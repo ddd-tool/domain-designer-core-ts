@@ -13,4 +13,7 @@ export default defineConfig({
       formats: ['es'],
     },
   },
+  esbuild: {
+    drop: process.env.NODE_ENV === 'production' ? ['console', 'debugger'] : [],
+  },
 })

@@ -66,10 +66,8 @@ function createInternalContext(initFn: ContextInitializer) {
     link(from: string, to: string, arrowType: ArrowType = 'Normal') {
       if (currentFlowName && flows[currentFlowName]) {
         if (flows[currentFlowName].length === 0 || flows[currentFlowName][flows[currentFlowName].length - 1] !== from) {
-          console.error('from', from)
           flows[currentFlowName].push(from)
         }
-        console.error('to', to)
         flows[currentFlowName].push(to)
       }
       arrows[`${from},${to}`] = arrowType
