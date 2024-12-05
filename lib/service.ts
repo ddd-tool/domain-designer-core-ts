@@ -50,7 +50,7 @@ export function serviceProvider(designCode: string): DomainDesignServiceProvider
       }
       const a = context.createCommand(param1, fields!, desc)
       context.link(_code, a._attributes._code)
-      return a
+      return a as DomainDesignCommand<FIELDS>
     }
     const service: DomainDesignService = {
       _attributes: {

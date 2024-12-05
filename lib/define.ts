@@ -12,13 +12,22 @@ export type DomainDesignDesc = Readonly<{
     readonly values: DomainDesignDescValue[]
   }
 }>
-export type DomainDesignDescValue = DomainDesignField<any> | DomainDesignCommand<any> | DomainDesignEvent<any>
+export type DomainDesignDescValue =
+  | DomainDesignField<any>
+  | DomainDesignCommand<any>
+  | DomainDesignFacadeCommand<any>
+  | DomainDesignEvent<any>
+  | DomainDesignAgg<any>
+  | DomainDesignPerson
+  | DomainDesignSystem
+  | DomainDesignPolicy
+  | DomainDesignService
 
 // ========================== 字段 ==========================
-export type DomainDesignFieldProvider<T extends DomainDesignFieldType> = (
+export type DomainDesignFieldProvider<TYPE extends DomainDesignFieldType> = (
   name: string,
   desc?: string | DomainDesignDesc
-) => DomainDesignField<T>
+) => DomainDesignField<TYPE>
 export type DomainDesignFieldType = 'String' | 'Number' | 'Time' | 'Enumeration' | 'Unknown' | 'ID'
 export type DomainDesignField<T extends DomainDesignFieldType> = Readonly<{
   readonly _attributes: {
@@ -55,9 +64,9 @@ export type DomainDesignPerson = Readonly<{
 }>
 
 // ========================== 指令 ==========================
-export type DomainDesignCommandProvider<FIELDS extends DomainDesignFields> = (
+export type DomainDesignCommandProvider = <FIELDS extends DomainDesignFields>(
   name: string,
-  fields: DomainDesignFields,
+  fields: FIELDS,
   desc?: string | DomainDesignDesc
 ) => DomainDesignCommand<FIELDS>
 export type DomainDesignCommand<FIELDS extends DomainDesignFields> = Readonly<{
@@ -68,6 +77,7 @@ export type DomainDesignCommand<FIELDS extends DomainDesignFields> = Readonly<{
     fields: FIELDS
     description?: DomainDesignDesc
   }
+  inner: FIELDS
   agg<AGG extends DomainDesignAgg<any>>(agg: AGG): AGG
   agg<FIELDS extends DomainDesignFields>(
     name: string,
@@ -76,7 +86,7 @@ export type DomainDesignCommand<FIELDS extends DomainDesignFields> = Readonly<{
   ): DomainDesignAgg<FIELDS>
 }>
 
-export type DomainDesignFacadeCommandProvider<FIELDS extends DomainDesignFields> = (
+export type DomainDesignFacadeCommandProvider = <FIELDS extends DomainDesignFields>(
   name: string,
   fields: FIELDS,
   desc?: string | DomainDesignDesc
@@ -89,6 +99,7 @@ export type DomainDesignFacadeCommand<FIELDS extends DomainDesignFields> = Reado
     fields: FIELDS
     description?: DomainDesignDesc
   }
+  inner: FIELDS
   agg<AGG extends DomainDesignAgg<any>>(agg: AGG): AGG
   agg<FIELDS extends DomainDesignFields>(
     name: string,
@@ -100,7 +111,7 @@ export type DomainDesignFacadeCommand<FIELDS extends DomainDesignFields> = Reado
 }>
 
 // ========================== 事件 ==========================
-export type DomainDesignEventProvider<FIELDS extends DomainDesignFields> = (
+export type DomainDesignEventProvider = <FIELDS extends DomainDesignFields>(
   name: string,
   fields: FIELDS,
   desc?: string | DomainDesignDesc
@@ -121,7 +132,7 @@ export type DomainDesignEvent<FIELDS extends DomainDesignFields> = Readonly<{
 }>
 
 // ========================== 聚合 ==========================
-export type DomainDesignAggProvider<FIELDS extends DomainDesignFields> = (
+export type DomainDesignAggProvider = <FIELDS extends DomainDesignFields>(
   name: string,
   fields: FIELDS,
   desc?: string | DomainDesignDesc

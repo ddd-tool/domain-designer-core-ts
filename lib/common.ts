@@ -27,10 +27,10 @@ export function genId(): string {
 type ContextInitializer = () => {
   createDesc: DomainDesignDescProvider
   createPerson: DomainDesignPersonProvider
-  createCommand: DomainDesignCommandProvider<any>
-  createFacadeCommand: DomainDesignFacadeCommandProvider<any>
-  createAgg: DomainDesignAggProvider<any>
-  createEvent: DomainDesignEventProvider<any>
+  createCommand: DomainDesignCommandProvider
+  createFacadeCommand: DomainDesignFacadeCommandProvider
+  createAgg: DomainDesignAggProvider
+  createEvent: DomainDesignEventProvider
   createPolicy: DomainDesignPolicyProvider
   createService: DomainDesignServiceProvider
   createSystem: DomainDesignSystemProvider
@@ -52,7 +52,31 @@ function createInternalContext(initFn: ContextInitializer) {
   const services: DomainDesignService[] = []
   const systems: DomainDesignSystem[] = []
   const aggs: DomainDesignAgg<any>[] = []
+
+  const flows: Record<string, Array<string>> = {}
+  let currentFlowName: string | undefined = undefined
   return {
+    defineFlow(name: string) {
+      if (flows[name] !== undefined) {
+        throw new Error(`flow ${name} already defined`)
+      }
+      flows[name] = []
+      currentFlowName = name
+    },
+    link(from: string, to: string, arrowType: ArrowType = 'Normal') {
+      if (currentFlowName && flows[currentFlowName]) {
+        if (flows[currentFlowName].length === 0 || flows[currentFlowName][flows[currentFlowName].length - 1] !== from) {
+          console.error('from', from)
+          flows[currentFlowName].push(from)
+        }
+        console.error('to', to)
+        flows[currentFlowName].push(to)
+      }
+      arrows[`${from},${to}`] = arrowType
+    },
+    getFlows() {
+      return flows
+    },
     getArrows() {
       return arrows
     },
@@ -114,9 +138,6 @@ function createInternalContext(initFn: ContextInitializer) {
     registerAgg(agg: DomainDesignAgg<any>) {
       idMap[agg._attributes._code] = agg
       aggs.push(agg)
-    },
-    link(from: string, to: string, arrowType: ArrowType = 'Normal') {
-      arrows[`${from},${to}`] = arrowType
     },
     createDesc: initResult.createDesc,
     createPersion: initResult.createPerson,

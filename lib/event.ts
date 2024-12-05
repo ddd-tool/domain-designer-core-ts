@@ -8,7 +8,7 @@ import {
   DomainDesignEventProvider,
 } from './define'
 
-export function eventProvider(designCode: string): DomainDesignEventProvider<any> {
+export function eventProvider(designCode: string): DomainDesignEventProvider {
   return <FIELDS extends DomainDesignFields>(
     name: string,
     fields: FIELDS,

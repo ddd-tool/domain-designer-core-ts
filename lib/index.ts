@@ -20,7 +20,7 @@ export function createDomainDesigner() {
   const createSystem = systemProvider(designCode)
   const createPolicy = policyProvider(designCode)
   const createService = serviceProvider(designCode)
-  useInternalContext(designCode, () => {
+  const context = useInternalContext(designCode, () => {
     return {
       createDesc,
       createPerson,
@@ -35,6 +35,7 @@ export function createDomainDesigner() {
   })
 
   return {
+    defineFlow: context.defineFlow,
     field,
     desc: createDesc,
     person: createPerson,

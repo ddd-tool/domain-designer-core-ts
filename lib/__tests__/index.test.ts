@@ -71,16 +71,43 @@ it('箭头', () => {
   checkArrow(命令2, 服务)
 })
 
-it('聚合增强', () => {
+it('命令内部字段', () => {
+  const d = createDomainDesigner()
+  const 主键 = d.field.id('主键')
+  const 命令1 = d.command('命令', { 主键 })
+  const 命令2 = d.facadeCmd('命令', { 主键 })
+  expect(命令1.inner.主键).not.toBeUndefined()
+  expect(命令2.inner.主键).not.toBeUndefined()
+})
+
+it('聚合内部字段', () => {
   const d = createDomainDesigner()
   const 主键 = d.field.id('主键')
   const 聚合 = d.agg('聚合', { 主键 })
-  聚合.inner['主键']
+  expect(聚合.inner.主键).not.toBeUndefined()
 })
 
-it('事件增强', () => {
+it('事件内部字段', () => {
   const d = createDomainDesigner()
   const 主键 = d.field.id('主键')
-  const event = d.event('事件', { 主键 })
-  event.inner['主键']
+  const 事件 = d.event('事件', { 主键 })
+  expect(事件.inner.主键).not.toBeUndefined()
+})
+
+it('定义流程', () => {
+  const d = createDomainDesigner()
+  const 用户 = d.person('用户')
+  const 命令1 = d.command('命令1', {})
+  const 命令2 = d.facadeCmd('命令2', {})
+  const 主键 = d.field.id('主键')
+  const 聚合 = d.agg('聚合', { 主键 })
+  const 成功事件 = d.event('成功事件', { 主键 })
+  const 失败事件 = d.event('失败事件', { 主键 })
+  d.defineFlow('正向流程')
+  用户.command(命令1).agg(聚合).event(成功事件)
+  d.defineFlow('失败流程')
+  用户.facadeCmd(命令2).agg(聚合).event(失败事件)
+
+  expect(d._getContext().getFlows().正向流程.length).toEqual(4)
+  expect(d._getContext().getFlows().失败流程.length).toEqual(4)
 })

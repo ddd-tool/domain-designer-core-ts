@@ -24,3 +24,28 @@ it('字符串转换模板函数', () => {
   expect(command._attributes.description?._attributes.template.reduce).instanceOf(Function)
   expect(facadeCmd._attributes.description?._attributes.template.reduce).instanceOf(Function)
 })
+
+it('字符串模板类型校验', () => {
+  const d = createDomainDesigner()
+  const agg = d.agg('agg', {})
+  const event = d.event('event', {})
+  const policy = d.policy('policy')
+  const person = d.person('person')
+  const system = d.system('system')
+  const service = d.service('service')
+  const field = d.field.id('field')
+  const command = d.command('command', {})
+  const facadeCmd = d.facadeCmd('facadeCmd', {})
+  const desc = d.desc`
+    ${agg}
+    ${event}
+    ${policy}
+    ${person}
+    ${system}
+    ${service}
+    ${field}
+    ${command}
+    ${facadeCmd}
+  `
+  expect(desc._attributes.values.length).toEqual(9)
+})

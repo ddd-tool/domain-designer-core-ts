@@ -10,8 +10,12 @@ import {
   DomainDesignService,
 } from './define'
 
-export function commandProvider(designCode: string): DomainDesignCommandProvider<any> {
-  return <FIELDS extends DomainDesignFields>(name: string, fields: FIELDS, desc?: string | DomainDesignDesc) => {
+export function commandProvider(designCode: string): DomainDesignCommandProvider {
+  return <FIELDS extends DomainDesignFields>(
+    name: string,
+    fields: FIELDS,
+    desc?: string | DomainDesignDesc
+  ): DomainDesignCommand<FIELDS> => {
     const context = useInternalContext(designCode)
     const _code = genId()
     function agg<AGG extends DomainDesignAgg<any>>(param: AGG): AGG
@@ -31,7 +35,7 @@ export function commandProvider(designCode: string): DomainDesignCommandProvider
       }
       const a = context.createAgg(param1, fields!, desc)
       context.link(_code, a._attributes._code)
-      return a
+      return a as DomainDesignAgg<FIELDS>
     }
     const command: DomainDesignCommand<FIELDS> = {
       _attributes: {
@@ -41,6 +45,7 @@ export function commandProvider(designCode: string): DomainDesignCommandProvider
         fields,
         description: context.createDesc(desc as any),
       },
+      inner: fields,
       agg,
     }
     context.registerCommand(command)
@@ -48,7 +53,7 @@ export function commandProvider(designCode: string): DomainDesignCommandProvider
   }
 }
 
-export function facadeCmdProvider(designCode: string): DomainDesignFacadeCommandProvider<any> {
+export function facadeCmdProvider(designCode: string): DomainDesignFacadeCommandProvider {
   return <FIELDS extends DomainDesignFields>(name: string, fields: FIELDS, desc?: string | DomainDesignDesc) => {
     const context = useInternalContext(designCode)
     const _code = genId()
@@ -91,6 +96,7 @@ export function facadeCmdProvider(designCode: string): DomainDesignFacadeCommand
         fields,
         description: context.createDesc(desc as any),
       },
+      inner: fields,
       agg,
       service,
     }

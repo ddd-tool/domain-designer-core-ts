@@ -1,12 +1,18 @@
 import { genId, useInternalContext } from './common'
-import { DomainDesignAgg, DomainDesignDesc, DomainDesignEvent, DomainDesignFields } from './define'
+import {
+  DomainDesignAgg,
+  DomainDesignAggProvider,
+  DomainDesignDesc,
+  DomainDesignEvent,
+  DomainDesignFields,
+} from './define'
 
-export function aggProvider(designCode: string) {
-  return <T extends DomainDesignFields>(
+export function aggProvider(designCode: string): DomainDesignAggProvider {
+  return <FIELDS extends DomainDesignFields>(
     name: string,
-    fields: T,
+    fields: FIELDS,
     desc?: string | DomainDesignDesc
-  ): DomainDesignAgg<T> => {
+  ): DomainDesignAgg<FIELDS> => {
     const context = useInternalContext(designCode)
     const _code = genId()
 
@@ -27,9 +33,9 @@ export function aggProvider(designCode: string) {
       }
       const e = context.createEvent(param1, fields!, desc)
       context.link(_code, e._attributes._code)
-      return e
+      return e as DomainDesignEvent<FIELDS>
     }
-    const agg: DomainDesignAgg<T> = {
+    const agg: DomainDesignAgg<FIELDS> = {
       _attributes: {
         _code,
         rule: 'Agg',
