@@ -1,5 +1,6 @@
 import { nanoid } from 'nanoid'
 import {
+  NonEmptyArray,
   ArrowType,
   DomainDesignAgg,
   DomainDesignAggProvider,
@@ -73,7 +74,7 @@ function createInternalContext(initFn: ContextInitializer) {
       currentWorkflowName = name
       return name
     },
-    setUserStory(name: string, workflowNames: string[]): void {
+    setUserStory(name: string, workflowNames: NonEmptyArray<string>): void {
       if (workflows[name] !== undefined) {
         throw new Error(`flow ${name} already exists`)
       }

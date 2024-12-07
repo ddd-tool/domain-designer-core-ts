@@ -239,4 +239,4 @@ export type DomainDesignService = Readonly<{
 // ========================== 上下文 ==========================
 export type ArrowType = 'Normal'
 
-type NonEmptyArray<T> = [T, ...T[]]
+export type NonEmptyArray<T> = [T, ...T[]]
