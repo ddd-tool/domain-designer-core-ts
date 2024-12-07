@@ -18,7 +18,7 @@ export type DomainDesignDescValue =
   | DomainDesignFacadeCommand<any>
   | DomainDesignEvent<any>
   | DomainDesignAgg<any>
-  | DomainDesignPerson
+  | DomainDesignActor
   | DomainDesignSystem
   | DomainDesignPolicy
   | DomainDesignService
@@ -52,7 +52,7 @@ export type DomainDesignInfo<TYPE extends DomainDesignInfoType> = Readonly<{
   }
 }>
 export type DomainDesignInfoFuncDependsOn = NonEmptyArray<DomainDesignInfo<Exclude<DomainDesignInfoType, 'Function'>>>
-export type DomainDesignInfos = Record<string, DomainDesignInfo<DomainDesignInfoType>>
+export type DomainDesignInfos = NonEmptyObject<Record<string, DomainDesignInfo<DomainDesignInfoType>>>
 export interface DomainDesignInfoFieldProvider {
   (name: string, desc?: string | DomainDesignDesc): DomainDesignInfo<'Field'>
   id(name: string, desc?: string | DomainDesignDesc): DomainDesignInfo<'Field'>
@@ -63,25 +63,25 @@ export interface DomainDesignInfoFieldProvider {
   bool(name: string, desc?: string | DomainDesignDesc): DomainDesignInfo<'Field'>
 }
 
-// ========================== 用户 ==========================
-export type DomainDesignPersonProvider = (name: string, desc?: string | DomainDesignDesc) => DomainDesignPerson
-export type DomainDesignPerson = Readonly<{
+// ========================== 参与者 ==========================
+export type DomainDesignActorProvider = (name: string, desc?: string | DomainDesignDesc) => DomainDesignActor
+export type DomainDesignActor = Readonly<{
   readonly _attributes: {
     __code: string
-    rule: 'Person'
+    rule: 'Actor'
     name: string
     description?: DomainDesignDesc
   }
   command<COMMAND extends DomainDesignCommand<any>>(command: COMMAND): COMMAND
   command<INFOS extends DomainDesignInfos>(
     name: string,
-    infos: INFOS,
+    infos: NonEmptyObject<INFOS>,
     desc?: string | DomainDesignDesc
   ): DomainDesignCommand<INFOS>
   facadeCmd<FACADECMD extends DomainDesignFacadeCommand<any>>(command: FACADECMD): FACADECMD
   facadeCmd<INFOS extends DomainDesignInfos>(
     name: string,
-    infos: INFOS,
+    infos: NonEmptyObject<INFOS>,
     desc?: string | DomainDesignDesc
   ): DomainDesignFacadeCommand<INFOS>
 }>
@@ -89,7 +89,7 @@ export type DomainDesignPerson = Readonly<{
 // ========================== 指令 ==========================
 export type DomainDesignCommandProvider = <INFOS extends DomainDesignInfos>(
   name: string,
-  infos: INFOS,
+  infos: NonEmptyObject<INFOS>,
   desc?: string | DomainDesignDesc
 ) => DomainDesignCommand<INFOS>
 export type DomainDesignCommand<INFOS extends DomainDesignInfos> = Readonly<{
@@ -102,16 +102,11 @@ export type DomainDesignCommand<INFOS extends DomainDesignInfos> = Readonly<{
   }
   inner: INFOS
   agg<AGG extends DomainDesignAgg<any>>(agg: AGG): AGG
-  agg<INFOS extends DomainDesignInfos>(
-    name: string,
-    infos: INFOS,
-    desc?: string | DomainDesignDesc
-  ): DomainDesignAgg<INFOS>
 }>
 
 export type DomainDesignFacadeCommandProvider = <INFOS extends DomainDesignInfos>(
   name: string,
-  infos: INFOS,
+  infos: NonEmptyObject<INFOS>,
   desc?: string | DomainDesignDesc
 ) => DomainDesignFacadeCommand<INFOS>
 export type DomainDesignFacadeCommand<INFOS extends DomainDesignInfos> = Readonly<{
@@ -124,11 +119,6 @@ export type DomainDesignFacadeCommand<INFOS extends DomainDesignInfos> = Readonl
   }
   inner: INFOS
   agg<AGG extends DomainDesignAgg<any>>(agg: AGG): AGG
-  agg<INFOS extends DomainDesignInfos>(
-    name: string,
-    infos: INFOS,
-    desc?: string | DomainDesignDesc
-  ): DomainDesignAgg<INFOS>
   service(service: DomainDesignService): DomainDesignService
   service(name: string, desc?: string | DomainDesignDesc): DomainDesignService
 }>
@@ -136,7 +126,7 @@ export type DomainDesignFacadeCommand<INFOS extends DomainDesignInfos> = Readonl
 // ========================== 事件 ==========================
 export type DomainDesignEventProvider = <INFOS extends DomainDesignInfos>(
   name: string,
-  infos: INFOS,
+  infos: NonEmptyObject<INFOS>,
   desc?: string | DomainDesignDesc
 ) => DomainDesignEvent<INFOS>
 export type DomainDesignEvent<INFOS extends DomainDesignInfos> = Readonly<{
@@ -157,7 +147,7 @@ export type DomainDesignEvent<INFOS extends DomainDesignInfos> = Readonly<{
 // ========================== 聚合 ==========================
 export type DomainDesignAggProvider = <INFOS extends DomainDesignInfos>(
   name: string,
-  infos: INFOS,
+  infos: NonEmptyObject<INFOS> | NonEmptyInitFunc<() => INFOS>,
   desc?: string | DomainDesignDesc
 ) => DomainDesignAgg<INFOS>
 export type DomainDesignAgg<INFOS extends DomainDesignInfos> = Readonly<{
@@ -172,7 +162,7 @@ export type DomainDesignAgg<INFOS extends DomainDesignInfos> = Readonly<{
   event<EVENT extends DomainDesignEvent<any>>(event: EVENT): EVENT
   event<INFOS extends DomainDesignInfos>(
     name: string,
-    infos: INFOS,
+    infos: NonEmptyObject<INFOS>,
     desc?: string | DomainDesignDesc
   ): DomainDesignEvent<INFOS>
 }>
@@ -202,13 +192,13 @@ export type DomainDesignSystem = Readonly<{
   command<COMMAND extends DomainDesignCommand<any>>(command: COMMAND): COMMAND
   command<INFOS extends DomainDesignInfos>(
     name: string,
-    infos: INFOS,
+    infos: NonEmptyObject<INFOS>,
     desc?: string | DomainDesignDesc
   ): DomainDesignCommand<INFOS>
   facadeCmd<FACADECMD extends DomainDesignFacadeCommand<any>>(facadeCmd: FACADECMD): FACADECMD
   facadeCmd<INFOS extends DomainDesignInfos>(
     name: string,
-    infos: INFOS,
+    infos: NonEmptyObject<INFOS>,
     desc?: string | DomainDesignDesc
   ): DomainDesignFacadeCommand<INFOS>
 }>
@@ -225,18 +215,15 @@ export type DomainDesignService = Readonly<{
   command<COMMAND extends DomainDesignCommand<any>>(command: COMMAND): COMMAND
   command<INFOS extends DomainDesignInfos>(
     name: string,
-    infos: INFOS,
+    infos: NonEmptyObject<INFOS>,
     desc?: string | DomainDesignDesc
   ): DomainDesignCommand<INFOS>
   agg<AGG extends DomainDesignAgg<any>>(agg: AGG): AGG
-  agg<INFOS extends DomainDesignInfos>(
-    name: string,
-    infos: INFOS,
-    desc?: string | DomainDesignDesc
-  ): DomainDesignAgg<INFOS>
 }>
 
 // ========================== 上下文 ==========================
 export type ArrowType = 'Normal'
 
 export type NonEmptyArray<T> = [T, ...T[]]
+export type NonEmptyObject<T extends object> = keyof T extends never ? never : T
+export type NonEmptyInitFunc<T extends () => object> = keyof ReturnType<T> extends never ? never : T

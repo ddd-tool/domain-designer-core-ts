@@ -6,12 +6,13 @@ import {
   DomainDesignPolicy,
   DomainDesignSystem,
   DomainDesignEventProvider,
+  NonEmptyObject,
 } from './define'
 
 export function eventProvider(designId: string): DomainDesignEventProvider {
   return <INFOS extends DomainDesignInfos>(
     name: string,
-    infos: INFOS,
+    infos: NonEmptyObject<INFOS>,
     desc?: string | DomainDesignDesc
   ): DomainDesignEvent<INFOS> => {
     const context = useInternalContext(designId)

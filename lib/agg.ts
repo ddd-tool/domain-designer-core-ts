@@ -5,26 +5,29 @@ import {
   DomainDesignDesc,
   DomainDesignEvent,
   DomainDesignInfos,
+  NonEmptyInitFunc,
+  NonEmptyObject,
 } from './define'
 
 export function createAggProvider(designId: string): DomainDesignAggProvider {
   return <INFOS extends DomainDesignInfos>(
     name: string,
-    infos: INFOS,
+    infoInitializer: NonEmptyInitFunc<() => INFOS> | NonEmptyObject<INFOS>,
     desc?: string | DomainDesignDesc
   ): DomainDesignAgg<INFOS> => {
     const context = useInternalContext(designId)
+    const infos = infoInitializer instanceof Function ? infoInitializer() : infoInitializer
     const __code = genId()
 
     function event<EVENT extends DomainDesignEvent<any>>(e: EVENT): EVENT
     function event<INFOS extends DomainDesignInfos>(
       name: string,
-      infos: INFOS,
+      infos: NonEmptyObject<INFOS>,
       desc?: string | DomainDesignDesc
     ): DomainDesignEvent<INFOS>
     function event<EVENT extends DomainDesignEvent<any>, INFOS extends DomainDesignInfos>(
       param1: EVENT | string,
-      infos?: INFOS,
+      infos?: NonEmptyObject<INFOS>,
       desc?: string | DomainDesignDesc
     ): EVENT | DomainDesignEvent<INFOS> {
       if (typeof param1 !== 'string') {

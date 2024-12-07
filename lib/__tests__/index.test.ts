@@ -5,14 +5,22 @@ it('注册元素', () => {
   const d = createDomainDesigner()
 
   // 用户
-  const 用户 = d.person('用户')
-  // 命令
-  const 命令1 = d.command('命令1', {})
-  const 命令2 = d.facadeCmd('命令2', {})
+  const 用户 = d.actor('用户')
   // 聚合
-  const 聚合 = d.agg('聚合', {})
+  const 聚合 = d.agg('聚合', () => {
+    return { 主键: d.info.field.id('主键') }
+  })
+  // 命令
+  const 命令1 = d.command('命令1', {
+    id: d.info.field.id('id'),
+  })
+  const 命令2 = d.facadeCmd('命令2', {
+    id: d.info.field.id('id'),
+  })
   // 事件
-  const 事件 = d.event('事件', {})
+  const 事件 = d.event('事件', {
+    id: 聚合.inner.主键,
+  })
   // 策略
   const 策略 = d.policy('策略')
   // 服务
@@ -21,7 +29,7 @@ it('注册元素', () => {
   const 外部系统 = d.system('外部系统')
 
   const context = d._getContext()
-  expect(context.getPersons()[0]._attributes.__code).toEqual(用户._attributes.__code)
+  expect(context.getActors()[0]._attributes.__code).toEqual(用户._attributes.__code)
   expect(context.getCommands()[0]._attributes.__code).toEqual(命令1._attributes.__code)
   expect(context.getFacadeCommands()[0]._attributes.__code).toEqual(命令2._attributes.__code)
   expect(context.getAggs()[0]._attributes.__code).toEqual(聚合._attributes.__code)
@@ -34,14 +42,20 @@ it('注册元素', () => {
 it('箭头', () => {
   const d = createDomainDesigner()
   // 用户
-  const 用户 = d.person('用户')
-  // 命令
-  const 命令1 = d.command('命令1', {})
-  const 命令2 = d.facadeCmd('命令2', {})
+  const 用户 = d.actor('用户')
   // 聚合
-  const 聚合 = d.agg('聚合', {})
+  const 聚合 = d.agg('聚合', () => {
+    return { 主键: d.info.field.id('主键') }
+  })
+  // 命令
+  const 命令1 = d.command('命令1', {
+    id: d.info.field.id('id'),
+  })
+  const 命令2 = d.facadeCmd('命令2', {
+    id: d.info.field.id('id'),
+  })
   // 事件
-  const 事件 = d.event('事件', {})
+  const 事件 = d.event('事件', { 主键: 聚合.inner.主键 })
   // 策略
   const 策略 = d.policy('策略')
   // 服务
@@ -96,18 +110,25 @@ it('事件内部字段', () => {
 
 it('定义流程', () => {
   const d = createDomainDesigner()
-  const 用户 = d.person('用户')
-  const 命令1 = d.command('命令1', {})
-  const 命令2 = d.facadeCmd('命令2', {})
-  const 主键 = d.info.field.id('主键')
-  const 聚合 = d.agg('聚合', { 主键 })
-  const 成功事件 = d.event('成功事件', { 主键 })
-  const 失败事件 = d.event('失败事件', { 主键 })
+  const 用户 = d.actor('用户')
+  const 聚合 = d.agg('聚合', { 主键: d.info.field.id('主键') })
+  const 命令1 = d.command('命令1', {
+    id: 聚合.inner.主键,
+  })
+  const 命令2 = d.facadeCmd('命令2', {
+    id: 聚合.inner.主键,
+  })
+  const 成功事件 = d.event('成功事件', {
+    id: 聚合.inner.主键,
+  })
+  const 失败事件 = d.event('失败事件', {
+    id: 聚合.inner.主键,
+  })
   const 成功流程 = d.startWorkflow('成功流程')
   用户.command(命令1).agg(聚合).event(成功事件)
   const 失败流程 = d.startWorkflow('失败流程')
   用户.facadeCmd(命令2).agg(聚合).event(失败事件)
-  d.setUserStory('', [成功流程, 失败流程])
+  d.defineUserStory('', [成功流程, 失败流程])
 
   expect(d._getContext().getWorkflows().成功流程.length).toEqual(4)
   expect(d._getContext().getWorkflows().失败流程.length).toEqual(4)

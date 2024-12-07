@@ -6,6 +6,7 @@ import {
   DomainDesignInfos,
   DomainDesignSystem,
   DomainDesignSystemProvider,
+  NonEmptyObject,
 } from './define'
 
 export function createSystemProvider(designId: string): DomainDesignSystemProvider {
@@ -15,12 +16,12 @@ export function createSystemProvider(designId: string): DomainDesignSystemProvid
     function command<COMMAND extends DomainDesignCommand<any>>(param: COMMAND): COMMAND
     function command<INFOS extends DomainDesignInfos>(
       name: string,
-      infos: INFOS,
+      infos: NonEmptyObject<INFOS>,
       desc?: string | DomainDesignDesc
     ): DomainDesignCommand<INFOS>
     function command<COMMAND extends DomainDesignCommand<any>, INFOS extends DomainDesignInfos>(
       param1: COMMAND | string,
-      infos?: INFOS,
+      infos?: NonEmptyObject<INFOS>,
       desc?: string | DomainDesignDesc
     ): COMMAND | DomainDesignCommand<INFOS> {
       if (typeof param1 === 'object') {
@@ -36,12 +37,12 @@ export function createSystemProvider(designId: string): DomainDesignSystemProvid
     function facadeCmd<FACADECMD extends DomainDesignFacadeCommand<any>>(param: FACADECMD): FACADECMD
     function facadeCmd<INFOS extends DomainDesignInfos>(
       name: string,
-      infos: INFOS,
+      infos: NonEmptyObject<INFOS>,
       desc?: string | DomainDesignDesc
     ): DomainDesignFacadeCommand<INFOS>
     function facadeCmd<FACADECMD extends DomainDesignFacadeCommand<any>, INFOS extends DomainDesignInfos>(
       param1: FACADECMD | string,
-      infos?: INFOS,
+      infos?: NonEmptyObject<INFOS>,
       desc?: string | DomainDesignDesc
     ): FACADECMD | DomainDesignFacadeCommand<INFOS> {
       if (typeof param1 === 'object') {

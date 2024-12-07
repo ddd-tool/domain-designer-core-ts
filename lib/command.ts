@@ -8,32 +8,18 @@ import {
   DomainDesignFacadeCommandProvider,
   DomainDesignFacadeCommand,
   DomainDesignService,
+  NonEmptyObject,
 } from './define'
 
 export function createCommandProvider(designId: string): DomainDesignCommandProvider {
   return <INFOS extends DomainDesignInfos>(
     name: string,
-    infos: INFOS,
+    infos: NonEmptyObject<INFOS>,
     desc?: string | DomainDesignDesc
   ): DomainDesignCommand<INFOS> => {
     const context = useInternalContext(designId)
     const __code = genId()
-    function agg<AGG extends DomainDesignAgg<any>>(param: AGG): AGG
-    function agg<INFOS extends DomainDesignInfos>(
-      name: string,
-      infos: INFOS,
-      desc?: string | DomainDesignDesc
-    ): DomainDesignAgg<INFOS>
-    function agg<AGG extends DomainDesignAgg<any>, INFOS extends DomainDesignInfos>(
-      param1: AGG | string,
-      infos?: INFOS,
-      desc?: string | DomainDesignDesc
-    ): AGG | DomainDesignAgg<INFOS> {
-      if (typeof param1 === 'object') {
-        context.link(__code, param1._attributes.__code)
-        return param1
-      }
-      const a = context.createAgg(param1, infos!, desc)
+    function agg<AGG extends DomainDesignAgg<any>>(a: AGG): AGG {
       context.link(__code, a._attributes.__code)
       return a
     }
@@ -54,25 +40,14 @@ export function createCommandProvider(designId: string): DomainDesignCommandProv
 }
 
 export function createFacadeCmdProvider(designId: string): DomainDesignFacadeCommandProvider {
-  return <INFOS extends DomainDesignInfos>(name: string, infos: INFOS, desc?: string | DomainDesignDesc) => {
+  return <INFOS extends DomainDesignInfos>(
+    name: string,
+    infos: NonEmptyObject<INFOS>,
+    desc?: string | DomainDesignDesc
+  ) => {
     const context = useInternalContext(designId)
     const __code = genId()
-    function agg<AGG extends DomainDesignAgg<any>>(param: AGG): AGG
-    function agg<INFOS extends DomainDesignInfos>(
-      name: string,
-      infos: INFOS,
-      desc?: string | DomainDesignDesc
-    ): DomainDesignAgg<INFOS>
-    function agg<AGG extends DomainDesignAgg<any>, INFOS extends DomainDesignInfos>(
-      param1: AGG | string,
-      infos?: INFOS,
-      desc?: string | DomainDesignDesc
-    ): AGG | DomainDesignAgg<INFOS> {
-      if (typeof param1 === 'object') {
-        context.link(__code, param1._attributes.__code)
-        return param1
-      }
-      const a = context.createAgg(param1, infos!, desc)
+    function agg<AGG extends DomainDesignAgg<any>>(a: AGG): AGG {
       context.link(__code, a._attributes.__code)
       return a
     }

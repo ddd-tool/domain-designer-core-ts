@@ -6,6 +6,7 @@ import {
   DomainDesignInfos,
   DomainDesignService,
   DomainDesignServiceProvider,
+  NonEmptyObject,
 } from './define'
 
 export function createServiceProvider(designId: string): DomainDesignServiceProvider {
@@ -13,22 +14,7 @@ export function createServiceProvider(designId: string): DomainDesignServiceProv
     const context = useInternalContext(designId)
     const __code = genId()
 
-    function agg<AGG extends DomainDesignAgg<any>>(param: AGG): AGG
-    function agg<INFOS extends DomainDesignInfos>(
-      name: string,
-      infos: INFOS,
-      desc?: string | DomainDesignDesc
-    ): DomainDesignAgg<INFOS>
-    function agg<AGG extends DomainDesignAgg<any>, INFOS extends DomainDesignInfos>(
-      param1: AGG | string,
-      infos?: INFOS,
-      desc?: string | DomainDesignDesc
-    ): AGG | DomainDesignAgg<INFOS> {
-      if (typeof param1 === 'object') {
-        context.link(__code, param1._attributes.__code)
-        return param1
-      }
-      const a = context.createAgg(param1, infos!, desc)
+    function agg<AGG extends DomainDesignAgg<any>>(a: AGG): AGG {
       context.link(__code, a._attributes.__code)
       return a
     }
@@ -36,12 +22,12 @@ export function createServiceProvider(designId: string): DomainDesignServiceProv
     function command<COMMAND extends DomainDesignCommand<any>>(param: COMMAND): COMMAND
     function command<INFOS extends DomainDesignInfos>(
       name: string,
-      infos: INFOS,
+      infos: NonEmptyObject<INFOS>,
       desc?: string | DomainDesignDesc
     ): INFOS
     function command<COMMAND extends DomainDesignCommand<any>, INFOS extends DomainDesignInfos>(
       param1: COMMAND | string,
-      infos?: INFOS,
+      infos?: NonEmptyObject<INFOS>,
       desc?: string | DomainDesignDesc
     ): COMMAND | DomainDesignCommand<INFOS> {
       if (typeof param1 === 'object') {

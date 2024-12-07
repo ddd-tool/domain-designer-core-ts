@@ -12,8 +12,8 @@ import {
   DomainDesignFacadeCommand,
   DomainDesignFacadeCommandProvider,
   DomainDesignInfoProvider,
-  DomainDesignPerson,
-  DomainDesignPersonProvider,
+  DomainDesignActor,
+  DomainDesignActorProvider,
   DomainDesignPolicy,
   DomainDesignPolicyProvider,
   DomainDesignService,
@@ -34,7 +34,7 @@ type ContextInitializer = () => {
   id: string
   createDesc: DomainDesignDescProvider
   createInfo: DomainDesignInfoProvider
-  createPerson: DomainDesignPersonProvider
+  createActor: DomainDesignActorProvider
   createCommand: DomainDesignCommandProvider
   createFacadeCommand: DomainDesignFacadeCommandProvider
   createAgg: DomainDesignAggProvider
@@ -55,7 +55,7 @@ function createInternalContext(initFn: ContextInitializer) {
   const idMap: Record<string, object> = {}
   const commands: DomainDesignCommand<any>[] = []
   const facadeCommands: DomainDesignFacadeCommand<any>[] = []
-  const persons: DomainDesignPerson[] = []
+  const actors: DomainDesignActor[] = []
   const events: DomainDesignEvent<any>[] = []
   const policies: DomainDesignPolicy[] = []
   const services: DomainDesignService[] = []
@@ -74,7 +74,7 @@ function createInternalContext(initFn: ContextInitializer) {
       currentWorkflowName = name
       return name
     },
-    setUserStory(name: string, workflowNames: NonEmptyArray<string>): void {
+    defineUserStory(name: string, workflowNames: NonEmptyArray<string>): void {
       if (workflows[name] !== undefined) {
         throw new Error(`flow ${name} already exists`)
       }
@@ -113,8 +113,8 @@ function createInternalContext(initFn: ContextInitializer) {
     getFacadeCommands() {
       return facadeCommands
     },
-    getPersons() {
-      return persons
+    getActors() {
+      return actors
     },
     getEvents() {
       return events
@@ -139,9 +139,9 @@ function createInternalContext(initFn: ContextInitializer) {
       idMap[command._attributes.__code] = command
       facadeCommands.push(command)
     },
-    registerPerson(person: DomainDesignPerson) {
-      idMap[person._attributes.__code] = person
-      persons.push(person)
+    registerActor(actor: DomainDesignActor) {
+      idMap[actor._attributes.__code] = actor
+      actors.push(actor)
     },
     registerEvent(event: DomainDesignEvent<any>) {
       idMap[event._attributes.__code] = event
@@ -165,7 +165,7 @@ function createInternalContext(initFn: ContextInitializer) {
     },
     createDesc: initResult.createDesc,
     info: initResult.createInfo(),
-    createPersion: initResult.createPerson,
+    createPersion: initResult.createActor,
     createCommand: initResult.createCommand,
     createFacadeCommand: initResult.createFacadeCommand,
     createAgg: initResult.createAgg,

@@ -1,7 +1,7 @@
 import { createInfoProvider } from './info'
 import { createCommandProvider, createFacadeCmdProvider } from './command'
 import { eventProvider } from './event'
-import { createPersonProvider } from './person'
+import { createActorProvider } from './actor'
 import { createDescProvider } from './desc'
 import { createAggProvider } from './agg'
 import { createSystemProvider } from './system'
@@ -13,7 +13,7 @@ export function createDomainDesigner() {
   const designId = genId()
   const createDesc = createDescProvider(designId)
   const infoProvider = createInfoProvider(designId)
-  const personProvider = createPersonProvider(designId)
+  const actorProvider = createActorProvider(designId)
   const commandProvider = createCommandProvider(designId)
   const createFacadeCommand = createFacadeCmdProvider(designId)
   const createAgg = createAggProvider(designId)
@@ -26,7 +26,7 @@ export function createDomainDesigner() {
       id: designId,
       createDesc,
       createInfo: infoProvider,
-      createPerson: personProvider,
+      createActor: actorProvider,
       createCommand: commandProvider,
       createFacadeCommand,
       createAgg,
@@ -39,10 +39,10 @@ export function createDomainDesigner() {
 
   return {
     startWorkflow: context.startWorkflow,
-    setUserStory: context.setUserStory,
+    defineUserStory: context.defineUserStory,
     desc: createDesc,
     info: context.info,
-    person: personProvider,
+    actor: actorProvider,
     facadeCmd: createFacadeCommand,
     command: commandProvider,
     agg: createAgg,
@@ -64,7 +64,7 @@ export type {
   DomainDesignEvent,
   DomainDesignInfo,
   DomainDesignInfoType,
-  DomainDesignPerson,
+  DomainDesignActor,
   DomainDesignSystem,
   DomainDesignService,
   DomainDesignPolicy,

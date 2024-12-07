@@ -4,8 +4,8 @@ import { createDomainDesigner } from '..'
 it('self design', () => {
   const d = createDomainDesigner()
 
-  const 领域专家 = d.person('领域专家')
-  const 开发人员 = d.person('开发人员')
+  const 领域专家 = d.actor('领域专家')
+  const 开发人员 = d.actor('开发人员')
 
   const 强类型需求 = (function () {
     const 现有基础设施 = d.info.doc('现有基础设施')
@@ -58,7 +58,7 @@ it('self design', () => {
   const 开发人员未确定软件价值 = d.startWorkflow('开发人员未确定软件价值')
   开发人员.command(确定软件价值).agg(强类型需求).event(未确定软件价值).policy(继续沟通)
 
-  d.setUserStory('用户故事：确定软件价值', [开发人员成功确定软件价值, 开发人员未确定软件价值])
+  d.defineUserStory('用户故事：确定软件价值', [开发人员成功确定软件价值, 开发人员未确定软件价值])
 
   expect(Object.keys(d._getContext().getUserStories()).length).toBe(1)
   expect(Object.values(d._getContext().getUserStories())[0].length).toBe(2)

@@ -4,23 +4,24 @@ import {
   DomainDesignDesc,
   DomainDesignFacadeCommand,
   DomainDesignInfos,
-  DomainDesignPerson,
-  DomainDesignPersonProvider,
+  DomainDesignActor,
+  DomainDesignActorProvider,
+  NonEmptyObject,
 } from './define'
 
-export function createPersonProvider(designId: string): DomainDesignPersonProvider {
+export function createActorProvider(designId: string): DomainDesignActorProvider {
   return (name: string, desc?: string | DomainDesignDesc) => {
     const context = useInternalContext(designId)
     const __code = genId()
     function command<COMMAND extends DomainDesignCommand<any>>(c: COMMAND): COMMAND
     function command<INFOS extends DomainDesignInfos>(
       name: string,
-      infos: INFOS,
+      infos: NonEmptyObject<INFOS>,
       desc?: string | DomainDesignDesc
     ): DomainDesignCommand<INFOS>
     function command<COMMAND extends DomainDesignCommand<any>, INFOS extends DomainDesignInfos>(
       param1: COMMAND | string,
-      infos?: INFOS,
+      infos?: NonEmptyObject<INFOS>,
       desc?: string | DomainDesignDesc
     ): COMMAND | DomainDesignCommand<INFOS> {
       if (typeof param1 !== 'string') {
@@ -35,12 +36,12 @@ export function createPersonProvider(designId: string): DomainDesignPersonProvid
     function facadeCmd<FACADECMD extends DomainDesignFacadeCommand<any>>(param: FACADECMD): FACADECMD
     function facadeCmd<INFOS extends DomainDesignInfos>(
       name: string,
-      infos: INFOS,
+      infos: NonEmptyObject<INFOS>,
       desc?: string | DomainDesignDesc
     ): INFOS
     function facadeCmd<FACADECMD extends DomainDesignFacadeCommand<any>, INFOS extends DomainDesignInfos>(
       param1: FACADECMD | string,
-      infos?: INFOS,
+      infos?: NonEmptyObject<INFOS>,
       desc?: string | DomainDesignDesc
     ): FACADECMD | DomainDesignFacadeCommand<INFOS> {
       if (typeof param1 !== 'string') {
@@ -51,17 +52,17 @@ export function createPersonProvider(designId: string): DomainDesignPersonProvid
       context.link(__code, c._attributes.__code)
       return c
     }
-    const person: DomainDesignPerson = {
+    const actor: DomainDesignActor = {
       _attributes: {
         __code,
-        rule: 'Person',
+        rule: 'Actor',
         name,
         description: context.createDesc(desc as any),
       },
       command,
       facadeCmd,
     }
-    context.registerPerson(person)
-    return person
+    context.registerActor(actor)
+    return actor
   }
 }
