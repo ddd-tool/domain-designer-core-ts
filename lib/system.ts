@@ -3,59 +3,59 @@ import {
   DomainDesignCommand,
   DomainDesignDesc,
   DomainDesignFacadeCommand,
-  DomainDesignFields,
+  DomainDesignInfos,
   DomainDesignSystem,
   DomainDesignSystemProvider,
 } from './define'
 
-export function systemProvider(designCode: string): DomainDesignSystemProvider {
+export function createSystemProvider(designId: string): DomainDesignSystemProvider {
   return (name: string, desc?: string | DomainDesignDesc) => {
-    const context = useInternalContext(designCode)
-    const _code = genId()
+    const context = useInternalContext(designId)
+    const __code = genId()
     function command<COMMAND extends DomainDesignCommand<any>>(param: COMMAND): COMMAND
-    function command<FIELDS extends DomainDesignFields>(
+    function command<INFOS extends DomainDesignInfos>(
       name: string,
-      fields: FIELDS,
+      infos: INFOS,
       desc?: string | DomainDesignDesc
-    ): DomainDesignCommand<FIELDS>
-    function command<COMMAND extends DomainDesignCommand<any>, FIELDS extends DomainDesignFields>(
+    ): DomainDesignCommand<INFOS>
+    function command<COMMAND extends DomainDesignCommand<any>, INFOS extends DomainDesignInfos>(
       param1: COMMAND | string,
-      fields?: FIELDS,
+      infos?: INFOS,
       desc?: string | DomainDesignDesc
-    ): COMMAND | DomainDesignCommand<FIELDS> {
+    ): COMMAND | DomainDesignCommand<INFOS> {
       if (typeof param1 === 'object') {
-        context.link(_code, param1._attributes._code)
+        context.link(__code, param1._attributes.__code)
         return param1
       } else {
-        const c = context.createCommand(param1, fields!, desc)
-        context.link(_code, c._attributes._code)
+        const c = context.createCommand(param1, infos!, desc)
+        context.link(__code, c._attributes.__code)
         return c
       }
     }
 
     function facadeCmd<FACADECMD extends DomainDesignFacadeCommand<any>>(param: FACADECMD): FACADECMD
-    function facadeCmd<FIELDS extends DomainDesignFields>(
+    function facadeCmd<INFOS extends DomainDesignInfos>(
       name: string,
-      fields: FIELDS,
+      infos: INFOS,
       desc?: string | DomainDesignDesc
-    ): DomainDesignFacadeCommand<FIELDS>
-    function facadeCmd<FACADECMD extends DomainDesignFacadeCommand<any>, FIELDS extends DomainDesignFields>(
+    ): DomainDesignFacadeCommand<INFOS>
+    function facadeCmd<FACADECMD extends DomainDesignFacadeCommand<any>, INFOS extends DomainDesignInfos>(
       param1: FACADECMD | string,
-      fields?: FIELDS,
+      infos?: INFOS,
       desc?: string | DomainDesignDesc
-    ): FACADECMD | DomainDesignFacadeCommand<FIELDS> {
+    ): FACADECMD | DomainDesignFacadeCommand<INFOS> {
       if (typeof param1 === 'object') {
-        context.link(_code, param1._attributes._code)
+        context.link(__code, param1._attributes.__code)
         return param1
       } else {
-        const c = context.createFacadeCommand(param1, fields!, desc)
-        context.link(_code, c._attributes._code)
+        const c = context.createFacadeCommand(param1, infos!, desc)
+        context.link(__code, c._attributes.__code)
         return c
       }
     }
     const system: DomainDesignSystem = {
       _attributes: {
-        _code,
+        __code,
         rule: 'System',
         name,
         description: context.createDesc(desc as any),

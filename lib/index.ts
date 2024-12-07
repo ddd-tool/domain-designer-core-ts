@@ -1,30 +1,33 @@
-import { field } from './field'
-import { commandProvider, facadeCmdProvider } from './command'
+import { createInfoProvider } from './info'
+import { createCommandProvider, createFacadeCmdProvider } from './command'
 import { eventProvider } from './event'
-import { personProvider } from './person'
-import { descProvider } from './desc'
-import { aggProvider } from './agg'
-import { systemProvider } from './system'
-import { policyProvider } from './policy'
-import { serviceProvider } from './service'
+import { createPersonProvider } from './person'
+import { createDescProvider } from './desc'
+import { createAggProvider } from './agg'
+import { createSystemProvider } from './system'
+import { createPolicyProvider } from './policy'
+import { createServiceProvider } from './service'
 import { genId, useInternalContext } from './common'
 
 export function createDomainDesigner() {
-  const designCode = genId()
-  const createDesc = descProvider(designCode)
-  const createPerson = personProvider(designCode)
-  const createCommand = commandProvider(designCode)
-  const createFacadeCommand = facadeCmdProvider(designCode)
-  const createAgg = aggProvider(designCode)
-  const createEvent = eventProvider(designCode)
-  const createSystem = systemProvider(designCode)
-  const createPolicy = policyProvider(designCode)
-  const createService = serviceProvider(designCode)
-  const context = useInternalContext(designCode, () => {
+  const designId = genId()
+  const createDesc = createDescProvider(designId)
+  const infoProvider = createInfoProvider(designId)
+  const personProvider = createPersonProvider(designId)
+  const commandProvider = createCommandProvider(designId)
+  const createFacadeCommand = createFacadeCmdProvider(designId)
+  const createAgg = createAggProvider(designId)
+  const createEvent = eventProvider(designId)
+  const createSystem = createSystemProvider(designId)
+  const createPolicy = createPolicyProvider(designId)
+  const createService = createServiceProvider(designId)
+  const context = useInternalContext(designId, () => {
     return {
+      id: designId,
       createDesc,
-      createPerson,
-      createCommand,
+      createInfo: infoProvider,
+      createPerson: personProvider,
+      createCommand: commandProvider,
       createFacadeCommand,
       createAgg,
       createEvent,
@@ -35,18 +38,19 @@ export function createDomainDesigner() {
   })
 
   return {
-    defineFlow: context.defineFlow,
-    field,
+    startWorkflow: context.startWorkflow,
+    setUserStory: context.setUserStory,
     desc: createDesc,
-    person: createPerson,
+    info: context.info,
+    person: personProvider,
     facadeCmd: createFacadeCommand,
-    command: createCommand,
+    command: commandProvider,
     agg: createAgg,
     event: createEvent,
     system: createSystem,
     policy: createPolicy,
     service: createService,
-    _getContext: () => useInternalContext(designCode),
+    _getContext: () => context,
   }
 }
 
@@ -55,9 +59,15 @@ export type DomainDesigner = ReturnType<typeof createDomainDesigner>
 export type {
   DomainDesignAgg,
   DomainDesignCommand,
+  DomainDesignFacadeCommand,
   DomainDesignDesc,
   DomainDesignEvent,
-  DomainDesignField,
-  DomainDesignFields,
+  DomainDesignInfo,
+  DomainDesignInfoType,
   DomainDesignPerson,
+  DomainDesignSystem,
+  DomainDesignService,
+  DomainDesignPolicy,
 } from './define'
+
+export { isDomainDesignInfoFunc } from './info'

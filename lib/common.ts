@@ -10,6 +10,7 @@ import {
   DomainDesignEventProvider,
   DomainDesignFacadeCommand,
   DomainDesignFacadeCommandProvider,
+  DomainDesignInfoProvider,
   DomainDesignPerson,
   DomainDesignPersonProvider,
   DomainDesignPolicy,
@@ -21,11 +22,17 @@ import {
 } from './define'
 
 export function genId(): string {
-  return nanoid()
+  const id = nanoid()
+  if (id === undefined) {
+    throw new Error('id is undefined')
+  }
+  return id
 }
 
 type ContextInitializer = () => {
+  id: string
   createDesc: DomainDesignDescProvider
+  createInfo: DomainDesignInfoProvider
   createPerson: DomainDesignPersonProvider
   createCommand: DomainDesignCommandProvider
   createFacadeCommand: DomainDesignFacadeCommandProvider
@@ -37,10 +44,11 @@ type ContextInitializer = () => {
 }
 
 export type DomainDesignInternalContext = ReturnType<typeof createInternalContext>
-const _internalContextMap: Record<string, ReturnType<typeof createInternalContext>> = {}
+const _internalContextMap: Record<string, DomainDesignInternalContext> = {}
 
 function createInternalContext(initFn: ContextInitializer) {
   const initResult = initFn()
+
   //NOTE: arrows的键为"srcid,destid"
   const arrows: Record<string, ArrowType> = {}
   const idMap: Record<string, object> = {}
@@ -53,27 +61,44 @@ function createInternalContext(initFn: ContextInitializer) {
   const systems: DomainDesignSystem[] = []
   const aggs: DomainDesignAgg<any>[] = []
 
-  const flows: Record<string, Array<string>> = {}
-  let currentFlowName: string | undefined = undefined
+  const workflows: Record<string, Array<string>> = {}
+  const userStories: Record<string, Array<string>> = {}
+  let currentWorkflowName: string | undefined = undefined
   return {
-    defineFlow(name: string) {
-      if (flows[name] !== undefined) {
-        throw new Error(`flow ${name} already defined`)
+    startWorkflow(name: string): string {
+      if (workflows[name] !== undefined) {
+        throw new Error(`flow ${name} already exists`)
       }
-      flows[name] = []
-      currentFlowName = name
+      workflows[name] = []
+      currentWorkflowName = name
+      return name
+    },
+    setUserStory(name: string, workflowNames: string[]): void {
+      if (workflows[name] !== undefined) {
+        throw new Error(`flow ${name} already exists`)
+      }
+      userStories[name] = workflowNames
     },
     link(from: string, to: string, arrowType: ArrowType = 'Normal') {
-      if (currentFlowName && flows[currentFlowName]) {
-        if (flows[currentFlowName].length === 0 || flows[currentFlowName][flows[currentFlowName].length - 1] !== from) {
-          flows[currentFlowName].push(from)
+      if (currentWorkflowName && workflows[currentWorkflowName]) {
+        if (
+          workflows[currentWorkflowName].length === 0 ||
+          workflows[currentWorkflowName][workflows[currentWorkflowName].length - 1] !== from
+        ) {
+          workflows[currentWorkflowName].push(from)
         }
-        flows[currentFlowName].push(to)
+        workflows[currentWorkflowName].push(to)
       }
       arrows[`${from},${to}`] = arrowType
     },
-    getFlows() {
-      return flows
+    getId() {
+      return initResult.id
+    },
+    getWorkflows() {
+      return workflows
+    },
+    getUserStories() {
+      return userStories
     },
     getArrows() {
       return arrows
@@ -106,38 +131,39 @@ function createInternalContext(initFn: ContextInitializer) {
       return aggs
     },
     registerCommand(command: DomainDesignCommand<any>) {
-      idMap[command._attributes._code] = command
+      idMap[command._attributes.__code] = command
       commands.push(command)
     },
     registerFacadeCommand(command: DomainDesignFacadeCommand<any>) {
-      idMap[command._attributes._code] = command
+      idMap[command._attributes.__code] = command
       facadeCommands.push(command)
     },
     registerPerson(person: DomainDesignPerson) {
-      idMap[person._attributes._code] = person
+      idMap[person._attributes.__code] = person
       persons.push(person)
     },
     registerEvent(event: DomainDesignEvent<any>) {
-      idMap[event._attributes._code] = event
+      idMap[event._attributes.__code] = event
       events.push(event)
     },
     registerPolicy(policy: DomainDesignPolicy) {
-      idMap[policy._attributes._code] = policy
+      idMap[policy._attributes.__code] = policy
       policies.push(policy)
     },
     registerService(service: DomainDesignService) {
-      idMap[service._attributes._code] = service
+      idMap[service._attributes.__code] = service
       services.push(service)
     },
     registerSystem(system: DomainDesignSystem) {
-      idMap[system._attributes._code] = system
+      idMap[system._attributes.__code] = system
       systems.push(system)
     },
     registerAgg(agg: DomainDesignAgg<any>) {
-      idMap[agg._attributes._code] = agg
+      idMap[agg._attributes.__code] = agg
       aggs.push(agg)
     },
     createDesc: initResult.createDesc,
+    info: initResult.createInfo(),
     createPersion: initResult.createPerson,
     createCommand: initResult.createCommand,
     createFacadeCommand: initResult.createFacadeCommand,
@@ -149,12 +175,13 @@ function createInternalContext(initFn: ContextInitializer) {
   }
 }
 
-export function useInternalContext(designCode: string, initFn?: ContextInitializer) {
-  if (!_internalContextMap[designCode]) {
-    if (!initFn) {
-      throw new Error('initFn is required')
-    }
-    _internalContextMap[designCode] = createInternalContext(initFn)
+export function useInternalContext(designId: string, initFn?: ContextInitializer): DomainDesignInternalContext {
+  if (_internalContextMap[designId]) {
+    return _internalContextMap[designId]
   }
-  return _internalContextMap[designCode]
+  if (!_internalContextMap[designId] && initFn) {
+    _internalContextMap[designId] = createInternalContext(initFn)
+    return _internalContextMap[designId]
+  }
+  throw new Error('initFn is required')
 }

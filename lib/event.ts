@@ -1,6 +1,6 @@
 import { genId, useInternalContext } from './common'
 import {
-  DomainDesignFields,
+  DomainDesignInfos,
   DomainDesignEvent,
   DomainDesignDesc,
   DomainDesignPolicy,
@@ -8,24 +8,24 @@ import {
   DomainDesignEventProvider,
 } from './define'
 
-export function eventProvider(designCode: string): DomainDesignEventProvider {
-  return <FIELDS extends DomainDesignFields>(
+export function eventProvider(designId: string): DomainDesignEventProvider {
+  return <INFOS extends DomainDesignInfos>(
     name: string,
-    fields: FIELDS,
+    infos: INFOS,
     desc?: string | DomainDesignDesc
-  ): DomainDesignEvent<FIELDS> => {
-    const context = useInternalContext(designCode)
-    const _code = genId()
+  ): DomainDesignEvent<INFOS> => {
+    const context = useInternalContext(designId)
+    const __code = genId()
 
     function policy(param: DomainDesignPolicy): DomainDesignPolicy
     function policy(name: string, desc?: string | DomainDesignDesc): DomainDesignPolicy
     function policy(param1: DomainDesignPolicy | string, desc?: string | DomainDesignDesc): DomainDesignPolicy {
       if (typeof param1 === 'object') {
-        context.link(_code, param1._attributes._code)
+        context.link(__code, param1._attributes.__code)
         return param1
       }
       const p = context.createPolicy(param1, desc)
-      context.link(_code, p._attributes._code)
+      context.link(__code, p._attributes.__code)
       return p
     }
 
@@ -33,22 +33,22 @@ export function eventProvider(designCode: string): DomainDesignEventProvider {
     function system(name: string, desc?: string | DomainDesignDesc): DomainDesignSystem
     function system(param1: DomainDesignSystem | string, desc?: string | DomainDesignDesc): DomainDesignSystem {
       if (typeof param1 === 'object') {
-        context.link(_code, param1._attributes._code)
+        context.link(__code, param1._attributes.__code)
         return param1
       }
       const s = context.createSystem(param1, desc)
-      context.link(_code, s._attributes._code)
+      context.link(__code, s._attributes.__code)
       return s
     }
-    const event: DomainDesignEvent<FIELDS> = {
+    const event: DomainDesignEvent<INFOS> = {
       _attributes: {
-        _code,
+        __code,
         rule: 'Event',
         name,
-        fields,
+        infos,
         description: context.createDesc(desc as any),
       },
-      inner: fields,
+      inner: infos,
       policy,
       system,
     }

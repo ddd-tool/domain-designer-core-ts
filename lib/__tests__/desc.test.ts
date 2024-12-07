@@ -10,7 +10,7 @@ it('字符串转换模板函数', () => {
   const person = d.person('person', '')
   const system = d.system('system', '')
   const service = d.service('service', '')
-  const field = d.field.id('field', '')
+  const infoId = d.info.field.id('infoId', '')
   const command = d.command('command', {}, '')
   const facadeCmd = d.facadeCmd('facadeCmd', {}, '')
   expect(desc._attributes.template.reduce).instanceOf(Function)
@@ -20,7 +20,7 @@ it('字符串转换模板函数', () => {
   expect(person._attributes.description?._attributes.template.reduce).instanceOf(Function)
   expect(system._attributes.description?._attributes.template.reduce).instanceOf(Function)
   expect(service._attributes.description?._attributes.template.reduce).instanceOf(Function)
-  expect(field._attributes.description?._attributes.template.reduce).instanceOf(Function)
+  expect(infoId._attributes.description?._attributes.template.reduce).instanceOf(Function)
   expect(command._attributes.description?._attributes.template.reduce).instanceOf(Function)
   expect(facadeCmd._attributes.description?._attributes.template.reduce).instanceOf(Function)
 })
@@ -33,7 +33,7 @@ it('字符串模板类型校验', () => {
   const person = d.person('person')
   const system = d.system('system')
   const service = d.service('service')
-  const field = d.field.id('field')
+  const infoId = d.info.field.id('infoId')
   const command = d.command('command', {})
   const facadeCmd = d.facadeCmd('facadeCmd', {})
   const desc = d.desc`
@@ -43,7 +43,7 @@ it('字符串模板类型校验', () => {
     ${person}
     ${system}
     ${service}
-    ${field}
+    ${infoId}
     ${command}
     ${facadeCmd}
   `

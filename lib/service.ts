@@ -3,58 +3,58 @@ import {
   DomainDesignAgg,
   DomainDesignCommand,
   DomainDesignDesc,
-  DomainDesignFields,
+  DomainDesignInfos,
   DomainDesignService,
   DomainDesignServiceProvider,
 } from './define'
 
-export function serviceProvider(designCode: string): DomainDesignServiceProvider {
+export function createServiceProvider(designId: string): DomainDesignServiceProvider {
   return (name: string, desc?: string | DomainDesignDesc) => {
-    const context = useInternalContext(designCode)
-    const _code = genId()
+    const context = useInternalContext(designId)
+    const __code = genId()
 
     function agg<AGG extends DomainDesignAgg<any>>(param: AGG): AGG
-    function agg<FIELDS extends DomainDesignFields>(
+    function agg<INFOS extends DomainDesignInfos>(
       name: string,
-      fields: FIELDS,
+      infos: INFOS,
       desc?: string | DomainDesignDesc
-    ): DomainDesignAgg<FIELDS>
-    function agg<AGG extends DomainDesignAgg<any>, FIELDS extends DomainDesignFields>(
+    ): DomainDesignAgg<INFOS>
+    function agg<AGG extends DomainDesignAgg<any>, INFOS extends DomainDesignInfos>(
       param1: AGG | string,
-      fields?: FIELDS,
+      infos?: INFOS,
       desc?: string | DomainDesignDesc
-    ): AGG | DomainDesignAgg<FIELDS> {
+    ): AGG | DomainDesignAgg<INFOS> {
       if (typeof param1 === 'object') {
-        context.link(_code, param1._attributes._code)
+        context.link(__code, param1._attributes.__code)
         return param1
       }
-      const a = context.createAgg(param1, fields!, desc)
-      context.link(_code, a._attributes._code)
+      const a = context.createAgg(param1, infos!, desc)
+      context.link(__code, a._attributes.__code)
       return a
     }
 
     function command<COMMAND extends DomainDesignCommand<any>>(param: COMMAND): COMMAND
-    function command<FIELDS extends DomainDesignFields>(
+    function command<INFOS extends DomainDesignInfos>(
       name: string,
-      fields: FIELDS,
+      infos: INFOS,
       desc?: string | DomainDesignDesc
-    ): FIELDS
-    function command<COMMAND extends DomainDesignCommand<any>, FIELDS extends DomainDesignFields>(
+    ): INFOS
+    function command<COMMAND extends DomainDesignCommand<any>, INFOS extends DomainDesignInfos>(
       param1: COMMAND | string,
-      fields?: DomainDesignFields,
+      infos?: INFOS,
       desc?: string | DomainDesignDesc
-    ): COMMAND | DomainDesignCommand<FIELDS> {
+    ): COMMAND | DomainDesignCommand<INFOS> {
       if (typeof param1 === 'object') {
-        context.link(_code, param1._attributes._code)
+        context.link(__code, param1._attributes.__code)
         return param1
       }
-      const a = context.createCommand(param1, fields!, desc)
-      context.link(_code, a._attributes._code)
-      return a as DomainDesignCommand<FIELDS>
+      const a = context.createCommand(param1, infos!, desc)
+      context.link(__code, a._attributes.__code)
+      return a
     }
     const service: DomainDesignService = {
       _attributes: {
-        _code,
+        __code,
         rule: 'Service',
         name,
         description: context.createDesc(desc as any),
