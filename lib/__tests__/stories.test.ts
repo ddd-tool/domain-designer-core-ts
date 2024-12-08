@@ -44,7 +44,7 @@ it('self design', () => {
     模糊地带: d.info.field('模糊地带'),
   })
 
-  const 继续沟通 = d.policy(
+  const 沟通策略 = d.policy(
     '继续沟通',
     d.desc`
     ${开发人员}与${领域专家}沟通
@@ -56,7 +56,7 @@ it('self design', () => {
   开发人员.command(确定软件价值).agg(强类型需求).event(已确定软件价值)
 
   const 开发人员未确定软件价值 = d.startWorkflow('开发人员未确定软件价值')
-  开发人员.command(确定软件价值).agg(强类型需求).event(未确定软件价值).policy(继续沟通)
+  开发人员.command(确定软件价值).agg(强类型需求).event(未确定软件价值).policy(沟通策略)
 
   d.defineUserStory('用户故事：确定软件价值', [开发人员成功确定软件价值, 开发人员未确定软件价值])
 

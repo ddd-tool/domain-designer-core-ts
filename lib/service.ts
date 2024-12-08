@@ -15,7 +15,7 @@ export function createServiceProvider(designId: string): DomainDesignServiceProv
     const __code = genId()
 
     function agg<AGG extends DomainDesignAgg<any>>(a: AGG): AGG {
-      context.link(__code, a._attributes.__code)
+      context.linkTo(__code, a._attributes.__code)
       return a
     }
 
@@ -31,11 +31,11 @@ export function createServiceProvider(designId: string): DomainDesignServiceProv
       desc?: string | DomainDesignDesc
     ): COMMAND | DomainDesignCommand<INFOS> {
       if (typeof param1 === 'object') {
-        context.link(__code, param1._attributes.__code)
+        context.linkTo(__code, param1._attributes.__code)
         return param1
       }
       const a = context.createCommand(param1, infos!, desc)
-      context.link(__code, a._attributes.__code)
+      context.linkTo(__code, a._attributes.__code)
       return a
     }
     const service: DomainDesignService = {

@@ -25,11 +25,11 @@ export function createSystemProvider(designId: string): DomainDesignSystemProvid
       desc?: string | DomainDesignDesc
     ): COMMAND | DomainDesignCommand<INFOS> {
       if (typeof param1 === 'object') {
-        context.link(__code, param1._attributes.__code)
+        context.linkTo(__code, param1._attributes.__code)
         return param1
       } else {
         const c = context.createCommand(param1, infos!, desc)
-        context.link(__code, c._attributes.__code)
+        context.linkTo(__code, c._attributes.__code)
         return c
       }
     }
@@ -46,11 +46,11 @@ export function createSystemProvider(designId: string): DomainDesignSystemProvid
       desc?: string | DomainDesignDesc
     ): FACADECMD | DomainDesignFacadeCommand<INFOS> {
       if (typeof param1 === 'object') {
-        context.link(__code, param1._attributes.__code)
+        context.linkTo(__code, param1._attributes.__code)
         return param1
       } else {
         const c = context.createFacadeCommand(param1, infos!, desc)
-        context.link(__code, c._attributes.__code)
+        context.linkTo(__code, c._attributes.__code)
         return c
       }
     }

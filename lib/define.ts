@@ -84,6 +84,11 @@ export type DomainDesignActor = Readonly<{
     infos: NonEmptyObject<INFOS>,
     desc?: string | DomainDesignDesc
   ): DomainDesignFacadeCommand<INFOS>
+  readModel<READ_MODEL extends DomainDesignReadModel<any>>(readModel: READ_MODEL): READ_MODEL
+  readModel<INFOS extends DomainDesignInfos>(
+    name: string,
+    infos: NonEmptyObject<INFOS> | NonEmptyInitFunc<() => INFOS>
+  ): DomainDesignReadModel<INFOS>
 }>
 
 // ========================== 指令 ==========================
@@ -142,6 +147,11 @@ export type DomainDesignEvent<INFOS extends DomainDesignInfos> = Readonly<{
   policy(name: string, desc?: string | DomainDesignDesc): DomainDesignPolicy
   system(system: DomainDesignSystem): DomainDesignSystem
   system(name: string, desc?: string | DomainDesignDesc): DomainDesignSystem
+  readModel<READ_MODEL extends DomainDesignReadModel<any>>(readModel: READ_MODEL): READ_MODEL
+  readModel<INFOS extends DomainDesignInfos>(
+    name: string,
+    infos: NonEmptyObject<INFOS> | NonEmptyInitFunc<() => INFOS>
+  ): DomainDesignReadModel<INFOS>
 }>
 
 // ========================== 聚合 ==========================
@@ -221,9 +231,24 @@ export type DomainDesignService = Readonly<{
   agg<AGG extends DomainDesignAgg<any>>(agg: AGG): AGG
 }>
 
-// ========================== 上下文 ==========================
-export type ArrowType = 'Normal'
+// ========================== 读模型 ==========================
+export type DomainDesignReadModelProvider = <INFOS extends DomainDesignInfos>(
+  name: string,
+  infos: NonEmptyObject<INFOS> | NonEmptyInitFunc<() => INFOS>,
+  desc?: string | DomainDesignDesc
+) => DomainDesignReadModel<INFOS>
+export type DomainDesignReadModel<INFOS extends DomainDesignInfos> = Readonly<{
+  readonly _attributes: {
+    __code: string
+    rule: 'ReadModel'
+    name: string
+    infos: INFOS
+    description?: DomainDesignDesc
+  }
+  inner: INFOS
+}>
 
+// ========================== 其他 ==========================
 export type NonEmptyArray<T> = [T, ...T[]]
 export type NonEmptyObject<T extends object> = keyof T extends never ? never : T
 export type NonEmptyInitFunc<T extends () => object> = keyof ReturnType<T> extends never ? never : T

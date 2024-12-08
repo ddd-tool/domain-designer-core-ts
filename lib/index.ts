@@ -7,6 +7,7 @@ import { createAggProvider } from './agg'
 import { createSystemProvider } from './system'
 import { createPolicyProvider } from './policy'
 import { createServiceProvider } from './service'
+import { createReadModelProvider } from './read-model'
 import { genId, useInternalContext } from './common'
 
 export function createDomainDesigner() {
@@ -21,6 +22,7 @@ export function createDomainDesigner() {
   const createSystem = createSystemProvider(designId)
   const createPolicy = createPolicyProvider(designId)
   const createService = createServiceProvider(designId)
+  const createReadModel = createReadModelProvider(designId)
   const context = useInternalContext(designId, () => {
     return {
       id: designId,
@@ -34,6 +36,7 @@ export function createDomainDesigner() {
       createSystem,
       createPolicy,
       createService,
+      createReadModel,
     }
   })
 
@@ -50,6 +53,7 @@ export function createDomainDesigner() {
     system: createSystem,
     policy: createPolicy,
     service: createService,
+    readModel: createReadModel,
     _getContext: () => context,
   }
 }

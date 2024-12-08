@@ -1,7 +1,6 @@
 import { nanoid } from 'nanoid'
 import {
   NonEmptyArray,
-  ArrowType,
   DomainDesignAgg,
   DomainDesignAggProvider,
   DomainDesignCommand,
@@ -20,7 +19,11 @@ import {
   DomainDesignServiceProvider,
   DomainDesignSystem,
   DomainDesignSystemProvider,
+  DomainDesignReadModel,
+  DomainDesignReadModelProvider,
 } from './define'
+
+export type LinkType = 'Depends' | 'Read'
 
 export function genId(): string {
   const id = nanoid()
@@ -42,6 +45,7 @@ type ContextInitializer = () => {
   createPolicy: DomainDesignPolicyProvider
   createService: DomainDesignServiceProvider
   createSystem: DomainDesignSystemProvider
+  createReadModel: DomainDesignReadModelProvider
 }
 
 export type DomainDesignInternalContext = ReturnType<typeof createInternalContext>
@@ -51,7 +55,7 @@ function createInternalContext(initFn: ContextInitializer) {
   const initResult = initFn()
 
   //NOTE: arrows的键为"srcid,destid"
-  const arrows: Record<string, ArrowType> = {}
+  const links: Record<string, LinkType> = {}
   const idMap: Record<string, object> = {}
   const commands: DomainDesignCommand<any>[] = []
   const facadeCommands: DomainDesignFacadeCommand<any>[] = []
@@ -61,6 +65,7 @@ function createInternalContext(initFn: ContextInitializer) {
   const services: DomainDesignService[] = []
   const systems: DomainDesignSystem[] = []
   const aggs: DomainDesignAgg<any>[] = []
+  const readModels: DomainDesignReadModel<any>[] = []
 
   const workflows: Record<string, Array<string>> = {}
   const userStories: Record<string, Array<string>> = {}
@@ -80,7 +85,7 @@ function createInternalContext(initFn: ContextInitializer) {
       }
       userStories[name] = workflowNames
     },
-    link(from: string, to: string, arrowType: ArrowType = 'Normal') {
+    linkTo(from: string, to: string, linkType: LinkType = 'Depends') {
       if (currentWorkflowName && workflows[currentWorkflowName]) {
         if (
           workflows[currentWorkflowName].length === 0 ||
@@ -90,7 +95,7 @@ function createInternalContext(initFn: ContextInitializer) {
         }
         workflows[currentWorkflowName].push(to)
       }
-      arrows[`${from},${to}`] = arrowType
+      links[`${from},${to}`] = linkType
     },
     getId() {
       return initResult.id
@@ -101,8 +106,8 @@ function createInternalContext(initFn: ContextInitializer) {
     getUserStories() {
       return userStories
     },
-    getArrows() {
-      return arrows
+    getLinks() {
+      return links
     },
     getIdMap() {
       return idMap
@@ -130,6 +135,9 @@ function createInternalContext(initFn: ContextInitializer) {
     },
     getAggs() {
       return aggs
+    },
+    getReadModels() {
+      return readModels
     },
     registerCommand(command: DomainDesignCommand<any>) {
       idMap[command._attributes.__code] = command
@@ -163,6 +171,10 @@ function createInternalContext(initFn: ContextInitializer) {
       idMap[agg._attributes.__code] = agg
       aggs.push(agg)
     },
+    registerReadModel(readModel: DomainDesignReadModel<any>) {
+      idMap[readModel._attributes.__code] = readModel
+      readModels.push(readModel)
+    },
     createDesc: initResult.createDesc,
     info: initResult.createInfo(),
     createPersion: initResult.createActor,
@@ -173,6 +185,7 @@ function createInternalContext(initFn: ContextInitializer) {
     createPolicy: initResult.createPolicy,
     createService: initResult.createService,
     createSystem: initResult.createSystem,
+    createReadModel: initResult.createReadModel,
   }
 }
 

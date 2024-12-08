@@ -1,5 +1,6 @@
 import { createDomainDesigner } from '..'
 import { expect, it } from 'vitest'
+import { LinkType } from '../common'
 
 it('注册元素', () => {
   const d = createDomainDesigner()
@@ -27,6 +28,8 @@ it('注册元素', () => {
   const 服务 = d.service('服务')
   // 外部系统
   const 外部系统 = d.system('外部系统')
+  // 读模型
+  const 读模型 = d.readModel('读模型', { id: d.info.field.id('id') })
 
   const context = d._getContext()
   expect(context.getActors()[0]._attributes.__code).toEqual(用户._attributes.__code)
@@ -37,9 +40,10 @@ it('注册元素', () => {
   expect(context.getPolicies()[0]._attributes.__code).toEqual(策略._attributes.__code)
   expect(context.getServices()[0]._attributes.__code).toEqual(服务._attributes.__code)
   expect(context.getSystems()[0]._attributes.__code).toEqual(外部系统._attributes.__code)
+  expect(context.getReadModels()[0]._attributes.__code).toEqual(读模型._attributes.__code)
 })
 
-it('箭头', () => {
+it('连接', () => {
   const d = createDomainDesigner()
   // 用户
   const 用户 = d.actor('用户')
@@ -62,9 +66,13 @@ it('箭头', () => {
   const 服务 = d.service('服务')
   // 外部系统
   const 外部系统 = d.system('外部系统')
+  // 读模型
+  const 读模型 = d.readModel('读模型', { id: d.info.field.id('id') })
   用户.command(命令1).agg(聚合).event(事件).policy(策略).service(服务)
   事件.system(外部系统)
   用户.facadeCmd(命令2).service(服务)
+  事件.readModel(读模型)
+  用户.readModel(读模型)
 
   const context = d._getContext()
   type Node = {
@@ -72,17 +80,19 @@ it('箭头', () => {
       __code: string
     }
   }
-  function checkArrow(from: Node, to: Node) {
-    expect(context.getArrows()[`${from._attributes.__code},${to._attributes.__code}`]).not.toBe(undefined)
+  function checkLink(from: Node, to: Node, linkType: LinkType = 'Depends') {
+    expect(context.getLinks()[`${from._attributes.__code},${to._attributes.__code}`]).toBe(linkType)
   }
-  checkArrow(用户, 命令1)
-  checkArrow(命令1, 聚合)
-  checkArrow(聚合, 事件)
-  checkArrow(事件, 策略)
-  checkArrow(策略, 服务)
-  checkArrow(事件, 外部系统)
-  checkArrow(用户, 命令2)
-  checkArrow(命令2, 服务)
+  checkLink(用户, 命令1)
+  checkLink(命令1, 聚合)
+  checkLink(聚合, 事件)
+  checkLink(事件, 策略)
+  checkLink(策略, 服务)
+  checkLink(事件, 外部系统)
+  checkLink(用户, 命令2)
+  checkLink(命令2, 服务)
+  checkLink(事件, 读模型)
+  checkLink(用户, 读模型, 'Read')
 })
 
 it('命令内部字段', () => {

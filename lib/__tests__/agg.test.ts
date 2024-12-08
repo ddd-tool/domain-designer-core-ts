@@ -1,4 +1,4 @@
-import { expect, expectTypeOf, it } from 'vitest'
+import { expect, it } from 'vitest'
 import { createDomainDesigner } from '..'
 
 it('agg 定义', () => {

@@ -9,11 +9,11 @@ export function createPolicyProvider(designId: string): DomainDesignPolicyProvid
     function service(name: string, desc?: string | DomainDesignDesc): DomainDesignService
     function service(param1: DomainDesignService | string, desc?: string | DomainDesignDesc): DomainDesignService {
       if (typeof param1 === 'object') {
-        context.link(__code, param1._attributes.__code)
+        context.linkTo(__code, param1._attributes.__code)
         return param1
       }
       const s = context.createService(param1, desc)
-      context.link(__code, s._attributes.__code)
+      context.linkTo(__code, s._attributes.__code)
       return s
     }
     const policy: DomainDesignPolicy = {

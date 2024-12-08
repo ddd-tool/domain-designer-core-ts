@@ -31,11 +31,11 @@ export function createAggProvider(designId: string): DomainDesignAggProvider {
       desc?: string | DomainDesignDesc
     ): EVENT | DomainDesignEvent<INFOS> {
       if (typeof param1 !== 'string') {
-        context.link(__code, param1._attributes.__code)
+        context.linkTo(__code, param1._attributes.__code)
         return param1
       }
       const e = context.createEvent(param1, infos!, desc)
-      context.link(__code, e._attributes.__code)
+      context.linkTo(__code, e._attributes.__code)
       return e as DomainDesignEvent<INFOS>
     }
     const agg: DomainDesignAgg<INFOS> = {
