@@ -12,6 +12,7 @@ import {
 } from './define'
 
 export function createCommandProvider(designId: string): DomainDesignCommandProvider {
+  const RULE = 'Command'
   return <INFOS extends DomainDesignInfos>(
     name: string,
     infos: NonEmptyObject<INFOS>,
@@ -20,13 +21,13 @@ export function createCommandProvider(designId: string): DomainDesignCommandProv
     const context = useInternalContext(designId)
     const __code = genId()
     function agg<AGG extends DomainDesignAgg<any>>(a: AGG): AGG {
-      context.linkTo(__code, a._attributes.__code)
+      context.linkTo(RULE, __code, a._attributes.rule, a._attributes.__code)
       return a
     }
     const command: DomainDesignCommand<INFOS> = {
       _attributes: {
         __code,
-        rule: 'Command',
+        rule: RULE,
         name,
         infos,
         description: context.createDesc(desc as any),
@@ -40,6 +41,7 @@ export function createCommandProvider(designId: string): DomainDesignCommandProv
 }
 
 export function createFacadeCmdProvider(designId: string): DomainDesignFacadeCommandProvider {
+  const RULE = 'FacadeCommand'
   return <INFOS extends DomainDesignInfos>(
     name: string,
     infos: NonEmptyObject<INFOS>,
@@ -48,7 +50,7 @@ export function createFacadeCmdProvider(designId: string): DomainDesignFacadeCom
     const context = useInternalContext(designId)
     const __code = genId()
     function agg<AGG extends DomainDesignAgg<any>>(a: AGG): AGG {
-      context.linkTo(__code, a._attributes.__code)
+      context.linkTo(RULE, __code, a._attributes.rule, a._attributes.__code)
       return a
     }
 
@@ -56,17 +58,17 @@ export function createFacadeCmdProvider(designId: string): DomainDesignFacadeCom
     function service(name: string, desc?: string | DomainDesignDesc): DomainDesignService
     function service(param1: DomainDesignService | string, desc?: string | DomainDesignDesc): DomainDesignService {
       if (typeof param1 === 'object') {
-        context.linkTo(__code, param1._attributes.__code)
+        context.linkTo(RULE, __code, param1._attributes.rule, param1._attributes.__code)
         return param1
       }
       const s = context.createService(param1, desc)
-      context.linkTo(__code, s._attributes.__code)
+      context.linkTo(RULE, __code, s._attributes.rule, s._attributes.__code)
       return s
     }
     const facadeCmd: DomainDesignFacadeCommand<INFOS> = {
       _attributes: {
         __code,
-        rule: 'FacadeCommand',
+        rule: RULE,
         name,
         infos,
         description: context.createDesc(desc as any),

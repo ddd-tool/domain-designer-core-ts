@@ -23,7 +23,18 @@ import {
   DomainDesignReadModelProvider,
 } from './define'
 
-export type LinkType = 'Depends' | 'Read'
+export type LinkType = 'Association' | 'Dependency' | 'Aggregation' | 'Composition'
+type Rule =
+  | 'Info'
+  | 'Actor'
+  | 'Command'
+  | 'FacadeCommand'
+  | 'Agg'
+  | 'Event'
+  | 'Policy'
+  | 'Service'
+  | 'System'
+  | 'ReadModel'
 
 export function genId(): string {
   const id = nanoid()
@@ -85,17 +96,17 @@ function createInternalContext(initFn: ContextInitializer) {
       }
       userStories[name] = workflowNames
     },
-    linkTo(from: string, to: string, linkType: LinkType = 'Depends') {
+    linkTo(srcRule: Rule, srcCode: string, targetRule: Rule, targetCode: string, linkType: LinkType = 'Association') {
       if (currentWorkflowName && workflows[currentWorkflowName]) {
         if (
           workflows[currentWorkflowName].length === 0 ||
-          workflows[currentWorkflowName][workflows[currentWorkflowName].length - 1] !== from
+          workflows[currentWorkflowName][workflows[currentWorkflowName].length - 1] !== srcCode
         ) {
-          workflows[currentWorkflowName].push(from)
+          workflows[currentWorkflowName].push(srcCode)
         }
-        workflows[currentWorkflowName].push(to)
+        workflows[currentWorkflowName].push(targetCode)
       }
-      links[`${from},${to}`] = linkType
+      links[`${srcRule},${srcCode},${targetRule},${targetCode}`] = linkType
     },
     getId() {
       return initResult.id

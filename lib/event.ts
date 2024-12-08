@@ -12,6 +12,7 @@ import {
 } from './define'
 
 export function eventProvider(designId: string): DomainDesignEventProvider {
+  const RULE = 'Event'
   return <INFOS extends DomainDesignInfos>(
     name: string,
     infos: NonEmptyObject<INFOS>,
@@ -24,11 +25,11 @@ export function eventProvider(designId: string): DomainDesignEventProvider {
     function policy(name: string, desc?: string | DomainDesignDesc): DomainDesignPolicy
     function policy(param1: DomainDesignPolicy | string, desc?: string | DomainDesignDesc): DomainDesignPolicy {
       if (typeof param1 === 'object') {
-        context.linkTo(__code, param1._attributes.__code)
+        context.linkTo(RULE, __code, param1._attributes.rule, param1._attributes.__code)
         return param1
       }
       const p = context.createPolicy(param1, desc)
-      context.linkTo(__code, p._attributes.__code)
+      context.linkTo(RULE, __code, p._attributes.rule, p._attributes.__code)
       return p
     }
 
@@ -36,11 +37,11 @@ export function eventProvider(designId: string): DomainDesignEventProvider {
     function system(name: string, desc?: string | DomainDesignDesc): DomainDesignSystem
     function system(param1: DomainDesignSystem | string, desc?: string | DomainDesignDesc): DomainDesignSystem {
       if (typeof param1 === 'object') {
-        context.linkTo(__code, param1._attributes.__code)
+        context.linkTo(RULE, __code, param1._attributes.rule, param1._attributes.__code)
         return param1
       }
       const s = context.createSystem(param1, desc)
-      context.linkTo(__code, s._attributes.__code)
+      context.linkTo(RULE, __code, s._attributes.rule, s._attributes.__code)
       return s
     }
 
@@ -56,17 +57,17 @@ export function eventProvider(designId: string): DomainDesignEventProvider {
       desc?: string | DomainDesignDesc
     ): READ_MODEL | DomainDesignReadModel<INFOS> {
       if (typeof param1 !== 'string') {
-        context.linkTo(__code, param1._attributes.__code)
+        context.linkTo(RULE, __code, param1._attributes.rule, param1._attributes.__code, 'Aggregation')
         return param1
       }
       const c = context.createReadModel(name, infos!, desc)
-      context.linkTo(__code, c._attributes.__code)
+      context.linkTo(RULE, __code, c._attributes.rule, c._attributes.__code, 'Aggregation')
       return c
     }
     const event: DomainDesignEvent<INFOS> = {
       _attributes: {
         __code,
-        rule: 'Event',
+        rule: RULE,
         name,
         infos,
         description: context.createDesc(desc as any),

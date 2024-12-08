@@ -78,10 +78,15 @@ it('连接', () => {
   type Node = {
     _attributes: {
       __code: string
+      rule: string
     }
   }
-  function checkLink(from: Node, to: Node, linkType: LinkType = 'Depends') {
-    expect(context.getLinks()[`${from._attributes.__code},${to._attributes.__code}`]).toBe(linkType)
+  function checkLink(from: Node, to: Node, linkType: LinkType = 'Association') {
+    expect(
+      context.getLinks()[
+        `${from._attributes.rule},${from._attributes.__code},${to._attributes.rule},${to._attributes.__code}`
+      ]
+    ).toBe(linkType)
   }
   checkLink(用户, 命令1)
   checkLink(命令1, 聚合)
@@ -91,8 +96,8 @@ it('连接', () => {
   checkLink(事件, 外部系统)
   checkLink(用户, 命令2)
   checkLink(命令2, 服务)
-  checkLink(事件, 读模型)
-  checkLink(用户, 读模型, 'Read')
+  checkLink(事件, 读模型, 'Aggregation')
+  checkLink(用户, 读模型, 'Dependency')
 })
 
 it('命令内部字段', () => {

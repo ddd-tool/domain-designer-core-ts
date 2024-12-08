@@ -10,12 +10,13 @@ import {
 } from './define'
 
 export function createServiceProvider(designId: string): DomainDesignServiceProvider {
+  const RULE = 'Service'
   return (name: string, desc?: string | DomainDesignDesc) => {
     const context = useInternalContext(designId)
     const __code = genId()
 
     function agg<AGG extends DomainDesignAgg<any>>(a: AGG): AGG {
-      context.linkTo(__code, a._attributes.__code)
+      context.linkTo(RULE, __code, a._attributes.rule, a._attributes.__code)
       return a
     }
 
@@ -31,17 +32,17 @@ export function createServiceProvider(designId: string): DomainDesignServiceProv
       desc?: string | DomainDesignDesc
     ): COMMAND | DomainDesignCommand<INFOS> {
       if (typeof param1 === 'object') {
-        context.linkTo(__code, param1._attributes.__code)
+        context.linkTo(RULE, __code, param1._attributes.rule, param1._attributes.__code)
         return param1
       }
       const a = context.createCommand(param1, infos!, desc)
-      context.linkTo(__code, a._attributes.__code)
+      context.linkTo(RULE, __code, a._attributes.rule, a._attributes.__code)
       return a
     }
     const service: DomainDesignService = {
       _attributes: {
         __code,
-        rule: 'Service',
+        rule: RULE,
         name,
         description: context.createDesc(desc as any),
       },

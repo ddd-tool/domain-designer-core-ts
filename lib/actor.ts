@@ -12,6 +12,7 @@ import {
 } from './define'
 
 export function createActorProvider(designId: string): DomainDesignActorProvider {
+  const RULE = 'Actor'
   return (name: string, desc?: string | DomainDesignDesc) => {
     const context = useInternalContext(designId)
     const __code = genId()
@@ -27,11 +28,11 @@ export function createActorProvider(designId: string): DomainDesignActorProvider
       desc?: string | DomainDesignDesc
     ): COMMAND | DomainDesignCommand<INFOS> {
       if (typeof param1 !== 'string') {
-        context.linkTo(__code, param1._attributes.__code)
+        context.linkTo(RULE, __code, param1._attributes.rule, param1._attributes.__code)
         return param1
       }
       const c = context.createCommand(name, infos!, desc)
-      context.linkTo(__code, c._attributes.__code)
+      context.linkTo(RULE, __code, c._attributes.rule, c._attributes.__code)
       return c
     }
 
@@ -47,11 +48,11 @@ export function createActorProvider(designId: string): DomainDesignActorProvider
       desc?: string | DomainDesignDesc
     ): FACADECMD | DomainDesignFacadeCommand<INFOS> {
       if (typeof param1 !== 'string') {
-        context.linkTo(__code, param1._attributes.__code)
+        context.linkTo(RULE, __code, param1._attributes.rule, param1._attributes.__code)
         return param1
       }
       const c = context.createFacadeCommand(name, infos!, desc)
-      context.linkTo(__code, c._attributes.__code)
+      context.linkTo(RULE, __code, c._attributes.rule, c._attributes.__code)
       return c
     }
 
@@ -67,17 +68,17 @@ export function createActorProvider(designId: string): DomainDesignActorProvider
       desc?: string | DomainDesignDesc
     ): READ_MODEL | DomainDesignReadModel<INFOS> {
       if (typeof param1 !== 'string') {
-        context.linkTo(__code, param1._attributes.__code, 'Read')
+        context.linkTo(RULE, __code, param1._attributes.rule, param1._attributes.__code, 'Dependency')
         return param1
       }
       const c = context.createReadModel(name, infos!, desc)
-      context.linkTo(__code, c._attributes.__code, 'Read')
+      context.linkTo(RULE, __code, c._attributes.rule, c._attributes.__code, 'Dependency')
       return c
     }
     const actor: DomainDesignActor = {
       _attributes: {
         __code,
-        rule: 'Actor',
+        rule: RULE,
         name,
         description: context.createDesc(desc as any),
       },

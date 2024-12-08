@@ -10,6 +10,7 @@ import {
 } from './define'
 
 export function createAggProvider(designId: string): DomainDesignAggProvider {
+  const RULE = 'Agg'
   return <INFOS extends DomainDesignInfos>(
     name: string,
     infoInitializer: NonEmptyInitFunc<() => INFOS> | NonEmptyObject<INFOS>,
@@ -31,17 +32,17 @@ export function createAggProvider(designId: string): DomainDesignAggProvider {
       desc?: string | DomainDesignDesc
     ): EVENT | DomainDesignEvent<INFOS> {
       if (typeof param1 !== 'string') {
-        context.linkTo(__code, param1._attributes.__code)
+        context.linkTo(RULE, __code, param1._attributes.rule, param1._attributes.__code)
         return param1
       }
       const e = context.createEvent(param1, infos!, desc)
-      context.linkTo(__code, e._attributes.__code)
+      context.linkTo(RULE, __code, e._attributes.rule, e._attributes.__code)
       return e as DomainDesignEvent<INFOS>
     }
     const agg: DomainDesignAgg<INFOS> = {
       _attributes: {
         __code,
-        rule: 'Agg',
+        rule: RULE,
         name,
         infos,
         description: context.createDesc(desc as any),

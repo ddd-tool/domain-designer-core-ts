@@ -10,6 +10,7 @@ import {
 } from './define'
 
 export function createSystemProvider(designId: string): DomainDesignSystemProvider {
+  const RULE = 'System'
   return (name: string, desc?: string | DomainDesignDesc) => {
     const context = useInternalContext(designId)
     const __code = genId()
@@ -25,11 +26,11 @@ export function createSystemProvider(designId: string): DomainDesignSystemProvid
       desc?: string | DomainDesignDesc
     ): COMMAND | DomainDesignCommand<INFOS> {
       if (typeof param1 === 'object') {
-        context.linkTo(__code, param1._attributes.__code)
+        context.linkTo(RULE, __code, param1._attributes.rule, param1._attributes.__code)
         return param1
       } else {
         const c = context.createCommand(param1, infos!, desc)
-        context.linkTo(__code, c._attributes.__code)
+        context.linkTo(RULE, __code, c._attributes.rule, c._attributes.__code)
         return c
       }
     }
@@ -46,18 +47,18 @@ export function createSystemProvider(designId: string): DomainDesignSystemProvid
       desc?: string | DomainDesignDesc
     ): FACADECMD | DomainDesignFacadeCommand<INFOS> {
       if (typeof param1 === 'object') {
-        context.linkTo(__code, param1._attributes.__code)
+        context.linkTo(RULE, __code, param1._attributes.rule, param1._attributes.__code)
         return param1
       } else {
         const c = context.createFacadeCommand(param1, infos!, desc)
-        context.linkTo(__code, c._attributes.__code)
+        context.linkTo(RULE, __code, c._attributes.rule, c._attributes.__code)
         return c
       }
     }
     const system: DomainDesignSystem = {
       _attributes: {
         __code,
-        rule: 'System',
+        rule: RULE,
         name,
         description: context.createDesc(desc as any),
       },
