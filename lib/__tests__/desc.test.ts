@@ -4,21 +4,15 @@ import { createDomainDesigner } from '..'
 it('字符串转换模板函数', () => {
   const d = createDomainDesigner()
   const desc = d.desc('default')
-  const agg = d.agg(
-    'agg',
-    {
-      id: d.info.field.id('id'),
-    },
-    ''
-  )
-  const event = agg.event('event', { id: agg.inner.id }, '')
+  const agg = d.agg('agg', [d.info.field.id('id')], '')
+  const event = agg.event('event', [agg.inner.id], '')
   const policy = event.policy('policy', '')
   const actor = d.actor('actor', '')
   const system = d.system('system', '')
   const service = d.service('service', '')
   const infoId = d.info.field.id('infoId', '')
-  const command = d.command('command', { id: agg.inner.id }, '')
-  const facadeCmd = d.facadeCmd('facadeCmd', { id: agg.inner.id }, '')
+  const command = d.command('command', [agg.inner.id], '')
+  const facadeCmd = d.facadeCmd('facadeCmd', [agg.inner.id], '')
   expect(desc._attributes.template.reduce).instanceOf(Function)
   expect(agg._attributes.description?._attributes.template.reduce).instanceOf(Function)
   expect(event._attributes.description?._attributes.template.reduce).instanceOf(Function)
@@ -33,17 +27,15 @@ it('字符串转换模板函数', () => {
 
 it('字符串模板类型校验', () => {
   const d = createDomainDesigner()
-  const agg = d.agg('agg', {
-    id: d.info.field.id('id'),
-  })
-  const event = d.event('event', { id: agg.inner.id })
+  const agg = d.agg('agg', [d.info.field.id('id')])
+  const event = d.event('event', [agg.inner.id])
   const policy = d.policy('policy')
   const actor = d.actor('actor')
   const system = d.system('system')
   const service = d.service('service')
   const infoId = d.info.field.id('infoId')
-  const command = d.command('command', { id: agg.inner.id })
-  const facadeCmd = d.facadeCmd('facadeCmd', { id: agg.inner.id })
+  const command = d.command('command', [agg.inner.id])
+  const facadeCmd = d.facadeCmd('facadeCmd', [agg.inner.id])
   const desc = d.desc`
     ${agg}
     ${event}

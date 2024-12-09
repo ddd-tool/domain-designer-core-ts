@@ -3,12 +3,14 @@ import {
   DomainDesignCommand,
   DomainDesignDesc,
   DomainDesignFacadeCommand,
-  DomainDesignInfos,
   DomainDesignActor,
   DomainDesignActorProvider,
-  NonEmptyObject,
   DomainDesignReadModel,
   NonEmptyInitFunc,
+  NonEmptyArray,
+  DomainDesignInfo,
+  DomainDesignInfoType,
+  CustomInfoArrayToInfoObject,
 } from './define'
 
 export function createActorProvider(designId: string): DomainDesignActorProvider {
@@ -17,16 +19,19 @@ export function createActorProvider(designId: string): DomainDesignActorProvider
     const context = useInternalContext(designId)
     const __code = genId()
     function command<COMMAND extends DomainDesignCommand<any>>(c: COMMAND): COMMAND
-    function command<INFOS extends DomainDesignInfos>(
-      name: string,
-      infos: NonEmptyObject<INFOS>,
-      desc?: string | DomainDesignDesc
-    ): DomainDesignCommand<INFOS>
-    function command<COMMAND extends DomainDesignCommand<any>, INFOS extends DomainDesignInfos>(
+    function command<
+      G_NAME extends string,
+      ARR extends NonEmptyArray<DomainDesignInfo<DomainDesignInfoType, G_NAME> | G_NAME>
+    >(name: string, infos: ARR, desc?: string | DomainDesignDesc): DomainDesignCommand<CustomInfoArrayToInfoObject<ARR>>
+    function command<
+      COMMAND extends DomainDesignCommand<any>,
+      G_NAME extends string,
+      ARR extends NonEmptyArray<DomainDesignInfo<DomainDesignInfoType, G_NAME> | G_NAME>
+    >(
       param1: COMMAND | string,
-      infos?: NonEmptyObject<INFOS>,
+      infos?: ARR,
       desc?: string | DomainDesignDesc
-    ): COMMAND | DomainDesignCommand<INFOS> {
+    ): COMMAND | DomainDesignCommand<CustomInfoArrayToInfoObject<ARR>> {
       if (typeof param1 !== 'string') {
         context.linkTo(RULE, __code, param1._attributes.rule, param1._attributes.__code)
         return param1
@@ -37,16 +42,23 @@ export function createActorProvider(designId: string): DomainDesignActorProvider
     }
 
     function facadeCmd<FACADECMD extends DomainDesignFacadeCommand<any>>(param: FACADECMD): FACADECMD
-    function facadeCmd<INFOS extends DomainDesignInfos>(
+    function facadeCmd<
+      G_NAME extends string,
+      ARR extends NonEmptyArray<DomainDesignInfo<DomainDesignInfoType, G_NAME> | G_NAME>
+    >(
       name: string,
-      infos: NonEmptyObject<INFOS>,
+      infos: ARR,
       desc?: string | DomainDesignDesc
-    ): INFOS
-    function facadeCmd<FACADECMD extends DomainDesignFacadeCommand<any>, INFOS extends DomainDesignInfos>(
+    ): DomainDesignFacadeCommand<CustomInfoArrayToInfoObject<ARR>>
+    function facadeCmd<
+      FACADECMD extends DomainDesignFacadeCommand<any>,
+      G_NAME extends string,
+      ARR extends NonEmptyArray<DomainDesignInfo<DomainDesignInfoType, G_NAME> | G_NAME>
+    >(
       param1: FACADECMD | string,
-      infos?: NonEmptyObject<INFOS>,
+      infos?: ARR,
       desc?: string | DomainDesignDesc
-    ): FACADECMD | DomainDesignFacadeCommand<INFOS> {
+    ): FACADECMD | DomainDesignFacadeCommand<CustomInfoArrayToInfoObject<ARR>> {
       if (typeof param1 !== 'string') {
         context.linkTo(RULE, __code, param1._attributes.rule, param1._attributes.__code)
         return param1
@@ -57,16 +69,23 @@ export function createActorProvider(designId: string): DomainDesignActorProvider
     }
 
     function readModel<READ_MODEL extends DomainDesignReadModel<any>>(param: READ_MODEL): READ_MODEL
-    function readModel<INFOS extends DomainDesignInfos>(
+    function readModel<
+      G_NAME extends string,
+      ARR extends NonEmptyArray<DomainDesignInfo<DomainDesignInfoType, G_NAME> | G_NAME>
+    >(
       name: string,
-      infos: NonEmptyObject<INFOS> | NonEmptyInitFunc<() => INFOS>,
+      infos: ARR | NonEmptyInitFunc<() => ARR>,
       desc?: string | DomainDesignDesc
-    ): DomainDesignReadModel<INFOS>
-    function readModel<READ_MODEL extends DomainDesignReadModel<any>, INFOS extends DomainDesignInfos>(
+    ): DomainDesignReadModel<CustomInfoArrayToInfoObject<ARR>>
+    function readModel<
+      READ_MODEL extends DomainDesignReadModel<any>,
+      G_NAME extends string,
+      ARR extends NonEmptyArray<DomainDesignInfo<DomainDesignInfoType, G_NAME> | G_NAME>
+    >(
       param1: READ_MODEL | string,
-      infos?: NonEmptyObject<INFOS> | NonEmptyInitFunc<() => INFOS>,
+      infos?: ARR | NonEmptyInitFunc<() => ARR>,
       desc?: string | DomainDesignDesc
-    ): READ_MODEL | DomainDesignReadModel<INFOS> {
+    ): READ_MODEL | DomainDesignReadModel<CustomInfoArrayToInfoObject<ARR>> {
       if (typeof param1 !== 'string') {
         context.linkTo(RULE, __code, param1._attributes.rule, param1._attributes.__code, 'Dependency')
         return param1

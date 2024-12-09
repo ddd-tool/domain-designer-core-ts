@@ -4,42 +4,55 @@ import {
   DomainDesignAggProvider,
   DomainDesignDesc,
   DomainDesignEvent,
-  DomainDesignInfos,
+  DomainDesignInfo,
+  DomainDesignInfoType,
+  NonEmptyArray,
   NonEmptyInitFunc,
   NonEmptyObject,
+  CustomInfoArrayToInfoObject,
 } from './define'
 
 export function createAggProvider(designId: string): DomainDesignAggProvider {
   const RULE = 'Agg'
-  return <INFOS extends DomainDesignInfos>(
+  return <G_NAME extends string, ARR extends NonEmptyArray<DomainDesignInfo<DomainDesignInfoType, G_NAME> | G_NAME>>(
     name: string,
-    infoInitializer: NonEmptyInitFunc<() => INFOS> | NonEmptyObject<INFOS>,
+    infoInitializer: ARR | NonEmptyInitFunc<() => ARR>,
     desc?: string | DomainDesignDesc
-  ): DomainDesignAgg<INFOS> => {
+  ): DomainDesignAgg<CustomInfoArrayToInfoObject<ARR>> => {
     const context = useInternalContext(designId)
-    const infos = infoInitializer instanceof Function ? infoInitializer() : infoInitializer
+    const infos = context.customInfoArrToInfoObj(
+      infoInitializer instanceof Function ? infoInitializer() : infoInitializer
+    )
     const __code = genId()
 
     function event<EVENT extends DomainDesignEvent<any>>(e: EVENT): EVENT
-    function event<INFOS extends DomainDesignInfos>(
+    function event<
+      G_NAME extends string,
+      INFOS extends NonEmptyArray<DomainDesignInfo<DomainDesignInfoType, G_NAME> | G_NAME>
+    >(
       name: string,
       infos: NonEmptyObject<INFOS>,
       desc?: string | DomainDesignDesc
-    ): DomainDesignEvent<INFOS>
-    function event<EVENT extends DomainDesignEvent<any>, INFOS extends DomainDesignInfos>(
+    ): DomainDesignEvent<CustomInfoArrayToInfoObject<INFOS>>
+    function event<
+      EVENT extends DomainDesignEvent<any>,
+      G_NAME extends string,
+      ARR extends NonEmptyArray<DomainDesignInfo<DomainDesignInfoType, G_NAME> | G_NAME>
+    >(
       param1: EVENT | string,
-      infos?: NonEmptyObject<INFOS>,
+      infos?: ARR,
       desc?: string | DomainDesignDesc
-    ): EVENT | DomainDesignEvent<INFOS> {
+    ): EVENT | DomainDesignEvent<CustomInfoArrayToInfoObject<ARR>> {
       if (typeof param1 !== 'string') {
         context.linkTo(RULE, __code, param1._attributes.rule, param1._attributes.__code)
         return param1
       }
       const e = context.createEvent(param1, infos!, desc)
       context.linkTo(RULE, __code, e._attributes.rule, e._attributes.__code)
-      return e as DomainDesignEvent<INFOS>
+      return e
     }
-    const agg: DomainDesignAgg<INFOS> = {
+
+    const agg: DomainDesignAgg<CustomInfoArrayToInfoObject<ARR>> = {
       _attributes: {
         __code,
         rule: RULE,

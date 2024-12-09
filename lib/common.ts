@@ -21,6 +21,9 @@ import {
   DomainDesignSystemProvider,
   DomainDesignReadModel,
   DomainDesignReadModelProvider,
+  CustomInfoArrayToInfoObject,
+  DomainDesignInfo,
+  DomainDesignInfoType,
 } from './define'
 
 export type LinkType = 'Association' | 'Dependency' | 'Aggregation' | 'Composition'
@@ -64,6 +67,7 @@ const _internalContextMap: Record<string, DomainDesignInternalContext> = {}
 
 function createInternalContext(initFn: ContextInitializer) {
   const initResult = initFn()
+  const info = initResult.createInfo()
 
   //NOTE: arrows的键为"srcid,destid"
   const links: Record<string, LinkType> = {}
@@ -186,8 +190,21 @@ function createInternalContext(initFn: ContextInitializer) {
       idMap[readModel._attributes.__code] = readModel
       readModels.push(readModel)
     },
+    customInfoArrToInfoObj<G_NAME extends string, ARR extends NonEmptyArray<DomainDesignInfo<any, G_NAME> | G_NAME>>(
+      arr: ARR
+    ): CustomInfoArrayToInfoObject<ARR> {
+      type T = Record<string, DomainDesignInfo<DomainDesignInfoType, G_NAME>>
+      return arr.reduce((map, v) => {
+        if (typeof v === 'string') {
+          ;(map as T)[v] = info.any(v)
+        } else {
+          ;(map as T)[v._attributes.name] = v
+        }
+        return map
+      }, {} as CustomInfoArrayToInfoObject<ARR>)
+    },
     createDesc: initResult.createDesc,
-    info: initResult.createInfo(),
+    info,
     createPersion: initResult.createActor,
     createCommand: initResult.createCommand,
     createFacadeCommand: initResult.createFacadeCommand,

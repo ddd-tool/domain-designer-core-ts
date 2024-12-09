@@ -3,7 +3,7 @@ import { DomainDesignDesc, DomainDesignInfo, DomainDesignInfoFieldProvider, Doma
 
 export function createInfoFieldProvider(designId: string): DomainDesignInfoFieldProvider {
   function createProviderBySubtype(subtype: DomainDesignInfoSubtype<'Field'>) {
-    return (name: string, desc?: string | DomainDesignDesc): DomainDesignInfo<'Field'> => {
+    return <NAME extends string>(name: NAME, desc?: string | DomainDesignDesc): DomainDesignInfo<'Field', NAME> => {
       const context = useInternalContext(designId)
       return {
         _attributes: {

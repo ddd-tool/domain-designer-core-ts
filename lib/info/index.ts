@@ -5,13 +5,14 @@ import type {
   DomainDesignInfoProvider,
   DomainDesignInfoType,
   DomainDesignInfoFuncDependsOn,
+  NonEmptyArray,
 } from '../define'
 import { createInfoFieldProvider } from './field'
 
 export function createInfoProvider(designId: string): DomainDesignInfoProvider {
   return () => {
     return {
-      any(name: string, desc?: string | DomainDesignDesc): DomainDesignInfo<'Any'> {
+      any<NAME extends string>(name: NAME, desc?: string | DomainDesignDesc): DomainDesignInfo<'Any', NAME> {
         const context = useInternalContext(designId)
         return {
           _attributes: {
@@ -24,7 +25,7 @@ export function createInfoProvider(designId: string): DomainDesignInfoProvider {
           },
         }
       },
-      doc(name: string, desc?: string | DomainDesignDesc): DomainDesignInfo<'Document'> {
+      doc<NAME extends string>(name: NAME, desc?: string | DomainDesignDesc): DomainDesignInfo<'Document', NAME> {
         const context = useInternalContext(designId)
         return {
           _attributes: {
@@ -37,18 +38,26 @@ export function createInfoProvider(designId: string): DomainDesignInfoProvider {
           },
         }
       },
-      func(
-        name: string,
-        dependOn: DomainDesignInfoFuncDependsOn,
+      func<NAME extends string>(
+        name: NAME,
+        dependOn: NonEmptyArray<DomainDesignInfoFuncDependsOn | string>, //DomainDesignInfoFuncDependsOn,
         desc?: string | DomainDesignDesc
-      ): DomainDesignInfo<'Function'> {
+      ): DomainDesignInfo<'Function', NAME> {
         const context = useInternalContext(designId)
+        const subtype = dependOn.reduce((arr, item) => {
+          if (typeof item === 'string') {
+            arr.push(context.info.any(item))
+          } else {
+            arr.push(item)
+          }
+          return arr
+        }, [] as DomainDesignInfoFuncDependsOn[])
         return {
           _attributes: {
             __code: genId(),
             rule: 'Info',
             type: 'Function',
-            subtype: dependOn,
+            subtype,
             name,
             description: context.createDesc(desc as any),
           },
@@ -59,8 +68,8 @@ export function createInfoProvider(designId: string): DomainDesignInfoProvider {
   }
 }
 
-export function isDomainDesignInfoFunc(
-  info: DomainDesignInfo<DomainDesignInfoType>
-): info is DomainDesignInfo<'Function'> {
+export function isDomainDesignInfoFunc<NAME extends string>(
+  info: DomainDesignInfo<DomainDesignInfoType, NAME>
+): info is DomainDesignInfo<'Function', NAME> {
   return info._attributes.rule === 'Info' && info._attributes.type === 'Function'
 }

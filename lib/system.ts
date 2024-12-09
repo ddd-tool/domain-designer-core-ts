@@ -1,12 +1,14 @@
 import { genId, useInternalContext } from './common'
 import {
+  CustomInfoArrayToInfoObject,
   DomainDesignCommand,
   DomainDesignDesc,
   DomainDesignFacadeCommand,
-  DomainDesignInfos,
+  DomainDesignInfo,
+  DomainDesignInfoType,
   DomainDesignSystem,
   DomainDesignSystemProvider,
-  NonEmptyObject,
+  NonEmptyArray,
 } from './define'
 
 export function createSystemProvider(designId: string): DomainDesignSystemProvider {
@@ -15,37 +17,46 @@ export function createSystemProvider(designId: string): DomainDesignSystemProvid
     const context = useInternalContext(designId)
     const __code = genId()
     function command<COMMAND extends DomainDesignCommand<any>>(param: COMMAND): COMMAND
-    function command<INFOS extends DomainDesignInfos>(
-      name: string,
-      infos: NonEmptyObject<INFOS>,
-      desc?: string | DomainDesignDesc
-    ): DomainDesignCommand<INFOS>
-    function command<COMMAND extends DomainDesignCommand<any>, INFOS extends DomainDesignInfos>(
+    function command<
+      G_NAME extends string,
+      ARR extends NonEmptyArray<DomainDesignInfo<DomainDesignInfoType, G_NAME> | G_NAME>
+    >(name: string, infos: ARR, desc?: string | DomainDesignDesc): DomainDesignCommand<CustomInfoArrayToInfoObject<ARR>>
+    function command<
+      COMMAND extends DomainDesignCommand<any>,
+      G_NAME extends string,
+      ARR extends NonEmptyArray<DomainDesignInfo<DomainDesignInfoType, G_NAME> | G_NAME>
+    >(
       param1: COMMAND | string,
-      infos?: NonEmptyObject<INFOS>,
+      infos?: ARR,
       desc?: string | DomainDesignDesc
-    ): COMMAND | DomainDesignCommand<INFOS> {
+    ): COMMAND | DomainDesignCommand<CustomInfoArrayToInfoObject<ARR>> {
       if (typeof param1 === 'object') {
         context.linkTo(RULE, __code, param1._attributes.rule, param1._attributes.__code)
         return param1
-      } else {
-        const c = context.createCommand(param1, infos!, desc)
-        context.linkTo(RULE, __code, c._attributes.rule, c._attributes.__code)
-        return c
       }
+      const a = context.createCommand(param1, infos!, desc)
+      context.linkTo(RULE, __code, a._attributes.rule, a._attributes.__code)
+      return a
     }
 
     function facadeCmd<FACADECMD extends DomainDesignFacadeCommand<any>>(param: FACADECMD): FACADECMD
-    function facadeCmd<INFOS extends DomainDesignInfos>(
+    function facadeCmd<
+      G_NAME extends string,
+      ARR extends NonEmptyArray<DomainDesignInfo<DomainDesignInfoType, G_NAME> | G_NAME>
+    >(
       name: string,
-      infos: NonEmptyObject<INFOS>,
+      infos: ARR,
       desc?: string | DomainDesignDesc
-    ): DomainDesignFacadeCommand<INFOS>
-    function facadeCmd<FACADECMD extends DomainDesignFacadeCommand<any>, INFOS extends DomainDesignInfos>(
+    ): DomainDesignFacadeCommand<CustomInfoArrayToInfoObject<ARR>>
+    function facadeCmd<
+      FACADECMD extends DomainDesignFacadeCommand<any>,
+      G_NAME extends string,
+      ARR extends NonEmptyArray<DomainDesignInfo<DomainDesignInfoType, G_NAME> | G_NAME>
+    >(
       param1: FACADECMD | string,
-      infos?: NonEmptyObject<INFOS>,
+      infos?: ARR,
       desc?: string | DomainDesignDesc
-    ): FACADECMD | DomainDesignFacadeCommand<INFOS> {
+    ): FACADECMD | DomainDesignFacadeCommand<CustomInfoArrayToInfoObject<ARR>> {
       if (typeof param1 === 'object') {
         context.linkTo(RULE, __code, param1._attributes.rule, param1._attributes.__code)
         return param1
