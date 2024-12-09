@@ -41,7 +41,7 @@ it('self design', () => {
   })
 
   const 未确定软件价值 = d.event('未确定软件价值', {
-    模糊地带: d.info.field('模糊地带'),
+    模糊地带: d.info.any('模糊地带'),
   })
 
   const 沟通策略 = d.policy(

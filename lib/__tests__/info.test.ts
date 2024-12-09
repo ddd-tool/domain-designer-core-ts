@@ -3,7 +3,7 @@ import { createDomainDesigner } from '..'
 
 it('info类型', () => {
   const d = createDomainDesigner()
-  const infoField = d.info.field('infoField')
+  const infoField = d.info.field.any('infoField')
   const infoFieldId = d.info.field.id('infoFieldId')
   const infoFieldTime = d.info.field.time('infoFieldTime')
   const infoFieldBool = d.info.field.bool('infoFieldBool')
@@ -12,7 +12,7 @@ it('info类型', () => {
   const infoFieldEnum = d.info.field.enum('infoFieldEnum')
 
   expect(infoField._attributes.type === 'Field').toBeTruthy()
-  expect(infoField._attributes.subtype === 'Unknown').toBeTruthy()
+  expect(infoField._attributes.subtype === 'Any').toBeTruthy()
   expect(infoFieldId._attributes.type === 'Field').toBeTruthy()
   expect(infoFieldId._attributes.subtype === 'Id').toBeTruthy()
   expect(infoFieldTime._attributes.type === 'Field').toBeTruthy()

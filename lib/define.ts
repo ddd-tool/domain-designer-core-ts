@@ -25,21 +25,24 @@ export type DomainDesignDescValue =
 
 // ========================== 信息 ==========================
 export type DomainDesignInfoProvider = () => {
-  field: DomainDesignInfoFieldProvider
+  any: (name: string, desc?: string | DomainDesignDesc) => DomainDesignInfo<'Any'>
   doc: (name: string, desc?: string | DomainDesignDesc) => DomainDesignInfo<'Document'>
   func: (
     name: string,
     dependsOn: DomainDesignInfoFuncDependsOn,
     desc?: string | DomainDesignDesc
   ) => DomainDesignInfo<'Function'>
+  field: DomainDesignInfoFieldProvider
 }
-export type DomainDesignInfoType = 'Field' | 'Document' | 'Function'
+export type DomainDesignInfoType = 'Field' | 'Document' | 'Function' | 'Any'
 export type DomainDesignInfoSubtype<TYPE extends DomainDesignInfoType> = TYPE extends 'Field'
-  ? 'Id' | 'Time' | 'Enum' | 'Unknown' | 'Number' | 'String' | 'Boolean'
+  ? 'Id' | 'Time' | 'Enum' | 'Number' | 'String' | 'Boolean' | 'Any'
   : TYPE extends 'Document'
   ? 'None'
   : TYPE extends 'Function'
   ? DomainDesignInfoFuncDependsOn
+  : TYPE extends 'Any'
+  ? 'None'
   : never
 export type DomainDesignInfo<TYPE extends DomainDesignInfoType> = Readonly<{
   _attributes: {
@@ -51,10 +54,13 @@ export type DomainDesignInfo<TYPE extends DomainDesignInfoType> = Readonly<{
     description?: DomainDesignDesc
   }
 }>
+export type StringArrayToInfos<ARR extends Array<any>> = {
+  [K in ARR[number]]: DomainDesignInfo<'Any'>
+}
 export type DomainDesignInfoFuncDependsOn = NonEmptyArray<DomainDesignInfo<Exclude<DomainDesignInfoType, 'Function'>>>
 export type DomainDesignInfos = NonEmptyObject<Record<string, DomainDesignInfo<DomainDesignInfoType>>>
 export interface DomainDesignInfoFieldProvider {
-  (name: string, desc?: string | DomainDesignDesc): DomainDesignInfo<'Field'>
+  any(name: string, desc?: string | DomainDesignDesc): DomainDesignInfo<'Field'>
   id(name: string, desc?: string | DomainDesignDesc): DomainDesignInfo<'Field'>
   time(name: string, desc?: string | DomainDesignDesc): DomainDesignInfo<'Field'>
   enum(name: string, desc?: string | DomainDesignDesc): DomainDesignInfo<'Field'>

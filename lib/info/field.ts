@@ -18,14 +18,13 @@ export function createInfoFieldProvider(designId: string): DomainDesignInfoField
     }
   }
 
-  const infoFieldProvider = createProviderBySubtype('Unknown')
-  const provider = infoFieldProvider as DomainDesignInfoFieldProvider
-  provider.str = createProviderBySubtype('String')
-  provider.num = createProviderBySubtype('Number')
-  provider.bool = createProviderBySubtype('Boolean')
-  provider.time = createProviderBySubtype('Time')
-  provider.enum = createProviderBySubtype('Enum')
-  provider.id = createProviderBySubtype('Id')
-
-  return infoFieldProvider as DomainDesignInfoFieldProvider
+  return {
+    any: createProviderBySubtype('Any'),
+    str: createProviderBySubtype('String'),
+    num: createProviderBySubtype('Number'),
+    bool: createProviderBySubtype('Boolean'),
+    time: createProviderBySubtype('Time'),
+    enum: createProviderBySubtype('Enum'),
+    id: createProviderBySubtype('Id'),
+  }
 }

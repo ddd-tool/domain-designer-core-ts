@@ -11,7 +11,19 @@ import { createInfoFieldProvider } from './field'
 export function createInfoProvider(designId: string): DomainDesignInfoProvider {
   return () => {
     return {
-      field: createInfoFieldProvider(designId),
+      any(name: string, desc?: string | DomainDesignDesc): DomainDesignInfo<'Any'> {
+        const context = useInternalContext(designId)
+        return {
+          _attributes: {
+            __code: genId(),
+            rule: 'Info',
+            type: 'Any',
+            subtype: 'None',
+            name,
+            description: context.createDesc(desc as any),
+          },
+        }
+      },
       doc(name: string, desc?: string | DomainDesignDesc): DomainDesignInfo<'Document'> {
         const context = useInternalContext(designId)
         return {
@@ -42,6 +54,7 @@ export function createInfoProvider(designId: string): DomainDesignInfoProvider {
           },
         }
       },
+      field: createInfoFieldProvider(designId),
     }
   }
 }
