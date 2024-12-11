@@ -17,11 +17,13 @@ export function eventProvider(designId: string): DomainDesignEventProvider {
   const RULE = 'Event'
   return <G_NAME extends string, ARR extends NonEmptyArray<DomainDesignInfo<DomainDesignInfoType, G_NAME> | G_NAME>>(
     name: string,
-    infoInitializer: ARR,
+    infoInitializer: ARR | NonEmptyInitFunc<() => ARR>,
     desc?: string | DomainDesignDesc
   ): DomainDesignEvent<CustomInfoArrayToInfoObject<ARR>> => {
     const context = useInternalContext(designId)
-    const infos = context.customInfoArrToInfoObj(infoInitializer)
+    const infos = context.customInfoArrToInfoObj(
+      infoInitializer instanceof Function ? infoInitializer() : infoInitializer
+    )
     const __code = genId()
 
     function policy(param: DomainDesignPolicy): DomainDesignPolicy

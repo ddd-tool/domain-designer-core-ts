@@ -11,17 +11,20 @@ import {
   DomainDesignInfoType,
   DomainDesignInfo,
   CustomInfoArrayToInfoObject,
+  NonEmptyInitFunc,
 } from './define'
 
 export function createCommandProvider(designId: string): DomainDesignCommandProvider {
   const RULE = 'Command'
   return <G_NAME extends string, ARR extends NonEmptyArray<DomainDesignInfo<DomainDesignInfoType, G_NAME> | G_NAME>>(
     name: string,
-    infoInitializer: ARR,
+    infoInitializer: ARR | NonEmptyInitFunc<() => ARR>,
     desc?: string | DomainDesignDesc
   ): DomainDesignCommand<CustomInfoArrayToInfoObject<ARR>> => {
     const context = useInternalContext(designId)
-    const infos = context.customInfoArrToInfoObj(infoInitializer)
+    const infos = context.customInfoArrToInfoObj(
+      infoInitializer instanceof Function ? infoInitializer() : infoInitializer
+    )
     const __code = genId()
 
     function agg<AGG extends DomainDesignAgg<any>>(a: AGG): AGG
@@ -67,11 +70,13 @@ export function createFacadeCmdProvider(designId: string): DomainDesignFacadeCom
   const RULE = 'FacadeCommand'
   return <G_NAME extends string, ARR extends NonEmptyArray<DomainDesignInfo<DomainDesignInfoType, G_NAME> | G_NAME>>(
     name: string,
-    infoInitializer: ARR,
+    infoInitializer: ARR | NonEmptyInitFunc<() => ARR>,
     desc?: string | DomainDesignDesc
   ): DomainDesignFacadeCommand<CustomInfoArrayToInfoObject<ARR>> => {
     const context = useInternalContext(designId)
-    const infos = context.customInfoArrToInfoObj(infoInitializer)
+    const infos = context.customInfoArrToInfoObj(
+      infoInitializer instanceof Function ? infoInitializer() : infoInitializer
+    )
     const __code = genId()
 
     function agg<AGG extends DomainDesignAgg<any>>(a: AGG): AGG

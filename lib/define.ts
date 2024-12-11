@@ -108,7 +108,7 @@ export type DomainDesignCommandProvider = <
   ARR extends NonEmptyArray<DomainDesignInfo<DomainDesignInfoType, G_NAME> | G_NAME>
 >(
   name: string,
-  infos: ARR,
+  infos: ARR | NonEmptyInitFunc<() => ARR>,
   desc?: string | DomainDesignDesc
 ) => DomainDesignCommand<CustomInfoArrayToInfoObject<ARR>>
 export type DomainDesignCommand<INFOS extends DomainDesignInfoObject> = Readonly<{
@@ -133,7 +133,7 @@ export type DomainDesignFacadeCommandProvider = <
   ARR extends NonEmptyArray<DomainDesignInfo<DomainDesignInfoType, G_NAME> | G_NAME>
 >(
   name: string,
-  infos: ARR,
+  infos: ARR | NonEmptyInitFunc<() => ARR>,
   desc?: string | DomainDesignDesc
 ) => DomainDesignFacadeCommand<CustomInfoArrayToInfoObject<ARR>>
 export type DomainDesignFacadeCommand<INFOS extends DomainDesignInfoObject> = Readonly<{
@@ -161,7 +161,7 @@ export type DomainDesignEventProvider = <
   ARR extends NonEmptyArray<DomainDesignInfo<DomainDesignInfoType, G_NAME> | G_NAME>
 >(
   name: string,
-  infos: ARR,
+  infos: ARR | NonEmptyInitFunc<() => ARR>,
   desc?: string | DomainDesignDesc
 ) => DomainDesignEvent<CustomInfoArrayToInfoObject<ARR>>
 export type DomainDesignEvent<INFOS extends DomainDesignInfoObject> = Readonly<{
