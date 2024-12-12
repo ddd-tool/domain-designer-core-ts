@@ -6,7 +6,7 @@ it('', () => {
   const 命令 = d.command('命令', [
     'a',
     d.info.any('b'),
-    d.info.doc('c'),
+    d.info.entity('c', []),
     d.info.func('d', [d.info.any('d')]),
     d.info.field.any('e'),
     d.info.field.bool('f'),
@@ -39,7 +39,7 @@ it('', () => {
   const command = actor.command('命令', ['a1', d.info.field.time('a2')])
   expect(command.inner.a1._attributes.name).toBe('a1')
   expect(command.inner.a2._attributes.name).toBe('a2')
-  const agg = command.agg('聚合', ['b1', d.info.doc('b2'), d.info.func('b3', ['b4', d.info.field.bool('b5')])])
+  const agg = command.agg('聚合', ['b1', d.info.entity('b2'), d.info.func('b3', ['b4', d.info.field.bool('b5')])])
   expect(agg.inner.b1._attributes.name).toBe('b1')
   expect(agg.inner.b2._attributes.name).toBe('b2')
   expect(agg.inner.b3._attributes.name).toBe('b3')

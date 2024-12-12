@@ -25,14 +25,28 @@ export function createInfoProvider(designId: string): DomainDesignInfoProvider {
           },
         }
       },
-      doc<NAME extends string>(name: NAME, desc?: string | DomainDesignDesc): DomainDesignInfo<'Document', NAME> {
+      entity<
+        NAME extends string,
+        G_NAME extends string,
+        ARR extends Array<DomainDesignInfo<DomainDesignInfoType, G_NAME> | G_NAME>
+      >(name: NAME, infos?: ARR, desc?: string | DomainDesignDesc): DomainDesignInfo<'Entity', NAME> {
         const context = useInternalContext(designId)
+        const subtype = !infos
+          ? []
+          : infos.reduce((arr, item) => {
+              if (typeof item === 'string') {
+                arr.push(context.info.field.any(item))
+              } else {
+                arr.push(item)
+              }
+              return arr
+            }, [] as DomainDesignInfo<DomainDesignInfoType, string>[])
         return {
           _attributes: {
             __code: genId(),
             rule: 'Info',
-            type: 'Document',
-            subtype: 'None',
+            type: 'Entity',
+            subtype,
             name,
             description: context.createDesc(desc as any),
           },

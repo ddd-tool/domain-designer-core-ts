@@ -26,10 +26,10 @@ it('info类型', () => {
   expect(infoFieldEnum._attributes.type === 'Field').toBeTruthy()
   expect(infoFieldEnum._attributes.subtype === 'Enum').toBeTruthy()
 
-  const infoDoc = d.info.doc('infoDoc')
-  expect(infoDoc._attributes.type).toEqual('Document')
+  const infoEntity = d.info.entity('infoEntity')
+  expect(infoEntity._attributes.type).toEqual('Entity')
 
-  const infoFunc = d.info.func('infoFunc', [infoFieldId, infoDoc, infoField])
+  const infoFunc = d.info.func('infoFunc', [infoFieldId, infoEntity, infoField])
   expect(infoFunc._attributes.type).toEqual('Function')
   expect(infoFunc._attributes.subtype.length).toEqual(3)
 })

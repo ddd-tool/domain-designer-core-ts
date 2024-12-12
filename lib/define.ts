@@ -26,7 +26,11 @@ export type DomainDesignDescValue =
 // ========================== 信息 ==========================
 export type DomainDesignInfoProvider = () => {
   any: <NAME extends string>(name: NAME, desc?: string | DomainDesignDesc) => DomainDesignInfo<'Any', NAME>
-  doc: <NAME extends string>(name: NAME, desc?: string | DomainDesignDesc) => DomainDesignInfo<'Document', NAME>
+  entity: <NAME extends string, ARR extends Array<DomainDesignInfo<DomainDesignInfoType, string> | string>>(
+    name: NAME,
+    infos?: ARR,
+    desc?: string | DomainDesignDesc
+  ) => DomainDesignInfo<'Entity', NAME>
   func: <NAME extends string>(
     name: NAME,
     dependsOn: NonEmptyArray<DomainDesignInfoFuncDependsOn | string>,
@@ -34,13 +38,15 @@ export type DomainDesignInfoProvider = () => {
   ) => DomainDesignInfo<'Function', NAME>
   field: DomainDesignInfoFieldProvider
 }
-export type DomainDesignInfoType = 'Field' | 'Document' | 'Function' | 'Any'
+export type DomainDesignInfoType = 'Field' | 'Entity' | 'Function' | 'Any'
 export type DomainDesignInfoSubtype<TYPE extends DomainDesignInfoType> = TYPE extends 'Field'
   ? 'Id' | 'Time' | 'Enum' | 'Number' | 'String' | 'Boolean' | 'Any'
   : TYPE extends 'Document'
   ? 'None'
   : TYPE extends 'Function'
   ? DomainDesignInfoFuncDependsOn[]
+  : TYPE extends 'Entity'
+  ? DomainDesignInfo<DomainDesignInfoType, string>[]
   : TYPE extends 'Any'
   ? 'None'
   : never

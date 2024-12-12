@@ -8,11 +8,11 @@ it('self design', () => {
   const 开发人员 = d.actor('开发人员')
 
   const 强类型需求 = (function () {
-    const 现有基础设施 = d.info.doc('现有基础设施')
-    const 现有痛点 = d.info.doc('现有痛点')
-    const 软件应用场景 = d.info.doc('软件应用场景')
-    const 预期业务效果 = d.info.doc('预期业务效果')
-    const 性能指标 = d.info.doc('性能指标')
+    const 现有基础设施 = d.info.entity('现有基础设施')
+    const 现有痛点 = d.info.entity('现有痛点')
+    const 软件应用场景 = d.info.entity('软件应用场景')
+    const 预期业务效果 = d.info.entity('预期业务效果')
+    const 性能指标 = d.info.entity('性能指标')
     const 是否已确定软件价值 = d.info.func('是否已确定软件价值', [
       现有痛点,
       现有基础设施,
@@ -21,8 +21,8 @@ it('self design', () => {
       性能指标,
     ])
     return d.agg('强类型需求', [
-      d.info.doc('UI和UE设计'),
-      d.info.doc('详细设计'),
+      d.info.entity('UI和UE设计'),
+      d.info.entity('详细设计'),
       现有痛点,
       现有基础设施,
       软件应用场景,

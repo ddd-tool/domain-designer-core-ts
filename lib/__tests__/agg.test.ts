@@ -9,7 +9,7 @@ it('agg 定义', () => {
   expect(agg1.inner.field2).not.toBeUndefined()
   expect(agg1.inner.field3).not.toBeUndefined()
 
-  const agg2 = d.agg('agg2', () => ['field1', d.info.field.id('field2'), d.info.doc('field3')])
+  const agg2 = d.agg('agg2', () => ['field1', d.info.field.id('field2'), d.info.entity('field3', [''])])
   expect(agg2._attributes.name).toBe('agg2')
   expect(agg2.inner.field1).not.toBeUndefined()
   expect(agg2.inner.field2).not.toBeUndefined()
