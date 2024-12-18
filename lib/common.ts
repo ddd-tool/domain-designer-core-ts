@@ -155,39 +155,39 @@ function createInternalContext(initFn: ContextInitializer) {
       return readModels
     },
     registerCommand(command: DomainDesignCommand<any>) {
-      idMap[command._attributes.__code] = command
+      idMap[command._attributes.__id] = command
       commands.push(command)
     },
     registerFacadeCommand(command: DomainDesignFacadeCommand<any>) {
-      idMap[command._attributes.__code] = command
+      idMap[command._attributes.__id] = command
       facadeCommands.push(command)
     },
     registerActor(actor: DomainDesignActor) {
-      idMap[actor._attributes.__code] = actor
+      idMap[actor._attributes.__id] = actor
       actors.push(actor)
     },
     registerEvent(event: DomainDesignEvent<any>) {
-      idMap[event._attributes.__code] = event
+      idMap[event._attributes.__id] = event
       events.push(event)
     },
     registerPolicy(policy: DomainDesignPolicy) {
-      idMap[policy._attributes.__code] = policy
+      idMap[policy._attributes.__id] = policy
       policies.push(policy)
     },
     registerService(service: DomainDesignService) {
-      idMap[service._attributes.__code] = service
+      idMap[service._attributes.__id] = service
       services.push(service)
     },
     registerSystem(system: DomainDesignSystem) {
-      idMap[system._attributes.__code] = system
+      idMap[system._attributes.__id] = system
       systems.push(system)
     },
     registerAgg(agg: DomainDesignAgg<any>) {
-      idMap[agg._attributes.__code] = agg
+      idMap[agg._attributes.__id] = agg
       aggs.push(agg)
     },
     registerReadModel(readModel: DomainDesignReadModel<any>) {
-      idMap[readModel._attributes.__code] = readModel
+      idMap[readModel._attributes.__id] = readModel
       readModels.push(readModel)
     },
     customInfoArrToInfoObj<G_NAME extends string, ARR extends NonEmptyArray<DomainDesignInfo<any, G_NAME> | G_NAME>>(
@@ -196,7 +196,7 @@ function createInternalContext(initFn: ContextInitializer) {
       type T = Record<string, DomainDesignInfo<DomainDesignInfoType, G_NAME>>
       return arr.reduce((map, v) => {
         if (typeof v === 'string') {
-          ;(map as T)[v] = info.any(v)
+          ;(map as T)[v] = info.valueObj(v)
         } else {
           ;(map as T)[v._attributes.name] = v
         }

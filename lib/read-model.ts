@@ -17,13 +17,13 @@ export function createReadModelProvider(designId: string): DomainDesignReadModel
     desc?: string | DomainDesignDesc
   ) => {
     const context = useInternalContext(designId)
-    const __code = genId()
+    const __id = genId()
     const infos = context.customInfoArrToInfoObj(
       infosInitializer instanceof Function ? infosInitializer() : infosInitializer
     )
     const readModel: DomainDesignReadModel<CustomInfoArrayToInfoObject<ARR>> = {
       _attributes: {
-        __code,
+        __id,
         rule: 'ReadModel',
         name,
         infos,

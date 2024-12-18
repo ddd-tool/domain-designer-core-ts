@@ -74,4 +74,16 @@ export type {
   DomainDesignPolicy,
 } from './define'
 
-export { isDomainDesignInfoFunc } from './info'
+export {
+  isDomainDesignInfo,
+  isDomainDesignInfoFunc,
+  isDomainDesignActor,
+  isDomainDesignAgg,
+  isDomainDesignCommand,
+  isDomainDesignFacadeCommand,
+  isDomainDesignEvent,
+  isDomainDesignPolicy,
+  isDomainDesignReadModel,
+  isDomainDesignService,
+  isDomainDesignSystem,
+} from './define'

@@ -17,7 +17,7 @@ export function createActorProvider(designId: string): DomainDesignActorProvider
   const RULE = 'Actor'
   return (name: string, desc?: string | DomainDesignDesc) => {
     const context = useInternalContext(designId)
-    const __code = genId()
+    const __id = genId()
     function command<COMMAND extends DomainDesignCommand<any>>(c: COMMAND): COMMAND
     function command<
       G_NAME extends string,
@@ -32,12 +32,12 @@ export function createActorProvider(designId: string): DomainDesignActorProvider
       infos?: ARR,
       desc?: string | DomainDesignDesc
     ): COMMAND | DomainDesignCommand<CustomInfoArrayToInfoObject<ARR>> {
-      if (typeof param1 !== 'string') {
-        context.linkTo(RULE, __code, param1._attributes.rule, param1._attributes.__code)
+      if (typeof param1 === 'object') {
+        context.linkTo(RULE, __id, param1._attributes.rule, param1._attributes.__id)
         return param1
       }
       const c = context.createCommand(name, infos!, desc)
-      context.linkTo(RULE, __code, c._attributes.rule, c._attributes.__code)
+      context.linkTo(RULE, __id, c._attributes.rule, c._attributes.__id)
       return c
     }
 
@@ -59,12 +59,12 @@ export function createActorProvider(designId: string): DomainDesignActorProvider
       infos?: ARR,
       desc?: string | DomainDesignDesc
     ): FACADECMD | DomainDesignFacadeCommand<CustomInfoArrayToInfoObject<ARR>> {
-      if (typeof param1 !== 'string') {
-        context.linkTo(RULE, __code, param1._attributes.rule, param1._attributes.__code)
+      if (typeof param1 === 'object') {
+        context.linkTo(RULE, __id, param1._attributes.rule, param1._attributes.__id)
         return param1
       }
       const c = context.createFacadeCommand(name, infos!, desc)
-      context.linkTo(RULE, __code, c._attributes.rule, c._attributes.__code)
+      context.linkTo(RULE, __id, c._attributes.rule, c._attributes.__id)
       return c
     }
 
@@ -86,17 +86,17 @@ export function createActorProvider(designId: string): DomainDesignActorProvider
       infos?: ARR | NonEmptyInitFunc<() => ARR>,
       desc?: string | DomainDesignDesc
     ): READ_MODEL | DomainDesignReadModel<CustomInfoArrayToInfoObject<ARR>> {
-      if (typeof param1 !== 'string') {
-        context.linkTo(RULE, __code, param1._attributes.rule, param1._attributes.__code, 'Dependency')
+      if (typeof param1 === 'object') {
+        context.linkTo(RULE, __id, param1._attributes.rule, param1._attributes.__id, 'Dependency')
         return param1
       }
       const c = context.createReadModel(name, infos!, desc)
-      context.linkTo(RULE, __code, c._attributes.rule, c._attributes.__code, 'Dependency')
+      context.linkTo(RULE, __id, c._attributes.rule, c._attributes.__id, 'Dependency')
       return c
     }
     const actor: DomainDesignActor = {
       _attributes: {
-        __code,
+        __id,
         rule: RULE,
         name,
         description: context.createDesc(desc as any),
