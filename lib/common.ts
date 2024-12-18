@@ -154,6 +154,9 @@ function createInternalContext(initFn: ContextInitializer) {
     getReadModels() {
       return readModels
     },
+    registerInfo(info: DomainDesignInfo<any, any>) {
+      idMap[info._attributes.__id] = info
+    },
     registerCommand(command: DomainDesignCommand<any>) {
       idMap[command._attributes.__id] = command
       commands.push(command)

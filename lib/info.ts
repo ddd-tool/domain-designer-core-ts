@@ -37,16 +37,18 @@ export function createInfoProvider(designId: string): DomainDesignInfoProvider {
       } else {
         desc = p2 as DomainDesignDesc | undefined
       }
-      return {
+      const result = {
         _attributes: {
           __id: genId(),
-          rule: 'Info',
-          type: 'Function',
+          rule: 'Info' as const,
+          type: 'Function' as const,
           subtype,
           name,
           description: context.createDesc(desc as any),
         },
       }
+      context.registerInfo(result)
+      return result
     }
 
     function valueObj<NAME extends string>(
@@ -79,59 +81,67 @@ export function createInfoProvider(designId: string): DomainDesignInfoProvider {
       } else {
         desc = p2 as DomainDesignDesc | undefined
       }
-      return {
+      const result = {
         _attributes: {
           __id: genId(),
-          rule: 'Info',
-          type: 'ValueObject',
+          rule: 'Info' as const,
+          type: 'ValueObject' as const,
           subtype,
           name,
           description: context.createDesc(desc as any),
         },
       }
+      context.registerInfo(result)
+      return result
     }
 
     return {
       document<NAME extends string>(name: NAME, desc?: string | DomainDesignDesc): DomainDesignInfo<'Document', NAME> {
         const context = useInternalContext(designId)
-        return {
+        const result = {
           _attributes: {
             __id: genId(),
-            rule: 'Info',
-            type: 'Document',
-            subtype: 'None',
+            rule: 'Info' as const,
+            type: 'Document' as const,
+            subtype: 'None' as const,
             name,
             description: context.createDesc(desc as any),
           },
         }
+        context.registerInfo(result)
+        return result
       },
       func,
       id<NAME extends string>(name: NAME, desc?: string | DomainDesignDesc): DomainDesignInfo<'Id', NAME> {
         const context = useInternalContext(designId)
-        return {
+        const result = {
           _attributes: {
             __id: genId(),
-            rule: 'Info',
-            type: 'Id',
-            subtype: 'None',
+            rule: 'Info' as const,
+            type: 'Id' as const,
+            subtype: 'None' as const,
             name,
             description: context.createDesc(desc as any),
           },
         }
+        context.registerInfo(result)
+        return result
       },
       valueObj,
       version<NAME extends string>(name: NAME, desc?: string | DomainDesignDesc): DomainDesignInfo<'Version', NAME> {
         const context = useInternalContext(designId)
-        return {
+        const result = {
           _attributes: {
             __id: genId(),
-            rule: 'Info',
-            type: 'Version',
-            subtype: 'None',
+            rule: 'Info' as const,
+            type: 'Version' as const,
+            subtype: 'None' as const,
             name,
             description: context.createDesc(desc as any),
           },
         }
+        context.registerInfo(result)
+        return result
       },
     }
   }
