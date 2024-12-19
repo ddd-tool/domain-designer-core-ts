@@ -1,4 +1,4 @@
-import { createDomainDesigner } from '..'
+import { createDomainDesigner, isDomainDesigner } from '..'
 import { expect, it } from 'vitest'
 import { LinkType } from '../common'
 
@@ -132,31 +132,7 @@ it('定义流程', () => {
   expect(d._getContext().getWorkflows().失败流程.length).toEqual(4)
 })
 
-// import { DomainDesignInfo, DomainDesignInfoType } from '../define'
-
-// const d = createDomainDesigner()
-
-// type DemoType<T> = T extends DomainDesignInfo<DomainDesignInfoType, string> ? T : never
-// function f<T>(f: DemoType<T>) {}
-// f(d.info.any('id'))
-
-// type InfoType = 'Any' | 'String'
-// type Info<TYPE extends InfoType, NAME extends string> = {
-//   type: TYPE
-//   name: NAME
-// }
-
-// type ArrayToObject<ARR extends Array<Info<any, string> | string>> = {
-//   [K in ARR[number] as K extends Info<any, infer U> ? U : K extends string ? K : never]: K extends Info<any, string>
-//     ? K
-//     : K extends string
-//     ? Info<'Any', K>
-//     : never
-// }
-
-// function exec<NAME extends string, ARR extends Array<NAME | Info<any, NAME>>>(t: ARR): ArrayToObject<ARR> {
-//   return {} as ArrayToObject<typeof t>
-// }
-
-// const a = exec(['a', { type: 'Any', name: 'b' }])
-// a
+it('designer类型判断', () => {
+  const d = createDomainDesigner()
+  expect(isDomainDesigner(d)).toBeTruthy()
+})

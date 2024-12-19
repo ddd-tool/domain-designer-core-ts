@@ -87,3 +87,29 @@ export {
   isDomainDesignService,
   isDomainDesignSystem,
 } from './define'
+
+function isDomainDesigner(param: any): param is DomainDesigner {
+  const d = param as ReturnType<typeof createDomainDesigner>
+  if (
+    d &&
+    typeof d.actor === 'function' &&
+    typeof d.startWorkflow === 'function' &&
+    typeof d.defineUserStory === 'function' &&
+    typeof d._getContext === 'function' &&
+    typeof d.desc === 'function' &&
+    typeof d.info === 'object' &&
+    typeof d.command === 'function' &&
+    typeof d.facadeCmd === 'function' &&
+    typeof d.agg === 'function' &&
+    typeof d.event === 'function' &&
+    typeof d.system === 'function' &&
+    typeof d.policy === 'function' &&
+    typeof d.service === 'function' &&
+    typeof d.readModel === 'function'
+  ) {
+    return true
+  }
+  return false
+}
+
+export { isDomainDesigner }
