@@ -4,17 +4,16 @@ import {
   DomainDesignAggProvider,
   DomainDesignDesc,
   DomainDesignEvent,
-  DomainDesignInfo,
-  DomainDesignInfoType,
   NonEmptyArray,
   NonEmptyInitFunc,
   NonEmptyObject,
   CustomInfoArrayToInfoObject,
+  CustomInfo,
 } from './define'
 
 export function createAggProvider(designId: string): DomainDesignAggProvider {
   const RULE = 'Agg'
-  return <G_NAME extends string, ARR extends NonEmptyArray<DomainDesignInfo<DomainDesignInfoType, G_NAME> | G_NAME>>(
+  return <G_NAME extends string, ARR extends NonEmptyArray<CustomInfo<G_NAME>>>(
     name: string,
     infoInitializer: ARR | NonEmptyInitFunc<() => ARR>,
     desc?: string | DomainDesignDesc
@@ -26,10 +25,7 @@ export function createAggProvider(designId: string): DomainDesignAggProvider {
     const __id = genId()
 
     function event<EVENT extends DomainDesignEvent<any>>(e: EVENT): EVENT
-    function event<
-      G_NAME extends string,
-      INFOS extends NonEmptyArray<DomainDesignInfo<DomainDesignInfoType, G_NAME> | G_NAME>
-    >(
+    function event<G_NAME extends string, INFOS extends NonEmptyArray<CustomInfo<G_NAME>>>(
       name: string,
       infos: NonEmptyObject<INFOS>,
       desc?: string | DomainDesignDesc
@@ -37,7 +33,7 @@ export function createAggProvider(designId: string): DomainDesignAggProvider {
     function event<
       EVENT extends DomainDesignEvent<any>,
       G_NAME extends string,
-      ARR extends NonEmptyArray<DomainDesignInfo<DomainDesignInfoType, G_NAME> | G_NAME>
+      ARR extends NonEmptyArray<CustomInfo<G_NAME>>
     >(
       param1: EVENT | string,
       infos?: ARR,

@@ -1,12 +1,11 @@
 import { genId, useInternalContext } from './common'
 import {
+  CustomInfo,
   CustomInfoArrayToInfoObject,
   DomainDesignAgg,
   DomainDesignCommand,
   DomainDesignDesc,
   DomainDesignFacadeCommand,
-  DomainDesignInfo,
-  DomainDesignInfoType,
   DomainDesignService,
   DomainDesignServiceProvider,
   NonEmptyArray,
@@ -19,14 +18,15 @@ export function createServiceProvider(designId: string): DomainDesignServiceProv
     const __id = genId()
 
     function agg<AGG extends DomainDesignAgg<any>>(a: AGG): AGG
-    function agg<
-      G_NAME extends string,
-      ARR extends NonEmptyArray<DomainDesignInfo<DomainDesignInfoType, G_NAME> | G_NAME>
-    >(name: string, agg: ARR, desc?: string | DomainDesignDesc): DomainDesignAgg<CustomInfoArrayToInfoObject<ARR>>
+    function agg<G_NAME extends string, ARR extends NonEmptyArray<CustomInfo<G_NAME>>>(
+      name: string,
+      agg: ARR,
+      desc?: string | DomainDesignDesc
+    ): DomainDesignAgg<CustomInfoArrayToInfoObject<ARR>>
     function agg<
       AGG extends DomainDesignAgg<any>,
       G_NAME extends string,
-      ARR extends NonEmptyArray<DomainDesignInfo<DomainDesignInfoType, G_NAME> | G_NAME>
+      ARR extends NonEmptyArray<CustomInfo<G_NAME>>
     >(
       param1: AGG | string,
       infos?: ARR,
@@ -43,14 +43,15 @@ export function createServiceProvider(designId: string): DomainDesignServiceProv
     }
 
     function command<COMMAND extends DomainDesignCommand<any>>(param: COMMAND): COMMAND
-    function command<
-      G_NAME extends string,
-      ARR extends NonEmptyArray<DomainDesignInfo<DomainDesignInfoType, G_NAME> | G_NAME>
-    >(name: string, infos: ARR, desc?: string | DomainDesignDesc): DomainDesignCommand<CustomInfoArrayToInfoObject<ARR>>
+    function command<G_NAME extends string, ARR extends NonEmptyArray<CustomInfo<G_NAME>>>(
+      name: string,
+      infos: ARR,
+      desc?: string | DomainDesignDesc
+    ): DomainDesignCommand<CustomInfoArrayToInfoObject<ARR>>
     function command<
       COMMAND extends DomainDesignCommand<any>,
       G_NAME extends string,
-      ARR extends NonEmptyArray<DomainDesignInfo<DomainDesignInfoType, G_NAME> | G_NAME>
+      ARR extends NonEmptyArray<CustomInfo<G_NAME>>
     >(
       param1: COMMAND | string,
       infos?: ARR,
@@ -66,10 +67,7 @@ export function createServiceProvider(designId: string): DomainDesignServiceProv
     }
 
     function facadeCmd<FACADECMD extends DomainDesignFacadeCommand<any>>(param: FACADECMD): FACADECMD
-    function facadeCmd<
-      G_NAME extends string,
-      ARR extends NonEmptyArray<DomainDesignInfo<DomainDesignInfoType, G_NAME> | G_NAME>
-    >(
+    function facadeCmd<G_NAME extends string, ARR extends NonEmptyArray<CustomInfo<G_NAME>>>(
       name: string,
       infos: ARR,
       desc?: string | DomainDesignDesc
@@ -77,7 +75,7 @@ export function createServiceProvider(designId: string): DomainDesignServiceProv
     function facadeCmd<
       FACADECMD extends DomainDesignFacadeCommand<any>,
       G_NAME extends string,
-      ARR extends NonEmptyArray<DomainDesignInfo<DomainDesignInfoType, G_NAME> | G_NAME>
+      ARR extends NonEmptyArray<CustomInfo<G_NAME>>
     >(
       param1: FACADECMD | string,
       infos?: ARR,

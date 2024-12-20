@@ -13,3 +13,11 @@ it('event 定义', () => {
   expect(event2.inner.field1).not.toBeUndefined()
   expect(event2.inner.field2).not.toBeUndefined()
 })
+
+it('event糖', () => {
+  const d = createDomainDesigner()
+  const event = d.event('event', ['field1', d.info.id('field2'), ['field3', '']])
+  const readModel = event.readModel('readModel', ['field1', ['field2', '']])
+  expect(readModel.inner.field1).not.toBeUndefined()
+  expect(readModel.inner.field2).not.toBeUndefined()
+})

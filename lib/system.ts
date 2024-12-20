@@ -1,11 +1,10 @@
 import { genId, useInternalContext } from './common'
 import {
+  CustomInfo,
   CustomInfoArrayToInfoObject,
   DomainDesignCommand,
   DomainDesignDesc,
   DomainDesignFacadeCommand,
-  DomainDesignInfo,
-  DomainDesignInfoType,
   DomainDesignSystem,
   DomainDesignSystemProvider,
   NonEmptyArray,
@@ -17,14 +16,15 @@ export function createSystemProvider(designId: string): DomainDesignSystemProvid
     const context = useInternalContext(designId)
     const __id = genId()
     function command<COMMAND extends DomainDesignCommand<any>>(param: COMMAND): COMMAND
-    function command<
-      G_NAME extends string,
-      ARR extends NonEmptyArray<DomainDesignInfo<DomainDesignInfoType, G_NAME> | G_NAME>
-    >(name: string, infos: ARR, desc?: string | DomainDesignDesc): DomainDesignCommand<CustomInfoArrayToInfoObject<ARR>>
+    function command<G_NAME extends string, ARR extends NonEmptyArray<CustomInfo<G_NAME>>>(
+      name: string,
+      infos: ARR,
+      desc?: string | DomainDesignDesc
+    ): DomainDesignCommand<CustomInfoArrayToInfoObject<ARR>>
     function command<
       COMMAND extends DomainDesignCommand<any>,
       G_NAME extends string,
-      ARR extends NonEmptyArray<DomainDesignInfo<DomainDesignInfoType, G_NAME> | G_NAME>
+      ARR extends NonEmptyArray<CustomInfo<G_NAME>>
     >(
       param1: COMMAND | string,
       infos?: ARR,
@@ -40,10 +40,7 @@ export function createSystemProvider(designId: string): DomainDesignSystemProvid
     }
 
     function facadeCmd<FACADECMD extends DomainDesignFacadeCommand<any>>(param: FACADECMD): FACADECMD
-    function facadeCmd<
-      G_NAME extends string,
-      ARR extends NonEmptyArray<DomainDesignInfo<DomainDesignInfoType, G_NAME> | G_NAME>
-    >(
+    function facadeCmd<G_NAME extends string, ARR extends NonEmptyArray<CustomInfo<G_NAME>>>(
       name: string,
       infos: ARR,
       desc?: string | DomainDesignDesc
@@ -51,7 +48,7 @@ export function createSystemProvider(designId: string): DomainDesignSystemProvid
     function facadeCmd<
       FACADECMD extends DomainDesignFacadeCommand<any>,
       G_NAME extends string,
-      ARR extends NonEmptyArray<DomainDesignInfo<DomainDesignInfoType, G_NAME> | G_NAME>
+      ARR extends NonEmptyArray<CustomInfo<G_NAME>>
     >(
       param1: FACADECMD | string,
       infos?: ARR,

@@ -136,3 +136,21 @@ it('designer类型判断', () => {
   const d = createDomainDesigner()
   expect(isDomainDesigner(d)).toBeTruthy()
 })
+
+it('info糖', () => {
+  const d = createDomainDesigner()
+  const command = d.command('agg', [
+    d.info.id('id'),
+    'name1',
+    ['name2', ''],
+    ['name3', d.desc`I am name3`],
+    d.info.version('version'),
+    d.info.func('func', ['a', 'b']),
+    d.info.document('doc'),
+  ])
+  expect(command.inner.id).not.toBeUndefined()
+  expect(command.inner.name1).not.toBeUndefined()
+  expect(command.inner.version).not.toBeUndefined()
+  expect(command.inner.func).not.toBeUndefined()
+  expect(command.inner.doc).not.toBeUndefined()
+})

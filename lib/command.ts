@@ -8,15 +8,14 @@ import {
   DomainDesignFacadeCommand,
   DomainDesignService,
   NonEmptyArray,
-  DomainDesignInfoType,
-  DomainDesignInfo,
   CustomInfoArrayToInfoObject,
   NonEmptyInitFunc,
+  CustomInfo,
 } from './define'
 
 export function createCommandProvider(designId: string): DomainDesignCommandProvider {
   const RULE = 'Command'
-  return <G_NAME extends string, ARR extends NonEmptyArray<DomainDesignInfo<DomainDesignInfoType, G_NAME> | G_NAME>>(
+  return <G_NAME extends string, ARR extends NonEmptyArray<CustomInfo<G_NAME>>>(
     name: string,
     infoInitializer: ARR | NonEmptyInitFunc<() => ARR>,
     desc?: string | DomainDesignDesc
@@ -28,14 +27,15 @@ export function createCommandProvider(designId: string): DomainDesignCommandProv
     const __id = genId()
 
     function agg<AGG extends DomainDesignAgg<any>>(a: AGG): AGG
-    function agg<
-      G_NAME extends string,
-      ARR extends NonEmptyArray<DomainDesignInfo<DomainDesignInfoType, G_NAME> | G_NAME>
-    >(name: string, agg: ARR, desc?: string | DomainDesignDesc): DomainDesignAgg<CustomInfoArrayToInfoObject<ARR>>
+    function agg<G_NAME extends string, ARR extends NonEmptyArray<CustomInfo<G_NAME>>>(
+      name: string,
+      agg: ARR,
+      desc?: string | DomainDesignDesc
+    ): DomainDesignAgg<CustomInfoArrayToInfoObject<ARR>>
     function agg<
       AGG extends DomainDesignAgg<any>,
       G_NAME extends string,
-      ARR extends NonEmptyArray<DomainDesignInfo<DomainDesignInfoType, G_NAME> | G_NAME>
+      ARR extends NonEmptyArray<CustomInfo<G_NAME>>
     >(
       param1: AGG | string,
       infos?: ARR,
@@ -68,7 +68,7 @@ export function createCommandProvider(designId: string): DomainDesignCommandProv
 
 export function createFacadeCmdProvider(designId: string): DomainDesignFacadeCommandProvider {
   const RULE = 'FacadeCommand'
-  return <G_NAME extends string, ARR extends NonEmptyArray<DomainDesignInfo<DomainDesignInfoType, G_NAME> | G_NAME>>(
+  return <G_NAME extends string, ARR extends NonEmptyArray<CustomInfo<G_NAME>>>(
     name: string,
     infoInitializer: ARR | NonEmptyInitFunc<() => ARR>,
     desc?: string | DomainDesignDesc
@@ -80,14 +80,15 @@ export function createFacadeCmdProvider(designId: string): DomainDesignFacadeCom
     const __id = genId()
 
     function agg<AGG extends DomainDesignAgg<any>>(a: AGG): AGG
-    function agg<
-      G_NAME extends string,
-      ARR extends NonEmptyArray<DomainDesignInfo<DomainDesignInfoType, G_NAME> | G_NAME>
-    >(name: string, agg: ARR, desc?: string | DomainDesignDesc): DomainDesignAgg<CustomInfoArrayToInfoObject<ARR>>
+    function agg<G_NAME extends string, ARR extends NonEmptyArray<CustomInfo<G_NAME>>>(
+      name: string,
+      agg: ARR,
+      desc?: string | DomainDesignDesc
+    ): DomainDesignAgg<CustomInfoArrayToInfoObject<ARR>>
     function agg<
       AGG extends DomainDesignAgg<any>,
       G_NAME extends string,
-      ARR extends NonEmptyArray<DomainDesignInfo<DomainDesignInfoType, G_NAME> | G_NAME>
+      ARR extends NonEmptyArray<CustomInfo<G_NAME>>
     >(
       param1: AGG | string,
       infos?: ARR,

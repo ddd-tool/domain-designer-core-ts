@@ -7,15 +7,14 @@ import {
   DomainDesignEventProvider,
   DomainDesignReadModel,
   NonEmptyInitFunc,
-  DomainDesignInfoType,
   NonEmptyArray,
   CustomInfoArrayToInfoObject,
-  DomainDesignInfo,
+  CustomInfo,
 } from './define'
 
 export function eventProvider(designId: string): DomainDesignEventProvider {
   const RULE = 'Event'
-  return <G_NAME extends string, ARR extends NonEmptyArray<DomainDesignInfo<DomainDesignInfoType, G_NAME> | G_NAME>>(
+  return <G_NAME extends string, ARR extends NonEmptyArray<CustomInfo<G_NAME>>>(
     name: string,
     infoInitializer: ARR | NonEmptyInitFunc<() => ARR>,
     desc?: string | DomainDesignDesc
@@ -51,10 +50,7 @@ export function eventProvider(designId: string): DomainDesignEventProvider {
     }
 
     function readModel<READ_MODEL extends DomainDesignReadModel<any>>(param: READ_MODEL): READ_MODEL
-    function readModel<
-      G_NAME extends string,
-      ARR extends NonEmptyArray<DomainDesignInfo<DomainDesignInfoType, G_NAME> | G_NAME>
-    >(
+    function readModel<G_NAME extends string, ARR extends NonEmptyArray<CustomInfo<G_NAME>>>(
       name: string,
       infos: ARR | NonEmptyInitFunc<() => ARR>,
       desc?: string | DomainDesignDesc
@@ -62,7 +58,7 @@ export function eventProvider(designId: string): DomainDesignEventProvider {
     function readModel<
       READ_MODEL extends DomainDesignReadModel<any>,
       G_NAME extends string,
-      ARR extends NonEmptyArray<DomainDesignInfo<DomainDesignInfoType, G_NAME> | G_NAME>
+      ARR extends NonEmptyArray<CustomInfo<G_NAME>>
     >(
       param1: READ_MODEL | string,
       infos?: ARR | NonEmptyInitFunc<() => ARR>,

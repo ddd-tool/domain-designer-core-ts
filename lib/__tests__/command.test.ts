@@ -24,3 +24,19 @@ it('初始化指令', () => {
   expect(facadeCmd2.inner.field1).not.toBeUndefined()
   expect(facadeCmd2.inner.field2).not.toBeUndefined()
 })
+
+it('command糖', () => {
+  const d = createDomainDesigner()
+  const command = d.command('command', ['field1', d.info.valueObj('field2')])
+  const agg = command.agg('agg', ['field1', ['field2', '']])
+  expect(agg.inner.field1).not.toBeUndefined()
+  expect(agg.inner.field2).not.toBeUndefined()
+})
+
+it('facadeCmd糖', () => {
+  const d = createDomainDesigner()
+  const facadeCmd = d.facadeCmd('facadeCmd', ['field1', d.info.valueObj('field2')])
+  const agg = facadeCmd.agg('agg', ['field1', ['field2', '']])
+  expect(agg.inner.field1).not.toBeUndefined()
+  expect(agg.inner.field2).not.toBeUndefined()
+})

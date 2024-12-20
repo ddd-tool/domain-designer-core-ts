@@ -1,9 +1,8 @@
 import { genId, useInternalContext } from './common'
 import {
+  CustomInfo,
   CustomInfoArrayToInfoObject,
   DomainDesignDesc,
-  DomainDesignInfo,
-  DomainDesignInfoType,
   DomainDesignReadModel,
   DomainDesignReadModelProvider,
   NonEmptyArray,
@@ -11,7 +10,7 @@ import {
 } from './define'
 
 export function createReadModelProvider(designId: string): DomainDesignReadModelProvider {
-  return <G_NAME extends string, ARR extends NonEmptyArray<DomainDesignInfo<DomainDesignInfoType, G_NAME> | G_NAME>>(
+  return <G_NAME extends string, ARR extends NonEmptyArray<CustomInfo<G_NAME>>>(
     name: string,
     infosInitializer: ARR | NonEmptyInitFunc<() => ARR>,
     desc?: string | DomainDesignDesc

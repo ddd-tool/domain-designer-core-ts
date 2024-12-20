@@ -13,9 +13,9 @@ import { genId, useInternalContext } from './common'
 export function createDomainDesigner() {
   const designId = genId()
   const createDesc = createDescProvider(designId)
-  const infoProvider = createInfoProvider(designId)
-  const actorProvider = createActorProvider(designId)
-  const commandProvider = createCommandProvider(designId)
+  const createInfo = createInfoProvider(designId)
+  const createActor = createActorProvider(designId)
+  const createCommand = createCommandProvider(designId)
   const createFacadeCommand = createFacadeCmdProvider(designId)
   const createAgg = createAggProvider(designId)
   const createEvent = eventProvider(designId)
@@ -27,9 +27,9 @@ export function createDomainDesigner() {
     return {
       id: designId,
       createDesc,
-      createInfo: infoProvider,
-      createActor: actorProvider,
-      createCommand: commandProvider,
+      createInfo,
+      createActor,
+      createCommand,
       createFacadeCommand,
       createAgg,
       createEvent,
@@ -45,9 +45,9 @@ export function createDomainDesigner() {
     defineUserStory: context.defineUserStory,
     desc: createDesc,
     info: context.info,
-    actor: actorProvider,
+    actor: createActor,
+    command: createCommand,
     facadeCmd: createFacadeCommand,
-    command: commandProvider,
     agg: createAgg,
     event: createEvent,
     system: createSystem,

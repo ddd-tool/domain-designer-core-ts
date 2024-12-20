@@ -24,6 +24,7 @@ import {
   CustomInfoArrayToInfoObject,
   DomainDesignInfo,
   DomainDesignInfoType,
+  CustomInfo,
 } from './define'
 
 export type LinkType = 'Association' | 'Dependency' | 'Aggregation' | 'Composition'
@@ -193,18 +194,36 @@ function createInternalContext(initFn: ContextInitializer) {
       idMap[readModel._attributes.__id] = readModel
       readModels.push(readModel)
     },
-    customInfoArrToInfoObj<G_NAME extends string, ARR extends NonEmptyArray<DomainDesignInfo<any, G_NAME> | G_NAME>>(
+    customInfoArrToInfoObj<G_NAME extends string, ARR extends NonEmptyArray<CustomInfo<G_NAME>>>(
       arr: ARR
     ): CustomInfoArrayToInfoObject<ARR> {
       type T = Record<string, DomainDesignInfo<DomainDesignInfoType, G_NAME>>
       return arr.reduce((map, v) => {
         if (typeof v === 'string') {
           ;(map as T)[v] = info.valueObj(v)
+        } else if (v instanceof Array) {
+          const [name, desc] = v
+          ;(map as T)[name] = info.valueObj(name, desc)
         } else {
           ;(map as T)[v._attributes.name] = v
         }
         return map
       }, {} as CustomInfoArrayToInfoObject<ARR>)
+    },
+    customInfoArrToInfoArr<G_NAME extends string, ARR extends NonEmptyArray<CustomInfo<G_NAME>>>(
+      arr: ARR
+    ): DomainDesignInfo<DomainDesignInfoType, string>[] {
+      return arr.reduce((arr, v) => {
+        if (typeof v === 'string') {
+          arr.push(info.valueObj(v))
+        } else if (v instanceof Array) {
+          const [name, desc] = v
+          arr.push(info.valueObj(name, desc))
+        } else {
+          arr.push(v)
+        }
+        return arr
+      }, [] as DomainDesignInfo<DomainDesignInfoType, string>[])
     },
     createDesc: initResult.createDesc,
     info,

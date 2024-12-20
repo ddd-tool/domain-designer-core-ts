@@ -11,7 +11,7 @@ it('', () => {
     d.info.id('c'),
     'd1',
     d.info.valueObj('d2'),
-    d.info.valueObj('d3', ['field1', d.info.valueObj('field2')]),
+    d.info.valueObj('d3', d.desc`field2`),
     d.info.version('e'),
   ])
   expect(命令.inner.a._attributes.name).toBe('a')
@@ -21,11 +21,11 @@ it('', () => {
   expect(命令.inner.b2._attributes.subtype.length).toBe(1)
   expect(命令.inner.c._attributes.name).toBe('c')
   expect(命令.inner.d1._attributes.name).toBe('d1')
-  expect(命令.inner.d1._attributes.subtype.length).toBe(0)
+  expect(命令.inner.d1._attributes.subtype).toBe('None')
   expect(命令.inner.d2._attributes.name).toBe('d2')
-  expect(命令.inner.d2._attributes.subtype.length).toBe(0)
+  expect(命令.inner.d2._attributes.subtype).toBe('None')
   expect(命令.inner.d3._attributes.name).toBe('d3')
-  expect(命令.inner.d3._attributes.subtype.length).toBe(2)
+  expect(命令.inner.d3._attributes.subtype).toBe('None')
   expect(命令.inner.e._attributes.name).toBe('e')
 
   const 事件 = d.event('事件', ['中文， 【 ? 事件'])
