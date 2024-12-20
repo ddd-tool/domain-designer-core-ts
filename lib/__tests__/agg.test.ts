@@ -23,3 +23,9 @@ it('agg糖', () => {
   expect(event.inner.field1).not.toBeUndefined()
   expect(event.inner.field2).not.toBeUndefined()
 })
+
+it('toFormat', () => {
+  const d = createDomainDesigner()
+  const agg = d.agg('agg', ['field1', d.info.id('field2'), ['field3', '']])
+  expect(agg.toFormat()).toBe('<agg>')
+})

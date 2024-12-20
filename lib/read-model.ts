@@ -29,6 +29,9 @@ export function createReadModelProvider(designId: string): DomainDesignReadModel
         description: context.createDesc(desc as any),
       },
       inner: infos,
+      toFormat() {
+        return context.toFormat(this)
+      },
     }
     context.registerReadModel(readModel)
     return readModel

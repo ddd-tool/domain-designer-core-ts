@@ -41,6 +41,9 @@ export function createInfoProvider(designId: string): DomainDesignInfoProvider {
           name,
           description: context.createDesc(desc as any),
         },
+        toFormat() {
+          return context.toFormat(this)
+        },
       }
       context.registerInfo(result)
       return result
@@ -58,6 +61,9 @@ export function createInfoProvider(designId: string): DomainDesignInfoProvider {
             name,
             description: context.createDesc(desc as any),
           },
+          toFormat() {
+            return context.toFormat(this)
+          },
         }
         context.registerInfo(result)
         return result
@@ -73,6 +79,9 @@ export function createInfoProvider(designId: string): DomainDesignInfoProvider {
             subtype: 'None' as const,
             name,
             description: context.createDesc(desc as any),
+          },
+          toFormat() {
+            return context.toFormat(this)
           },
         }
         context.registerInfo(result)
@@ -92,6 +101,9 @@ export function createInfoProvider(designId: string): DomainDesignInfoProvider {
             name,
             description: context.createDesc(desc as any),
           },
+          toFormat() {
+            return context.toFormat(this)
+          },
         }
         context.registerInfo(result)
         return result
@@ -106,6 +118,9 @@ export function createInfoProvider(designId: string): DomainDesignInfoProvider {
             subtype: 'None' as const,
             name,
             description: context.createDesc(desc as any),
+          },
+          toFormat() {
+            return context.toFormat(this)
           },
         }
         context.registerInfo(result)

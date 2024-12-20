@@ -21,3 +21,9 @@ it('event糖', () => {
   expect(readModel.inner.field1).not.toBeUndefined()
   expect(readModel.inner.field2).not.toBeUndefined()
 })
+
+it('toFormat', () => {
+  const d = createDomainDesigner()
+  const event = d.event('event', ['field1', d.info.id('field2'), ['field3', '']])
+  expect(event.toFormat()).toBe('<event>')
+})

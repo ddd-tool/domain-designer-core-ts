@@ -58,6 +58,9 @@ export function createAggProvider(designId: string): DomainDesignAggProvider {
       },
       inner: infos,
       event,
+      toFormat() {
+        return context.toFormat(this)
+      },
     }
     context.registerAgg(agg)
     return agg

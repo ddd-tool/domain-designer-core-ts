@@ -27,7 +27,21 @@ it('初始化指令', () => {
 
 it('command糖', () => {
   const d = createDomainDesigner()
-  const command = d.command('command', ['field1', d.info.valueObj('field2')])
+  const command = d.command('command', [
+    d.info.id('id'),
+    'name1',
+    ['name2', ''],
+    ['name3', d.desc`I am name3`],
+    d.info.version('version'),
+    d.info.func('func', ['a', 'b']),
+    d.info.document('doc'),
+  ])
+  expect(command.inner.id).not.toBeUndefined()
+  expect(command.inner.name1).not.toBeUndefined()
+  expect(command.inner.version).not.toBeUndefined()
+  expect(command.inner.func).not.toBeUndefined()
+  expect(command.inner.doc).not.toBeUndefined()
+
   const agg = command.agg('agg', ['field1', ['field2', '']])
   expect(agg.inner.field1).not.toBeUndefined()
   expect(agg.inner.field2).not.toBeUndefined()
@@ -35,8 +49,26 @@ it('command糖', () => {
 
 it('facadeCmd糖', () => {
   const d = createDomainDesigner()
-  const facadeCmd = d.facadeCmd('facadeCmd', ['field1', d.info.valueObj('field2')])
+  const facadeCmd = d.facadeCmd('facadeCmd', [
+    d.info.id('id'),
+    'name1',
+    ['name2', ''],
+    ['name3', d.desc`I am name3`],
+    d.info.version('version'),
+    d.info.func('func', ['a', 'b']),
+    d.info.document('doc'),
+  ])
   const agg = facadeCmd.agg('agg', ['field1', ['field2', '']])
   expect(agg.inner.field1).not.toBeUndefined()
   expect(agg.inner.field2).not.toBeUndefined()
+})
+
+it('toFormat', () => {
+  const d = createDomainDesigner()
+
+  const command = d.command('command', ['field1', d.info.valueObj('field2')])
+  expect(command.toFormat()).toBe('<command>')
+
+  const facadeCmd = d.facadeCmd('facadeCmd', ['field1', d.info.valueObj('field2')])
+  expect(facadeCmd.toFormat()).toBe('<facadeCmd>')
 })

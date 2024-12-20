@@ -9,8 +9,9 @@ import { createPolicyProvider } from './policy'
 import { createServiceProvider } from './service'
 import { createReadModelProvider } from './read-model'
 import { genId, useInternalContext } from './common'
+import { DomainDesignOptions } from './define'
 
-export function createDomainDesigner() {
+export function createDomainDesigner(opts?: DomainDesignOptions) {
   const designId = genId()
   const createDesc = createDescProvider(designId)
   const createInfo = createInfoProvider(designId)
@@ -26,6 +27,7 @@ export function createDomainDesigner() {
   const context = useInternalContext(designId, () => {
     return {
       id: designId,
+      options: opts,
       createDesc,
       createInfo,
       createActor,

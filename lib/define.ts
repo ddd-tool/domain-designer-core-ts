@@ -56,6 +56,7 @@ export type DomainDesignInfo<TYPE extends DomainDesignInfoType, NAME extends str
     name: NAME
     description?: DomainDesignDesc
   }
+  toFormat(): string
 }>
 export type DomainDesignInfoFuncDependsOn = DomainDesignInfo<Exclude<DomainDesignInfoType, 'Function'>, string>
 
@@ -111,6 +112,7 @@ export type DomainDesignActor = Readonly<{
     name: string,
     infos: ARR | NonEmptyInitFunc<() => ARR>
   ): DomainDesignReadModel<CustomInfoArrayToInfoObject<ARR>>
+  toFormat(): string
 }>
 
 // ========================== 指令 ==========================
@@ -136,6 +138,7 @@ export type DomainDesignCommand<INFOS extends DomainDesignInfoObject> = Readonly
     agg: ARR,
     desc?: string | DomainDesignDesc
   ): DomainDesignAgg<CustomInfoArrayToInfoObject<ARR>>
+  toFormat(): string
 }>
 
 export type DomainDesignFacadeCommandProvider = {
@@ -162,6 +165,7 @@ export type DomainDesignFacadeCommand<INFOS extends DomainDesignInfoObject> = Re
   ): DomainDesignAgg<CustomInfoArrayToInfoObject<ARR>>
   service(service: DomainDesignService): DomainDesignService
   service(name: string, desc?: string | DomainDesignDesc): DomainDesignService
+  toFormat(): string
 }>
 
 // ========================== 事件 ==========================
@@ -190,6 +194,7 @@ export type DomainDesignEvent<INFOS extends DomainDesignInfoObject> = Readonly<{
     name: string,
     infos: ARR | NonEmptyInitFunc<() => ARR>
   ): DomainDesignReadModel<CustomInfoArrayToInfoObject<ARR>>
+  toFormat(): string
 }>
 
 // ========================== 聚合 ==========================
@@ -215,6 +220,7 @@ export type DomainDesignAgg<INFOS extends DomainDesignInfoObject> = Readonly<{
     infos: ARR,
     desc?: string | DomainDesignDesc
   ): DomainDesignEvent<CustomInfoArrayToInfoObject<ARR>>
+  toFormat(): string
 }>
 
 // ========================== 策略 ==========================
@@ -230,6 +236,7 @@ export type DomainDesignPolicy = Readonly<{
   }
   service(service: DomainDesignService): DomainDesignService
   service(name: string, desc?: string | DomainDesignDesc): DomainDesignService
+  toFormat(): string
 }>
 
 // ========================== 外部系统 ==========================
@@ -255,6 +262,7 @@ export type DomainDesignSystem = Readonly<{
     infos: ARR,
     desc?: string | DomainDesignDesc
   ): DomainDesignFacadeCommand<CustomInfoArrayToInfoObject<ARR>>
+  toFormat(): string
 }>
 
 // ========================== 服务 ==========================
@@ -284,6 +292,7 @@ export type DomainDesignService = Readonly<{
     agg: ARR,
     desc?: string | DomainDesignDesc
   ): DomainDesignAgg<CustomInfoArrayToInfoObject<ARR>>
+  toFormat(): string
 }>
 
 // ========================== 读模型 ==========================
@@ -303,7 +312,14 @@ export type DomainDesignReadModel<INFOS extends DomainDesignInfoObject> = Readon
     description?: DomainDesignDesc
   }
   inner: INFOS
+  toFormat(): string
 }>
+
+// ========================== 配置 ==========================
+
+export type DomainDesignOptions = {
+  toFormatType?: 'BngleBrackets' | 'JSON' | 'JSONPretty'
+}
 
 // ========================== 其他 ==========================
 export type NonEmptyArray<T> = [T, ...T[]]

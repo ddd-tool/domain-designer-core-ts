@@ -100,6 +100,9 @@ export function createServiceProvider(designId: string): DomainDesignServiceProv
       agg,
       command,
       facadeCmd,
+      toFormat() {
+        return context.toFormat(this)
+      },
     }
     context.registerService(service)
     return service

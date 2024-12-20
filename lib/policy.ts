@@ -25,6 +25,9 @@ export function createPolicyProvider(designId: string): DomainDesignPolicyProvid
         description: context.createDesc(desc as any),
       },
       service,
+      toFormat() {
+        return context.toFormat(this)
+      },
     }
     context.registerPolicy(policy)
     return policy

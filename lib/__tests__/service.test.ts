@@ -16,3 +16,9 @@ it('service 糖', () => {
   expect(agg.inner.field1).not.toBeUndefined()
   expect(agg.inner.field2).not.toBeUndefined()
 })
+
+it('toFormat', () => {
+  const d = createDomainDesigner()
+  const service = d.service('service')
+  expect(service.toFormat()).toBe('<service>')
+})

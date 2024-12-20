@@ -25,6 +25,7 @@ import {
   DomainDesignInfo,
   DomainDesignInfoType,
   CustomInfo,
+  DomainDesignOptions,
 } from './define'
 
 export type LinkType = 'Association' | 'Dependency' | 'Aggregation' | 'Composition'
@@ -50,6 +51,7 @@ export function genId(): string {
 
 type ContextInitializer = () => {
   id: string
+  options?: DomainDesignOptions
   createDesc: DomainDesignDescProvider
   createInfo: DomainDesignInfoProvider
   createActor: DomainDesignActorProvider
@@ -62,12 +64,20 @@ type ContextInitializer = () => {
   createSystem: DomainDesignSystemProvider
   createReadModel: DomainDesignReadModelProvider
 }
+const DETAULT_OPTIONS: DomainDesignOptions = {
+  toFormatType: 'BngleBrackets',
+}
 
 export type DomainDesignInternalContext = ReturnType<typeof createInternalContext>
 const _internalContextMap: Record<string, DomainDesignInternalContext> = {}
 
 function createInternalContext(initFn: ContextInitializer) {
   const initResult = initFn()
+  if (!initResult.options) {
+    initResult.options = DETAULT_OPTIONS
+  } else {
+    initResult.options = Object.assign(DETAULT_OPTIONS, initResult.options)
+  }
   const info = initResult.createInfo()
 
   //NOTE: arrows的键为"srcid,destid"
@@ -224,6 +234,20 @@ function createInternalContext(initFn: ContextInitializer) {
         }
         return arr
       }, [] as DomainDesignInfo<DomainDesignInfoType, string>[])
+    },
+    toFormat<OBJ extends { _attributes: { __id: string; name: string } }>(obj: OBJ): string {
+      if (initResult.options?.toFormatType === 'BngleBrackets') {
+        return `<${obj._attributes.name}>`
+      } else if (initResult.options?.toFormatType === 'JSON') {
+        return JSON.stringify(obj)
+      } else if (initResult.options?.toFormatType === 'JSONPretty') {
+        return JSON.stringify(obj, null, 2)
+      } else if (initResult.options?.toFormatType === undefined) {
+        return obj.toString()
+      } else {
+        isNever(initResult.options?.toFormatType)
+      }
+      return obj.toString()
     },
     createDesc: initResult.createDesc,
     info,

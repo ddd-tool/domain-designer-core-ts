@@ -60,6 +60,9 @@ export function createCommandProvider(designId: string): DomainDesignCommandProv
       },
       inner: infos,
       agg,
+      toFormat() {
+        return context.toFormat(this)
+      },
     }
     context.registerCommand(command)
     return command
@@ -126,6 +129,9 @@ export function createFacadeCmdProvider(designId: string): DomainDesignFacadeCom
       inner: infos,
       agg,
       service,
+      toFormat() {
+        return context.toFormat(this)
+      },
     }
     context.registerFacadeCommand(facadeCmd)
     return facadeCmd

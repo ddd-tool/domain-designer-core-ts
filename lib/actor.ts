@@ -104,6 +104,9 @@ export function createActorProvider(designId: string): DomainDesignActorProvider
       command,
       facadeCmd,
       readModel,
+      toFormat() {
+        return context.toFormat(this)
+      },
     }
     context.registerActor(actor)
     return actor

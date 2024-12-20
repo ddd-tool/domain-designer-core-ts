@@ -13,3 +13,9 @@ it('read-model 定义', () => {
   expect(readModel2.inner.field1).not.toBeUndefined()
   expect(readModel2.inner.field2).not.toBeUndefined()
 })
+
+it('toFormat', () => {
+  const d = createDomainDesigner()
+  const readModel = d.readModel('readModel', ['field1', d.info.id('field2'), ['field3', '']])
+  expect(readModel.toFormat()).toBe('<readModel>')
+})

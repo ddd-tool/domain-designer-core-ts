@@ -84,6 +84,9 @@ export function eventProvider(designId: string): DomainDesignEventProvider {
       policy,
       system,
       readModel,
+      toFormat() {
+        return context.toFormat(this)
+      },
     }
     context.registerEvent(event)
     return event

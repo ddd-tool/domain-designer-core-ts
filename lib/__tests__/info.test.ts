@@ -41,3 +41,17 @@ it('info.func 糖', () => {
   expect(func._attributes.subtype[0]._attributes.name).toBe('field1')
   expect(func._attributes.subtype[1]._attributes.name).toBe('field2')
 })
+
+it('toFormat', () => {
+  const d = createDomainDesigner()
+  const func = d.info.func('func', ['field1', ['field2', '']])
+  const id = d.info.id('id')
+  const doc = d.info.document('doc')
+  const vo = d.info.valueObj('vo', '备注')
+  const version = d.info.version('version')
+  expect(func.toFormat()).toBe('<func>')
+  expect(id.toFormat()).toBe('<id>')
+  expect(doc.toFormat()).toBe('<doc>')
+  expect(vo.toFormat()).toBe('<vo>')
+  expect(version.toFormat()).toBe('<version>')
+})

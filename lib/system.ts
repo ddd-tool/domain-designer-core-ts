@@ -72,6 +72,9 @@ export function createSystemProvider(designId: string): DomainDesignSystemProvid
       },
       command,
       facadeCmd,
+      toFormat() {
+        return context.toFormat(this)
+      },
     }
     context.registerSystem(system)
     return system
