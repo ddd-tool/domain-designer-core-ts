@@ -53,12 +53,16 @@ pub struct MatchResult {
     pub matches: Vec<MatchRecord>,
 }
 
-pub fn match_table(sources: Vec<String>, targets: Vec<String>, threshold: f64) -> MatchResult {
+pub fn match_table(
+    sources: Vec<String>,
+    targets: Vec<String>,
+    threshold: Option<f64>,
+) -> MatchResult {
     let mut matches: Vec<MatchRecord> = vec![];
     for source in sources {
         for target in targets.iter() {
             if let Some(score) = match_string(source.clone(), target.clone()) {
-                if score > threshold {
+                if threshold.is_none() || score > threshold.unwrap() {
                     matches.push(MatchRecord {
                         source: source.clone(),
                         target: target.clone(),

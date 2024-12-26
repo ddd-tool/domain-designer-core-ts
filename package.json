@@ -14,11 +14,12 @@
   },
   "repository": "https://github.com/ddd-tool/domain-designer-core-ts.git",
   "scripts": {
-    "build": "pnpm build:pack && pnpm verify && pnpm test && pnpm build:sync",
+    "build": "pnpm build:pack && pnpm verify && pnpm test:all && pnpm build:sync",
     "build:pack": "vite build",
     "build:sync": "node scripts/gen-package-info.mjs",
     "verify": "tsc -p tsconfig.build.json --composite false",
-    "test": "npx vitest"
+    "test": "pnpm test:all",
+    "test:all": "npx vitest"
   },
   "devDependencies": {
     "@tsconfig/node22": "^22.0.0",

@@ -80,7 +80,7 @@ function createInternalContext(initFn: ContextInitializer) {
   }
   const info = initResult.createInfo()
 
-  //NOTE: arrows的键为"srcid,destid"
+  //NOTE: links的键为"srcRule,srcId,destRule,destId"
   const links: Record<string, LinkType> = {}
   const idMap: Record<string, object> = {}
   const commands: DomainDesignCommand<any>[] = []
@@ -111,17 +111,17 @@ function createInternalContext(initFn: ContextInitializer) {
       }
       userStories[name] = workflowNames
     },
-    linkTo(srcRule: Rule, srcCode: string, targetRule: Rule, targetCode: string, linkType: LinkType = 'Association') {
+    linkTo(srcRule: Rule, srcId: string, targetRule: Rule, targetId: string, linkType: LinkType = 'Association') {
       if (currentWorkflowName && workflows[currentWorkflowName]) {
         if (
           workflows[currentWorkflowName].length === 0 ||
-          workflows[currentWorkflowName][workflows[currentWorkflowName].length - 1] !== srcCode
+          workflows[currentWorkflowName][workflows[currentWorkflowName].length - 1] !== srcId
         ) {
-          workflows[currentWorkflowName].push(srcCode)
+          workflows[currentWorkflowName].push(srcId)
         }
-        workflows[currentWorkflowName].push(targetCode)
+        workflows[currentWorkflowName].push(targetId)
       }
-      links[`${srcRule},${srcCode},${targetRule},${targetCode}`] = linkType
+      links[`${srcRule},${srcId},${targetRule},${targetId}`] = linkType
     },
     getId() {
       return initResult.id

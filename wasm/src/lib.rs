@@ -8,6 +8,6 @@ pub fn match_string(a: String, b: String) -> f64 {
 }
 
 #[wasm_bindgen]
-pub fn match_table(sources: Vec<String>, targets: Vec<String>, threshold: f64) -> JsValue {
+pub fn match_table(sources: Vec<String>, targets: Vec<String>, threshold: Option<f64>) -> JsValue {
     serde_wasm_bindgen::to_value(&strsim::match_table(sources, targets, threshold)).unwrap()
 }

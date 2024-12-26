@@ -12,6 +12,6 @@ type MatchResult = {
   matches: MatchRecord[]
 }
 
-export function match_table(sources: string[], targets: string[], threshold: number): MatchResult {
+export function match_table(sources: string[], targets: string[], threshold?: number): MatchResult {
   return _match_table(sources, targets, threshold)
 }

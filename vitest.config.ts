@@ -5,5 +5,6 @@ export default defineConfig({
   plugins: [wasm()],
   test: {
     globals: true,
+    silent: false,
   },
 })
