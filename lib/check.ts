@@ -55,8 +55,10 @@ export function checkWorkflow(
     const src = context.getIdMap()[srcId]
     const dst = context.getIdMap()[dstId]
     if (!isTable(src) || !isTable(dst)) {
+      srcId = dstId
       continue
     } else if (result[`${srcId},${dstId}`] !== undefined) {
+      srcId = dstId
       continue
     }
     const srcIds = Object.values(src.inner).map((v) => v._attributes.__id)
@@ -84,10 +86,11 @@ export function checkWorkflow(
         type: 'warning',
         message: `<${src._attributes.name}>中的\`${match.source}\`与<${dst._attributes.name}>中的\`${
           match.target
-        }\`相似度过高，建议检查是否有误（${match.score * 100}%）`,
+        }\`相似度过高，建议检查是否有误（相似度 ${match.score * 100}%）`,
       })
     }
     result[`${srcId},${dstId}`] = p
+    srcId = dstId
     i++
   }
   return result
