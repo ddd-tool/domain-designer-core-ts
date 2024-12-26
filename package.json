@@ -1,7 +1,7 @@
 {
   "name": "@ddd-tool/domain-designer-core",
   "private": true,
-  "version": "0.0.0-alpha.12",
+  "version": "0.0.0-alpha.13",
   "type": "module",
   "files": [
     "dist"
@@ -15,8 +15,8 @@
   "repository": "https://github.com/ddd-tool/domain-designer-core-ts.git",
   "scripts": {
     "build": "pnpm build:pack && pnpm verify && pnpm test && pnpm build:sync",
-    "build:pack": "vite build && node scripts/gen-package-info.mjs",
-    "build:sync": "ncp ./README.md ./dist/README.md",
+    "build:pack": "vite build",
+    "build:sync": "node scripts/gen-package-info.mjs",
     "verify": "tsc -p tsconfig.build.json --composite false",
     "test": "npx vitest"
   },
@@ -27,11 +27,12 @@
     "read-pkg": "^9.0.1",
     "typescript": "~5.7.2",
     "vite": "^6.0.1",
+    "vite-plugin-wasm": "^3.4.1",
     "vitest": "^2.1.8",
     "vue": "^3.5.13"
   },
-  "packageManager": "pnpm@9.14.4+sha512.c8180b3fbe4e4bca02c94234717896b5529740a6cbadf19fa78254270403ea2f27d4e1d46a08a0f56c89b63dc8ebfd3ee53326da720273794e6200fcf0d184ab",
   "dependencies": {
     "nanoid": "^5.0.9"
-  }
+  },
+  "packageManager": "pnpm@9.14.4+sha512.c8180b3fbe4e4bca02c94234717896b5529740a6cbadf19fa78254270403ea2f27d4e1d46a08a0f56c89b63dc8ebfd3ee53326da720273794e6200fcf0d184ab"
 }

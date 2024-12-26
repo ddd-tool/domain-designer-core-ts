@@ -115,3 +115,5 @@ function isDomainDesigner(param: any): param is DomainDesigner {
 }
 
 export { isDomainDesigner }
+
+export { match_string } from './wasm'
