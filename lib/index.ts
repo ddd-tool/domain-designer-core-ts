@@ -60,21 +60,19 @@ export function createDomainDesigner(opts?: DomainDesignOptions): DomainDesigner
   }
 }
 
-export type {
-  DomainDesignAgg,
-  DomainDesignCommand,
-  DomainDesignFacadeCommand,
-  DomainDesignDesc,
-  DomainDesignEvent,
-  DomainDesignInfo,
-  DomainDesignInfoType,
-  DomainDesignActor,
-  DomainDesignSystem,
-  DomainDesignService,
-  DomainDesignPolicy,
-} from './define'
-
 export {
+  type DomainDesigner,
+  type DomainDesignAgg,
+  type DomainDesignCommand,
+  type DomainDesignFacadeCommand,
+  type DomainDesignDesc,
+  type DomainDesignEvent,
+  type DomainDesignInfo,
+  type DomainDesignInfoType,
+  type DomainDesignActor,
+  type DomainDesignSystem,
+  type DomainDesignService,
+  type DomainDesignPolicy,
   isDomainDesignInfo,
   isDomainDesignInfoFunc,
   isDomainDesignActor,
@@ -86,32 +84,7 @@ export {
   isDomainDesignReadModel,
   isDomainDesignService,
   isDomainDesignSystem,
+  isDomainDesigner,
 } from './define'
 
-function isDomainDesigner(param: any): param is DomainDesigner {
-  const d = param as ReturnType<typeof createDomainDesigner>
-  if (
-    d &&
-    typeof d.actor === 'function' &&
-    typeof d.startWorkflow === 'function' &&
-    typeof d.defineUserStory === 'function' &&
-    typeof d._getContext === 'function' &&
-    typeof d.desc === 'function' &&
-    typeof d.info === 'object' &&
-    typeof d.command === 'function' &&
-    typeof d.facadeCmd === 'function' &&
-    typeof d.agg === 'function' &&
-    typeof d.event === 'function' &&
-    typeof d.system === 'function' &&
-    typeof d.policy === 'function' &&
-    typeof d.service === 'function' &&
-    typeof d.readModel === 'function'
-  ) {
-    return true
-  }
-  return false
-}
-
-export { isDomainDesigner }
-
-export { match_string } from './wasm'
+export { checkDomainDesigner, checkStory, checkWorkflow } from './check'
