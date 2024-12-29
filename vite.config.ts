@@ -4,6 +4,7 @@ import wasm from 'vite-plugin-wasm'
 
 export default defineConfig({
   plugins: [wasm()],
+  assetsInclude: ['**/*.wasm'],
   build: {
     minify: 'esbuild',
     outDir: 'dist',

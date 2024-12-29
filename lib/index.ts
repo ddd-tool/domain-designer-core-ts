@@ -73,6 +73,7 @@ export {
   type DomainDesignSystem,
   type DomainDesignService,
   type DomainDesignPolicy,
+  type DomainDesignInfoObject,
   isDomainDesignInfo,
   isDomainDesignInfoFunc,
   isDomainDesignActor,
