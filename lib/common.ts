@@ -26,6 +26,8 @@ import {
   DomainDesignInfoType,
   CustomInfo,
   DomainDesignOptions,
+  DomainNodeSet,
+  DomainDesignObject,
 } from './define'
 
 export type LinkType = 'Association' | 'Dependency' | 'Aggregation' | 'Composition'
@@ -82,7 +84,8 @@ function createInternalContext(initFn: ContextInitializer) {
 
   //NOTE: links的键为"srcRule,srcId,destRule,destId"
   const links: Record<string, LinkType> = {}
-  const idMap: Record<string, object> = {}
+  const idMap: Record<string, DomainDesignObject> = {}
+  const associationMap: Record<string, DomainNodeSet<DomainDesignObject>> = {}
   const commands: DomainDesignCommand<any>[] = []
   const facadeCommands: DomainDesignFacadeCommand<any>[] = []
   const actors: DomainDesignActor[] = []
@@ -122,8 +125,16 @@ function createInternalContext(initFn: ContextInitializer) {
         workflows[currentWorkflowName].push(targetId)
       }
       links[`${srcRule},${srcId},${targetRule},${targetId}`] = linkType
+      if (associationMap[srcId] === undefined) {
+        associationMap[srcId] = new DomainNodeSet()
+      }
+      associationMap[srcId].add(idMap[targetId])
+      if (associationMap[targetId] === undefined) {
+        associationMap[targetId] = new DomainNodeSet()
+      }
+      associationMap[targetId].add(idMap[srcId])
     },
-    getId() {
+    getDesignerId() {
       return initResult.id
     },
     getWorkflows() {
@@ -137,6 +148,9 @@ function createInternalContext(initFn: ContextInitializer) {
     },
     getIdMap() {
       return idMap
+    },
+    getAssociationMap() {
+      return associationMap
     },
     getCommands() {
       return commands

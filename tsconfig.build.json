@@ -1,5 +1,4 @@
 {
-  "extends": "@tsconfig/node22/tsconfig.json",
   "include": [
     "globals.d.ts",
     "lib/*",
@@ -13,6 +12,7 @@
     "composite": true,
     "baseUrl": ".",
     "module": "ESNext",
+    "target": "ESNext",
     "moduleResolution": "Bundler",
     "noEmit": false,
     "emitDeclarationOnly": true,

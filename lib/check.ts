@@ -4,7 +4,7 @@ import {
   type DomainDesigner,
   type DomainDesignEvent,
   type DomainDesignFacadeCommand,
-  type DomainDesignInfoObject,
+  type DomainDesignInfoRecord,
   type DomainDesignReadModel,
   type Warning,
   isDomainDesignAgg,
@@ -99,11 +99,11 @@ export function checkWorkflow(
 function isTable(
   node: object
 ): node is
-  | DomainDesignCommand<DomainDesignInfoObject>
-  | DomainDesignFacadeCommand<DomainDesignInfoObject>
-  | DomainDesignEvent<DomainDesignInfoObject>
-  | DomainDesignAgg<DomainDesignInfoObject>
-  | DomainDesignReadModel<DomainDesignInfoObject> {
+  | DomainDesignCommand<DomainDesignInfoRecord>
+  | DomainDesignFacadeCommand<DomainDesignInfoRecord>
+  | DomainDesignEvent<DomainDesignInfoRecord>
+  | DomainDesignAgg<DomainDesignInfoRecord>
+  | DomainDesignReadModel<DomainDesignInfoRecord> {
   return (
     isDomainDesignCommand(node) ||
     isDomainDesignEvent(node) ||

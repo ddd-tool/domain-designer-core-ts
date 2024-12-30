@@ -10,6 +10,7 @@ import {
 } from './define'
 
 export function createReadModelProvider(designId: string): DomainDesignReadModelProvider {
+  const RULE = 'ReadModel'
   return <G_NAME extends string, ARR extends NonEmptyArray<CustomInfo<G_NAME>>>(
     name: string,
     infosInitializer: ARR | NonEmptyInitFunc<() => ARR>,
@@ -23,7 +24,7 @@ export function createReadModelProvider(designId: string): DomainDesignReadModel
     const readModel: DomainDesignReadModel<CustomInfoArrayToInfoObject<ARR>> = {
       _attributes: {
         __id,
-        rule: 'ReadModel',
+        rule: RULE,
         name,
         infos,
         description: context.createDesc(desc as any),

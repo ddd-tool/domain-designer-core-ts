@@ -22,7 +22,6 @@
     "test:all": "npx vitest"
   },
   "devDependencies": {
-    "@tsconfig/node22": "^22.0.0",
     "@types/node": "^22.10.1",
     "ncp": "^2.0.0",
     "read-pkg": "^9.0.1",

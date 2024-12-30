@@ -1,6 +1,7 @@
 import { checkWorkflow, createDomainDesigner, isDomainDesigner } from '..'
 import { expect, it } from 'vitest'
 import { LinkType } from '../common'
+import { DomainDesignObject } from '../define'
 
 it('注册元素', () => {
   const d = createDomainDesigner()
@@ -65,18 +66,14 @@ it('连接', () => {
   用户.readModel(读模型)
 
   const context = d._getContext()
-  type Node = {
-    _attributes: {
-      __id: string
-      rule: string
-    }
-  }
-  function checkLink(from: Node, to: Node, linkType: LinkType = 'Association') {
+  function checkLink(from: DomainDesignObject, to: DomainDesignObject, linkType: LinkType = 'Association') {
     expect(
       context.getLinks()[
         `${from._attributes.rule},${from._attributes.__id},${to._attributes.rule},${to._attributes.__id}`
       ]
     ).toBe(linkType)
+    expect(context.getAssociationMap()[from._attributes.__id].has(to))
+    expect(context.getAssociationMap()[to._attributes.__id].has(from))
   }
   checkLink(用户, 命令1)
   checkLink(命令1, 聚合)
