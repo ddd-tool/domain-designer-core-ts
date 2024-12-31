@@ -1,14 +1,14 @@
 import { readonly } from 'vue'
-import { DomainDesignDesc, DomainDesignDescProvider, DomainDesignDescValue } from './define'
+import { DomainDesignDesc, DomainDesignDescProvider, DomainDesignDescInject } from './define'
 
 export function createDescProvider(_designCode: string): DomainDesignDescProvider {
   function descFn(temp: undefined): undefined
   function descFn(temp: string): DomainDesignDesc
   function descFn(temp: DomainDesignDesc): DomainDesignDesc
-  function descFn(temp: TemplateStringsArray, ...values: DomainDesignDescValue[]): DomainDesignDesc
+  function descFn(temp: TemplateStringsArray, ...values: DomainDesignDescInject[]): DomainDesignDesc
   function descFn(
     temp: string | TemplateStringsArray | undefined | DomainDesignDesc,
-    ...values: DomainDesignDescValue[]
+    ...values: DomainDesignDescInject[]
   ): DomainDesignDesc | undefined {
     if (temp === undefined) {
       return undefined
@@ -28,7 +28,7 @@ export function createDescProvider(_designCode: string): DomainDesignDescProvide
       _attributes: {
         rule: 'Desc',
         template: template,
-        values: values,
+        inject: values,
       },
     }
   }

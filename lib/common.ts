@@ -26,7 +26,7 @@ import {
   DomainDesignInfoType,
   CustomInfo,
   DomainDesignOptions,
-  DomainNodeSet,
+  DomainObjectSet,
   DomainDesignObject,
 } from './define'
 
@@ -85,7 +85,7 @@ function createInternalContext(initFn: ContextInitializer) {
   //NOTE: links的键为"srcRule,srcId,destRule,destId"
   const links: Record<string, LinkType> = {}
   const idMap: Record<string, DomainDesignObject> = {}
-  const associationMap: Record<string, DomainNodeSet<DomainDesignObject>> = {}
+  const associationMap: Record<string, DomainObjectSet<DomainDesignObject>> = {}
   const commands: DomainDesignCommand<any>[] = []
   const facadeCommands: DomainDesignFacadeCommand<any>[] = []
   const actors: DomainDesignActor[] = []
@@ -126,11 +126,11 @@ function createInternalContext(initFn: ContextInitializer) {
       }
       links[`${srcRule},${srcId},${targetRule},${targetId}`] = linkType
       if (associationMap[srcId] === undefined) {
-        associationMap[srcId] = new DomainNodeSet()
+        associationMap[srcId] = new DomainObjectSet()
       }
       associationMap[srcId].add(idMap[targetId])
       if (associationMap[targetId] === undefined) {
-        associationMap[targetId] = new DomainNodeSet()
+        associationMap[targetId] = new DomainObjectSet()
       }
       associationMap[targetId].add(idMap[srcId])
     },

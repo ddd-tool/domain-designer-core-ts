@@ -47,5 +47,5 @@ it('字符串模板类型校验', () => {
     ${command}
     ${facadeCmd}
   `
-  expect(desc._attributes.values.length).toEqual(9)
+  expect(desc._attributes.inject.length).toEqual(9)
 })

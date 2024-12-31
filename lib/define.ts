@@ -1,4 +1,4 @@
-export class DomainNodeSet<T extends DomainDesignObject> implements Iterable<T> {
+export class DomainObjectSet<T extends DomainDesignObject> implements Iterable<T> {
   private record: Record<string, T> = {}
 
   add(item: T): void {
@@ -16,7 +16,6 @@ export class DomainNodeSet<T extends DomainDesignObject> implements Iterable<T> 
   [Symbol.iterator](): Iterator<T> {
     let index = 0
     const items = Object.values(this.record)
-
     return {
       next(): IteratorResult<T> {
         if (index < items.length) {
@@ -42,23 +41,23 @@ export type DomainDesignRule =
   | 'ReadModel'
 
 export interface DomainDesignObject {
-  _attributes: { rule: DomainDesignRule; __id: string }
+  _attributes: { rule: DomainDesignRule; __id: string; name: string }
 }
 // ========================== 描述 ==========================
 export type DomainDesignDescProvider = {
   (temp: undefined): undefined
   (temp: string): DomainDesignDesc
   (temp: DomainDesignDesc): DomainDesignDesc
-  (temp: TemplateStringsArray, ...values: DomainDesignDescValue[]): DomainDesignDesc
+  (temp: TemplateStringsArray, ...values: DomainDesignDescInject[]): DomainDesignDesc
 }
 export type DomainDesignDesc = Readonly<{
   readonly _attributes: {
     rule: Extract<DomainDesignRule, 'Desc'>
     readonly template: TemplateStringsArray
-    readonly values: DomainDesignDescValue[]
+    readonly inject: DomainDesignDescInject[]
   }
 }>
-export type DomainDesignDescValue =
+export type DomainDesignDescInject =
   | DomainDesignInfo<any, any>
   | DomainDesignCommand<any>
   | DomainDesignFacadeCommand<any>
@@ -525,7 +524,7 @@ export type DomainDesigner = {
     getUserStories(): Record<string, string[]>
     getLinks(): Record<string, import('./common').LinkType>
     getIdMap(): Record<string, import('./define').DomainDesignObject>
-    getAssociationMap(): Record<string, import('./define').DomainNodeSet<import('./define').DomainDesignObject>>
+    getAssociationMap(): Record<string, import('./define').DomainObjectSet<import('./define').DomainDesignObject>>
     getCommands(): import('./define').DomainDesignCommand<any>[]
     getFacadeCommands(): import('./define').DomainDesignFacadeCommand<any>[]
     getActors(): import('./define').DomainDesignActor[]
