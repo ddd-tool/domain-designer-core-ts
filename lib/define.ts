@@ -41,7 +41,12 @@ export type DomainDesignRule =
   | 'ReadModel'
 
 export interface DomainDesignObject {
-  _attributes: { rule: DomainDesignRule; __id: string; name: string }
+  readonly _attributes: {
+    readonly rule: DomainDesignRule
+    readonly __id: string
+    readonly name: string
+    readonly description?: DomainDesignDesc
+  }
 }
 // ========================== 描述 ==========================
 export type DomainDesignDescProvider = {
