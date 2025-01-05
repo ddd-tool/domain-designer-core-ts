@@ -1,15 +1,15 @@
 {
   "name": "@ddd-tool/domain-designer-core",
   "private": true,
-  "version": "0.0.0-alpha.26",
+  "version": "0.0.0-alpha.27",
   "type": "module",
   "files": [
     "dist"
   ],
   "sideEffects": [
-    "./index.mjs"
+    "./index.js"
   ],
-  "module": "./dist/index.mjs",
+  "module": "./dist/index.js",
   "license": "Apache-2.0",
   "author": {
     "name": "AlphaFoxz",
