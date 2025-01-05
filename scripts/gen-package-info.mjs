@@ -8,7 +8,7 @@ const packageJsons = readPackageSync()
 const publishPackageInfo = {
   ...packageJsons,
   private: false,
-  module: 'index.mjs',
+  module: 'index.js',
 }
 delete publishPackageInfo.scripts
 delete publishPackageInfo.readme
