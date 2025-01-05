@@ -3,7 +3,7 @@ import { checkDomainDesigner, checkStory, checkWorkflow } from '../check'
 import { createDomainDesigner } from '..'
 import { match_string, match_table } from '../wasm'
 
-it('wasm', () => {
+it('wasm', async () => {
   const f = match_string('a', 'a')
   expect(f).toBe(1)
   const m = match_table(['a', 'b'], ['a', 'b'], 0.7)
@@ -16,7 +16,7 @@ it('wasm', () => {
   expect(m.matches[1].score).toBe(1)
 })
 
-it('check', () => {
+it('check', async () => {
   const d = createDomainDesigner()
   const age = d.info.valueObj('age')
   const command = d.command('command', ['id', 'name', age])
@@ -24,9 +24,9 @@ it('check', () => {
   const workflow = d.startWorkflow('123')
   command.agg(agg)
   d.defineUserStory('story', [workflow])
-  const result1 = checkWorkflow(d, workflow)
-  const result2 = checkStory(d, 'story')
-  const result3 = checkDomainDesigner(d)
+  const result1 = await checkWorkflow(d, workflow)
+  const result2 = await checkStory(d, 'story')
+  const result3 = await checkDomainDesigner(d)
 
   expect(Object.values(result1)[0].length).toBe(2)
   expect(Object.values(result2)[0].length).toBe(2)

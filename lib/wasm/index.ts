@@ -8,7 +8,7 @@ type MatchRecord = {
   score: number
 }
 
-type MatchResult = {
+export type MatchResult = {
   matches: MatchRecord[]
 }
 

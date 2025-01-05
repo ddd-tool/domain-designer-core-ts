@@ -13,18 +13,34 @@ import {
   isDomainDesignFacadeCommand,
   isDomainDesignReadModel,
 } from './define'
-import { match_table } from './wasm'
 
-export function checkDomainDesigner(d: DomainDesigner): Record<string, Warning[]> {
+let wasmApi: {
+  matchTable: (sources: string[], targets: string[], threshold?: number) => any
+}
+async function loadWasm() {
+  if (!wasmApi) {
+    const match_table = (await import('./wasm')).match_table
+    wasmApi = {
+      matchTable: match_table,
+    }
+  }
+  return wasmApi
+}
+
+export async function checkDomainDesigner(d: DomainDesigner): Promise<Record<string, Warning[]>> {
   const context = d._getContext()
   const result: Record<string, Warning[]> = {}
   for (const story of Object.keys(context.getUserStories())) {
-    Object.assign(result, checkStory(d, story, result))
+    Object.assign(result, await checkStory(d, story, result))
   }
   return result
 }
 
-export function checkStory(d: DomainDesigner, story: string, r?: Record<string, Warning[]>): Record<string, Warning[]> {
+export async function checkStory(
+  d: DomainDesigner,
+  story: string,
+  r?: Record<string, Warning[]>
+): Promise<Record<string, Warning[]>> {
   const context = d._getContext()
   const workflows = context.getUserStories()[story]
   if (!workflows) {
@@ -32,16 +48,16 @@ export function checkStory(d: DomainDesigner, story: string, r?: Record<string, 
   }
   const result: Record<string, Warning[]> = r || {}
   for (const workflow of workflows) {
-    return Object.assign(result, checkWorkflow(d, workflow, result))
+    return Object.assign(result, await checkWorkflow(d, workflow, result))
   }
   return result
 }
 
-export function checkWorkflow(
+export async function checkWorkflow(
   d: DomainDesigner,
   workflow: string,
   r?: Record<string, Warning[]>
-): Record<string, Warning[]> {
+): Promise<Record<string, Warning[]>> {
   const context = d._getContext()
   const result: Record<string, Warning[]> = r || {}
   let srcId = ''
@@ -68,7 +84,7 @@ export function checkWorkflow(
       ...dstIds.filter((item) => !srcIds.includes(item)),
     ]
 
-    const problems = match_table(
+    const problems = (await loadWasm()).matchTable(
       Object.values(src.inner)
         .filter((v) => symmetricDifference.includes(v._attributes.__id))
         .map((v) => v._attributes.name),
