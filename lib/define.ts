@@ -371,14 +371,6 @@ export type DomainDesignOptions = {
   toFormatType?: 'BngleBrackets' | 'JSON' | 'JSONPretty'
 }
 
-export type Warning = {
-  _attributes: {
-    rule: 'CheckResult'
-  }
-  type: 'warning'
-  message: string
-}
-
 // ========================== 其他 ==========================
 export type NonEmptyArray<T> = [T, ...T[]]
 export type NonEmptyObject<T extends object> = keyof T extends never ? never : T

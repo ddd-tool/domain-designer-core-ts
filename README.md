@@ -29,3 +29,12 @@
 - Aggregation: 聚合关系。空心菱形箭头连线，表示从部分组成整体（部分可单独存在）
 
 - Composition: 组合关系。实心菱形箭头连线，表示从部分组成整体（部分不可单独存在，没有整体就没有部分）
+
+## 关于 wasm
+
+- 使用 rust 构建
+
+```shell
+# -t, --target <TARGET> Sets the target environment. [possible values: bundler, nodejs, web, no-modules, deno] [default: bundler]
+wasm-pack build -t web
+```

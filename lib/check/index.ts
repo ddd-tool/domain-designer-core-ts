@@ -6,22 +6,43 @@ import {
   type DomainDesignFacadeCommand,
   type DomainDesignInfoRecord,
   type DomainDesignReadModel,
-  type Warning,
   isDomainDesignAgg,
   isDomainDesignCommand,
   isDomainDesignEvent,
   isDomainDesignFacadeCommand,
   isDomainDesignReadModel,
-} from './define'
+} from '../define'
+
+export type Warning = {
+  _attributes: {
+    rule: 'CheckResult'
+  }
+  type: 'warning'
+  message: string
+}
+
+import { match_table, match_string } from './wasm'
 
 let wasmApi: {
-  matchTable: (sources: string[], targets: string[], threshold?: number) => any
+  matchTable: (sources: string[], targets: string[], threshold?: number) => MatchResult
+  matchString: (source: string, target: string) => number
 }
-async function loadWasm() {
+
+type MatchRecord = {
+  source: string
+  target: string
+  score: number
+}
+
+export type MatchResult = {
+  matches: MatchRecord[]
+}
+
+export async function loadWasm() {
   if (!wasmApi) {
-    const match_table = (await import('./wasm')).match_table
     wasmApi = {
       matchTable: match_table,
+      matchString: match_string,
     }
   }
   return wasmApi
@@ -84,7 +105,7 @@ export async function checkWorkflow(
       ...dstIds.filter((item) => !srcIds.includes(item)),
     ]
 
-    const problems = (await loadWasm()).matchTable(
+    const problems = match_table(
       Object.values(src.inner)
         .filter((v) => symmetricDifference.includes(v._attributes.__id))
         .map((v) => v._attributes.name),
@@ -128,3 +149,5 @@ function isTable(
     isDomainDesignFacadeCommand(node)
   )
 }
+
+// export { checkDomainDesigner, checkStory, checkWorkflow }

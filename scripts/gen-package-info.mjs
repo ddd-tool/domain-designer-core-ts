@@ -1,5 +1,5 @@
-import fs from 'node:fs'
-import path from 'node:path'
+import fs from 'fs'
+import path from 'path'
 import { readPackageSync } from 'read-pkg'
 
 const rootDir = process.cwd()
@@ -7,7 +7,6 @@ const rootDir = process.cwd()
 const packageJsons = readPackageSync()
 const publishPackageInfo = {
   ...packageJsons,
-  sideEffects: false,
   private: false,
   module: 'index.js',
 }
@@ -18,6 +17,20 @@ delete publishPackageInfo.devDependencies
 delete publishPackageInfo._id
 
 fs.writeFileSync(path.join(rootDir, 'dist', 'package.json'), JSON.stringify(publishPackageInfo, null, 2), 'utf8')
+
+fs.writeFileSync(
+  path.join(rootDir, 'dist', 'check', 'package.json'),
+  JSON.stringify(
+    {
+      main: './index.mjs',
+      module: './index.mjs',
+      types: './index.d.ts',
+    },
+    null,
+    2
+  ),
+  'utf8'
+)
 
 fs.copyFileSync(path.join(rootDir, 'README.md'), path.join(rootDir, 'dist', 'README.md'))
 

@@ -89,5 +89,3 @@ export {
   isDomainDesignSystem,
   isDomainDesigner,
 } from './define'
-
-export { checkDomainDesigner, checkStory, checkWorkflow } from './check'
