@@ -3,7 +3,7 @@ export class DomainObjectSet<T extends DomainDesignObject> implements Iterable<T
 
   add(item: T): void {
     const key = item._attributes.__id
-    if (this.record[key] !== undefined) {
+    if (this.record[key] === undefined) {
       this.record[key] = item
     }
   }

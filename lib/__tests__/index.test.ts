@@ -74,6 +74,14 @@ it('连接', () => {
     ).toBe(linkType)
     expect(context.getAssociationMap()[from._attributes.__id].has(to))
     expect(context.getAssociationMap()[to._attributes.__id].has(from))
+    expect(
+      [...context.getAssociationMap()[to._attributes.__id]].filter((i) => i._attributes.__id === from._attributes.__id)
+        .length
+    ).toBe(1)
+    expect(
+      [...context.getAssociationMap()[from._attributes.__id]].filter((i) => i._attributes.__id === to._attributes.__id)
+        .length
+    ).toBe(1)
   }
   checkLink(用户, 命令1)
   checkLink(命令1, 聚合)
