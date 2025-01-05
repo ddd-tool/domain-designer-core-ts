@@ -1,7 +1,7 @@
 import { expect, it } from 'vitest'
-import { checkDomainDesigner, checkStory, checkWorkflow } from '../../check'
-import { createDomainDesigner } from '../..'
-import { match_table, match_string } from '../wasm'
+import { checkDomainDesigner, checkStory, checkWorkflow } from '../check'
+import { createDomainDesigner } from '..'
+import { match_table, match_string } from '../check/wasm'
 
 it('wasm', async () => {
   const f = match_string('a', 'a')
