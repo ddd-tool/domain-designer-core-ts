@@ -18,13 +18,14 @@
   "repository": "https://github.com/ddd-tool/domain-designer-core-ts.git",
   "scripts": {
     "build": "pnpm build:pack && pnpm verify && pnpm test:all && pnpm build:sync",
-    "build:pack": "vite build",
+    "build:pack": "vite build && vite build ./lib/check",
     "build:sync": "node scripts/gen-package-info.mjs",
     "verify": "tsc -p tsconfig.build.json --composite false",
     "test": "pnpm test:all",
     "test:all": "npx vitest"
   },
   "devDependencies": {
+    "@rollup/plugin-wasm": "^6.2.2",
     "@types/node": "^22.10.5",
     "cross-fetch": "^4.1.0",
     "ncp": "^2.0.0",

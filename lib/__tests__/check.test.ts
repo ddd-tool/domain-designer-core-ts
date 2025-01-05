@@ -133,7 +133,7 @@ it('check 完整流程', async () => {
 
   d.defineUserStory('作为商城用户，我要查看订单情况，以便了解订单状态', [创建订单成功_自动扣款成功流程])
 
-  const chekcResult = await checkWorkflow(d, 创建订单成功_自动扣款失败流程)
+  const chekcResult = checkWorkflow(d, 创建订单成功_自动扣款失败流程)
   expect(Object.values(chekcResult).length).toBe(6)
   expect(Object.values(chekcResult)[0].length).toBe(1)
   expect(Object.values(chekcResult)[1].length).toBe(0)
