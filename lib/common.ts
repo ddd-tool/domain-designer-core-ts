@@ -67,7 +67,7 @@ type ContextInitializer = () => {
   createReadModel: DomainDesignReadModelProvider
 }
 const DETAULT_OPTIONS: DomainDesignOptions = {
-  moduleName: 'example',
+  moduleName: '',
   __toFormatType: 'BngleBrackets',
 }
 
