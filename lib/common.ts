@@ -67,7 +67,8 @@ type ContextInitializer = () => {
   createReadModel: DomainDesignReadModelProvider
 }
 const DETAULT_OPTIONS: DomainDesignOptions = {
-  toFormatType: 'BngleBrackets',
+  moduleName: 'example',
+  __toFormatType: 'BngleBrackets',
 }
 
 export type DomainDesignInternalContext = ReturnType<typeof createInternalContext>
@@ -136,6 +137,9 @@ function createInternalContext(initFn: ContextInitializer) {
     },
     getDesignerId() {
       return initResult.id
+    },
+    getModuleName() {
+      return initResult.options.moduleName
     },
     getWorkflows() {
       return workflows
@@ -250,16 +254,16 @@ function createInternalContext(initFn: ContextInitializer) {
       }, [] as DomainDesignInfo<DomainDesignInfoType, string>[])
     },
     toFormat<OBJ extends { _attributes: { __id: string; name: string } }>(obj: OBJ): string {
-      if (initResult.options?.toFormatType === 'BngleBrackets') {
+      if (initResult.options?.__toFormatType === 'BngleBrackets') {
         return `<${obj._attributes.name}>`
-      } else if (initResult.options?.toFormatType === 'JSON') {
+      } else if (initResult.options?.__toFormatType === 'JSON') {
         return JSON.stringify(obj)
-      } else if (initResult.options?.toFormatType === 'JSONPretty') {
+      } else if (initResult.options?.__toFormatType === 'JSONPretty') {
         return JSON.stringify(obj, null, 2)
-      } else if (initResult.options?.toFormatType === undefined) {
+      } else if (initResult.options?.__toFormatType === undefined) {
         return obj.toString()
       } else {
-        isNever(initResult.options?.toFormatType)
+        isNever(initResult.options?.__toFormatType)
       }
       return obj.toString()
     },

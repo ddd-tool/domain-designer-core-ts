@@ -16,7 +16,7 @@
 
   - [x] 内部提供可链式调用的函数
 
-- [ ] 提供一个 `checkDesigner` 函数，用于辅助检查完备性
+- [x] 提供一个 `checkDesigner` 函数，用于辅助检查完备性
 
   - [x] 内置字符串相似性算法，用于辅助检查完备性
 
@@ -35,6 +35,9 @@
 - 使用 rust 构建
 
 ```shell
+cd wasm/
+
+wasm-pack build
+
 # -t, --target <TARGET> Sets the target environment. [possible values: bundler, nodejs, web, no-modules, deno] [default: bundler]
-wasm-pack build -t web
 ```
