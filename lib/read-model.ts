@@ -2,7 +2,7 @@ import { genId, useInternalContext } from './common'
 import {
   CustomInfo,
   CustomInfoArrayToInfoObject,
-  DomainDesignDesc,
+  DomainDesignNote,
   DomainDesignReadModel,
   DomainDesignReadModelProvider,
   NonEmptyArray,
@@ -14,7 +14,7 @@ export function createReadModelProvider(designId: string): DomainDesignReadModel
   return <G_NAME extends string, ARR extends NonEmptyArray<CustomInfo<G_NAME>>>(
     name: string,
     infosInitializer: ARR | NonEmptyInitFunc<() => ARR>,
-    desc?: string | DomainDesignDesc
+    note?: string | DomainDesignNote
   ) => {
     const context = useInternalContext(designId)
     const __id = genId()
@@ -27,7 +27,7 @@ export function createReadModelProvider(designId: string): DomainDesignReadModel
         rule: RULE,
         name,
         infos,
-        description: context.createDesc(desc as any),
+        note: context.createNote(note as any),
       },
       inner: infos,
       toFormat() {

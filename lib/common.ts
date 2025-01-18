@@ -5,7 +5,7 @@ import {
   DomainDesignAggProvider,
   DomainDesignCommand,
   DomainDesignCommandProvider,
-  DomainDesignDescProvider,
+  DomainDesignNoteProvider,
   DomainDesignEvent,
   DomainDesignEventProvider,
   DomainDesignFacadeCommand,
@@ -54,7 +54,7 @@ export function genId(): string {
 type ContextInitializer = () => {
   id: string
   options?: DomainDesignOptions
-  createDesc: DomainDesignDescProvider
+  createNote: DomainDesignNoteProvider
   createInfo: DomainDesignInfoProvider
   createActor: DomainDesignActorProvider
   createCommand: DomainDesignCommandProvider
@@ -230,8 +230,8 @@ function createInternalContext(initFn: ContextInitializer) {
         if (typeof v === 'string') {
           ;(map as T)[v] = info.valueObj(v)
         } else if (v instanceof Array) {
-          const [name, desc] = v
-          ;(map as T)[name] = info.valueObj(name, desc)
+          const [name, note] = v
+          ;(map as T)[name] = info.valueObj(name, note)
         } else {
           ;(map as T)[v._attributes.name] = v
         }
@@ -245,8 +245,8 @@ function createInternalContext(initFn: ContextInitializer) {
         if (typeof v === 'string') {
           arr.push(info.valueObj(v))
         } else if (v instanceof Array) {
-          const [name, desc] = v
-          arr.push(info.valueObj(name, desc))
+          const [name, note] = v
+          arr.push(info.valueObj(name, note))
         } else {
           arr.push(v)
         }
@@ -267,7 +267,7 @@ function createInternalContext(initFn: ContextInitializer) {
       }
       return obj.toString()
     },
-    createDesc: initResult.createDesc,
+    createNote: initResult.createNote,
     info,
     createPersion: initResult.createActor,
     createCommand: initResult.createCommand,

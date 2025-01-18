@@ -24,7 +24,7 @@ it('info类型', () => {
   expect(infoVo2._attributes.type).toEqual('ValueObject')
   expect(infoVo2._attributes.subtype).toBe('None')
   expect(map[infoVo2._attributes.__id]).instanceOf(Object)
-  expect(infoVo2._attributes.description).instanceOf(Object)
+  expect(infoVo2._attributes.note).instanceOf(Object)
   expect(infoFunc1._attributes.type === 'Function').toBeTruthy()
   expect(typeof infoFunc1._attributes.subtype === 'object').toBeTruthy()
   expect(infoFunc1._attributes.subtype.length).toBe(0)

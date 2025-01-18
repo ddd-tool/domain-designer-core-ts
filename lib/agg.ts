@@ -2,7 +2,7 @@ import { genId, useInternalContext } from './common'
 import {
   DomainDesignAgg,
   DomainDesignAggProvider,
-  DomainDesignDesc,
+  DomainDesignNote,
   DomainDesignEvent,
   NonEmptyArray,
   NonEmptyInitFunc,
@@ -16,7 +16,7 @@ export function createAggProvider(designId: string): DomainDesignAggProvider {
   return <G_NAME extends string, ARR extends NonEmptyArray<CustomInfo<G_NAME>>>(
     name: string,
     infoInitializer: ARR | NonEmptyInitFunc<() => ARR>,
-    desc?: string | DomainDesignDesc
+    note?: string | DomainDesignNote
   ): DomainDesignAgg<CustomInfoArrayToInfoObject<ARR>> => {
     const context = useInternalContext(designId)
     const infos = context.customInfoArrToInfoObj(
@@ -28,7 +28,7 @@ export function createAggProvider(designId: string): DomainDesignAggProvider {
     function event<G_NAME extends string, INFOS extends NonEmptyArray<CustomInfo<G_NAME>>>(
       name: string,
       infos: NonEmptyObject<INFOS>,
-      desc?: string | DomainDesignDesc
+      note?: string | DomainDesignNote
     ): DomainDesignEvent<CustomInfoArrayToInfoObject<INFOS>>
     function event<
       EVENT extends DomainDesignEvent<any>,
@@ -37,13 +37,13 @@ export function createAggProvider(designId: string): DomainDesignAggProvider {
     >(
       param1: EVENT | string,
       infos?: ARR,
-      desc?: string | DomainDesignDesc
+      note?: string | DomainDesignNote
     ): EVENT | DomainDesignEvent<CustomInfoArrayToInfoObject<ARR>> {
       if (typeof param1 === 'object') {
         context.linkTo(RULE, __id, param1._attributes.rule, param1._attributes.__id)
         return param1
       }
-      const e = context.createEvent(param1, infos!, desc)
+      const e = context.createEvent(param1, infos!, note)
       context.linkTo(RULE, __id, e._attributes.rule, e._attributes.__id)
       return e
     }
@@ -54,7 +54,7 @@ export function createAggProvider(designId: string): DomainDesignAggProvider {
         rule: RULE,
         name,
         infos,
-        description: context.createDesc(desc as any),
+        note: context.createNote(note as any),
       },
       inner: infos,
       event,

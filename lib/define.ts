@@ -28,7 +28,7 @@ export class DomainObjectSet<T extends DomainDesignObject> implements Iterable<T
   }
 }
 export type DomainDesignRule =
-  | 'Desc'
+  | 'Note'
   | 'Info'
   | 'Actor'
   | 'Command'
@@ -45,24 +45,24 @@ export interface DomainDesignObject {
     readonly rule: DomainDesignRule
     readonly __id: string
     readonly name: string
-    readonly description?: DomainDesignDesc
+    readonly note?: DomainDesignNote
   }
 }
 // ========================== 描述 ==========================
-export type DomainDesignDescProvider = {
+export type DomainDesignNoteProvider = {
   (temp: undefined): undefined
-  (temp: string): DomainDesignDesc
-  (temp: DomainDesignDesc): DomainDesignDesc
-  (temp: TemplateStringsArray, ...values: DomainDesignDescInject[]): DomainDesignDesc
+  (temp: string): DomainDesignNote
+  (temp: DomainDesignNote): DomainDesignNote
+  (temp: TemplateStringsArray, ...values: DomainDesignNoteInject[]): DomainDesignNote
 }
-export type DomainDesignDesc = Readonly<{
+export type DomainDesignNote = Readonly<{
   readonly _attributes: {
-    rule: Extract<DomainDesignRule, 'Desc'>
+    rule: Extract<DomainDesignRule, 'Note'>
     readonly template: TemplateStringsArray
-    readonly inject: DomainDesignDescInject[]
+    readonly inject: DomainDesignNoteInject[]
   }
 }>
-export type DomainDesignDescInject =
+export type DomainDesignNoteInject =
   | DomainDesignInfo<any, any>
   | DomainDesignCommand<any>
   | DomainDesignFacadeCommand<any>
@@ -75,19 +75,19 @@ export type DomainDesignDescInject =
 
 // ========================== 信息 ==========================
 export type DomainDesignInfoProvider = () => {
-  document<NAME extends string>(name: NAME, desc?: string | DomainDesignDesc): DomainDesignInfo<'Document', NAME>
-  func<NAME extends string>(name: NAME, desc?: string | DomainDesignDesc): DomainDesignInfo<'Function', NAME>
+  document<NAME extends string>(name: NAME, note?: string | DomainDesignNote): DomainDesignInfo<'Document', NAME>
+  func<NAME extends string>(name: NAME, note?: string | DomainDesignNote): DomainDesignInfo<'Function', NAME>
   func<NAME extends string>(
     name: NAME,
-    dependsOn: NonEmptyArray<DomainDesignInfoFuncDependsOn | string | [string, string | DomainDesignDesc]>,
-    desc?: string | DomainDesignDesc
+    dependsOn: NonEmptyArray<DomainDesignInfoFuncDependsOn | string | [string, string | DomainDesignNote]>,
+    note?: string | DomainDesignNote
   ): DomainDesignInfo<'Function', NAME>
-  id<NAME extends string>(name: NAME, desc?: string | DomainDesignDesc): DomainDesignInfo<'Id', NAME>
-  valueObj<NAME extends string>(name: NAME, desc?: string | DomainDesignDesc): DomainDesignInfo<'ValueObject', NAME>
-  version<NAME extends string>(name: NAME, desc?: string | DomainDesignDesc): DomainDesignInfo<'Version', NAME>
+  id<NAME extends string>(name: NAME, note?: string | DomainDesignNote): DomainDesignInfo<'Id', NAME>
+  valueObj<NAME extends string>(name: NAME, note?: string | DomainDesignNote): DomainDesignInfo<'ValueObject', NAME>
+  version<NAME extends string>(name: NAME, note?: string | DomainDesignNote): DomainDesignInfo<'Version', NAME>
 }
 export type DomainDesignInfoType = 'Document' | 'Function' | 'Id' | 'ValueObject' | 'Version'
-export type DomainDesignInfoSimplify<NAME extends string> = NAME | [NAME, string | DomainDesignDesc]
+export type DomainDesignInfoSimplify<NAME extends string> = NAME | [NAME, string | DomainDesignNote]
 export type DomainDesignInfoSubtype<TYPE extends DomainDesignInfoType> = TYPE extends
   | 'Document'
   | 'Id'
@@ -104,7 +104,7 @@ export interface DomainDesignInfo<TYPE extends DomainDesignInfoType, NAME extend
     readonly type: TYPE
     readonly subtype: DomainDesignInfoSubtype<TYPE>
     readonly name: NAME
-    readonly description?: DomainDesignDesc
+    readonly note?: DomainDesignNote
   }
   toFormat(): string
 }
@@ -115,9 +115,9 @@ export type DomainDesignInfoRecord = NonEmptyObject<Record<string, DomainDesignI
 export type CustomInfo<G_NAME extends string> =
   | DomainDesignInfo<DomainDesignInfoType, G_NAME>
   | G_NAME
-  | [G_NAME, string | DomainDesignDesc]
+  | [G_NAME, string | DomainDesignNote]
 export type CustomInfoArrayToInfoObject<
-  ARR extends Array<DomainDesignInfo<any, any> | string | [string, string | DomainDesignDesc]>
+  ARR extends Array<DomainDesignInfo<any, any> | string | [string, string | DomainDesignNote]>
 > = {
   [K in ARR[number] as K extends DomainDesignInfo<any, infer U>
     ? U
@@ -136,26 +136,26 @@ export type CustomInfoArrayToInfoObject<
 
 // ========================== 参与者 ==========================
 export type DomainDesignActorProvider = {
-  (name: string, desc?: string | DomainDesignDesc): DomainDesignActor
+  (name: string, note?: string | DomainDesignNote): DomainDesignActor
 }
 export interface DomainDesignActor extends DomainDesignObject {
   readonly _attributes: {
     readonly __id: string
     readonly rule: Extract<DomainDesignRule, 'Actor'>
     readonly name: string
-    readonly description?: DomainDesignDesc
+    readonly note?: DomainDesignNote
   }
   command<COMMAND extends DomainDesignCommand<any>>(command: COMMAND): COMMAND
   command<G_NAME extends string, ARR extends NonEmptyArray<DomainDesignInfo<DomainDesignInfoType, G_NAME> | G_NAME>>(
     name: string,
     infos: ARR,
-    desc?: string | DomainDesignDesc
+    note?: string | DomainDesignNote
   ): DomainDesignCommand<CustomInfoArrayToInfoObject<ARR>>
   facadeCmd<FACADECMD extends DomainDesignFacadeCommand<any>>(command: FACADECMD): FACADECMD
   facadeCmd<G_NAME extends string, ARR extends NonEmptyArray<DomainDesignInfo<DomainDesignInfoType, G_NAME> | G_NAME>>(
     name: string,
     infos: ARR,
-    desc?: string | DomainDesignDesc
+    note?: string | DomainDesignNote
   ): DomainDesignFacadeCommand<CustomInfoArrayToInfoObject<ARR>>
   readModel<READ_MODEL extends DomainDesignReadModel<any>>(readModel: READ_MODEL): READ_MODEL
   readModel<G_NAME extends string, ARR extends NonEmptyArray<DomainDesignInfo<DomainDesignInfoType, G_NAME> | G_NAME>>(
@@ -170,7 +170,7 @@ export type DomainDesignCommandProvider = {
   <G_NAME extends string, ARR extends NonEmptyArray<CustomInfo<G_NAME>>>(
     name: string,
     infos: ARR | NonEmptyInitFunc<() => ARR>,
-    desc?: string | DomainDesignDesc
+    note?: string | DomainDesignNote
   ): DomainDesignCommand<CustomInfoArrayToInfoObject<ARR>>
 }
 export interface DomainDesignCommand<INFOS extends DomainDesignInfoRecord> extends DomainDesignObject {
@@ -179,14 +179,14 @@ export interface DomainDesignCommand<INFOS extends DomainDesignInfoRecord> exten
     readonly rule: Extract<DomainDesignRule, 'Command'>
     readonly name: string
     readonly infos: INFOS
-    readonly description?: DomainDesignDesc
+    readonly note?: DomainDesignNote
   }
   readonly inner: INFOS
   agg<AGG extends DomainDesignAgg<any>>(agg: AGG): AGG
   agg<G_NAME extends string, ARR extends NonEmptyArray<CustomInfo<G_NAME>>>(
     name: string,
     agg: ARR,
-    desc?: string | DomainDesignDesc
+    note?: string | DomainDesignNote
   ): DomainDesignAgg<CustomInfoArrayToInfoObject<ARR>>
   toFormat(): string
 }
@@ -195,7 +195,7 @@ export type DomainDesignFacadeCommandProvider = {
   <G_NAME extends string, ARR extends NonEmptyArray<CustomInfo<G_NAME>>>(
     name: string,
     infos: ARR | NonEmptyInitFunc<() => ARR>,
-    desc?: string | DomainDesignDesc
+    note?: string | DomainDesignNote
   ): DomainDesignFacadeCommand<CustomInfoArrayToInfoObject<ARR>>
 }
 export interface DomainDesignFacadeCommand<INFOS extends DomainDesignInfoRecord> extends DomainDesignObject {
@@ -204,17 +204,17 @@ export interface DomainDesignFacadeCommand<INFOS extends DomainDesignInfoRecord>
     readonly rule: Extract<DomainDesignRule, 'FacadeCommand'>
     readonly name: string
     readonly infos: INFOS
-    readonly description?: DomainDesignDesc
+    readonly note?: DomainDesignNote
   }
   readonly inner: INFOS
   agg<AGG extends DomainDesignAgg<any>>(agg: AGG): AGG
   agg<G_NAME extends string, ARR extends NonEmptyArray<CustomInfo<G_NAME>>>(
     name: string,
     agg: ARR,
-    desc?: string | DomainDesignDesc
+    note?: string | DomainDesignNote
   ): DomainDesignAgg<CustomInfoArrayToInfoObject<ARR>>
   service(service: DomainDesignService): DomainDesignService
-  service(name: string, desc?: string | DomainDesignDesc): DomainDesignService
+  service(name: string, note?: string | DomainDesignNote): DomainDesignService
   toFormat(): string
 }
 
@@ -223,7 +223,7 @@ export type DomainDesignEventProvider = {
   <G_NAME extends string, ARR extends NonEmptyArray<CustomInfo<G_NAME>>>(
     name: string,
     infos: ARR | NonEmptyInitFunc<() => ARR>,
-    desc?: string | DomainDesignDesc
+    note?: string | DomainDesignNote
   ): DomainDesignEvent<CustomInfoArrayToInfoObject<ARR>>
 }
 export interface DomainDesignEvent<INFOS extends DomainDesignInfoRecord> extends DomainDesignObject {
@@ -232,13 +232,13 @@ export interface DomainDesignEvent<INFOS extends DomainDesignInfoRecord> extends
     readonly rule: Extract<DomainDesignRule, 'Event'>
     readonly name: string
     readonly infos: INFOS
-    readonly description?: DomainDesignDesc
+    readonly note?: DomainDesignNote
   }
   readonly inner: INFOS
   policy(policy: DomainDesignPolicy): DomainDesignPolicy
-  policy(name: string, desc?: string | DomainDesignDesc): DomainDesignPolicy
+  policy(name: string, note?: string | DomainDesignNote): DomainDesignPolicy
   system(system: DomainDesignSystem): DomainDesignSystem
-  system(name: string, desc?: string | DomainDesignDesc): DomainDesignSystem
+  system(name: string, note?: string | DomainDesignNote): DomainDesignSystem
   readModel<READ_MODEL extends DomainDesignReadModel<any>>(readModel: READ_MODEL): READ_MODEL
   readModel<G_NAME extends string, ARR extends NonEmptyArray<CustomInfo<G_NAME>>>(
     name: string,
@@ -252,7 +252,7 @@ export type DomainDesignAggProvider = {
   <G_NAME extends string, ARR extends NonEmptyArray<CustomInfo<G_NAME>>>(
     name: string,
     infos: ARR | NonEmptyInitFunc<() => ARR>,
-    desc?: string | DomainDesignDesc
+    note?: string | DomainDesignNote
   ): DomainDesignAgg<CustomInfoArrayToInfoObject<ARR>>
 }
 export interface DomainDesignAgg<INFOS extends DomainDesignInfoRecord> extends DomainDesignObject {
@@ -261,86 +261,86 @@ export interface DomainDesignAgg<INFOS extends DomainDesignInfoRecord> extends D
     readonly rule: Extract<DomainDesignRule, 'Agg'>
     readonly name: string
     readonly infos: INFOS
-    readonly description?: DomainDesignDesc
+    readonly note?: DomainDesignNote
   }
   readonly inner: INFOS
   event<EVENT extends DomainDesignEvent<any>>(event: EVENT): EVENT
   event<G_NAME extends string, ARR extends NonEmptyArray<CustomInfo<G_NAME>>>(
     name: string,
     infos: ARR,
-    desc?: string | DomainDesignDesc
+    note?: string | DomainDesignNote
   ): DomainDesignEvent<CustomInfoArrayToInfoObject<ARR>>
   toFormat(): string
 }
 
 // ========================== 策略 ==========================
 export type DomainDesignPolicyProvider = {
-  (name: string, desc?: string | DomainDesignDesc): DomainDesignPolicy
+  (name: string, note?: string | DomainDesignNote): DomainDesignPolicy
 }
 export interface DomainDesignPolicy extends DomainDesignObject {
   readonly _attributes: {
     readonly __id: string
     readonly rule: Extract<DomainDesignRule, 'Policy'>
     readonly name: string
-    readonly description?: DomainDesignDesc
+    readonly note?: DomainDesignNote
   }
   service(service: DomainDesignService): DomainDesignService
-  service(name: string, desc?: string | DomainDesignDesc): DomainDesignService
+  service(name: string, note?: string | DomainDesignNote): DomainDesignService
   toFormat(): string
 }
 
 // ========================== 外部系统 ==========================
 export type DomainDesignSystemProvider = {
-  (name: string, desc?: string | DomainDesignDesc): DomainDesignSystem
+  (name: string, note?: string | DomainDesignNote): DomainDesignSystem
 }
 export interface DomainDesignSystem extends DomainDesignObject {
   readonly _attributes: {
     readonly __id: string
     readonly rule: Extract<DomainDesignRule, 'System'>
     readonly name: string
-    readonly description?: DomainDesignDesc
+    readonly note?: DomainDesignNote
   }
   command<COMMAND extends DomainDesignCommand<any>>(command: COMMAND): COMMAND
   command<G_NAME extends string, ARR extends NonEmptyArray<CustomInfo<G_NAME>>>(
     name: string,
     infos: ARR,
-    desc?: string | DomainDesignDesc
+    note?: string | DomainDesignNote
   ): DomainDesignCommand<CustomInfoArrayToInfoObject<ARR>>
   facadeCmd<FACADECMD extends DomainDesignFacadeCommand<any>>(facadeCmd: FACADECMD): FACADECMD
   facadeCmd<G_NAME extends string, ARR extends NonEmptyArray<CustomInfo<G_NAME>>>(
     name: string,
     infos: ARR,
-    desc?: string | DomainDesignDesc
+    note?: string | DomainDesignNote
   ): DomainDesignFacadeCommand<CustomInfoArrayToInfoObject<ARR>>
   toFormat(): string
 }
 
 // ========================== 服务 ==========================
-export type DomainDesignServiceProvider = (name: string, desc?: string | DomainDesignDesc) => DomainDesignService
+export type DomainDesignServiceProvider = (name: string, note?: string | DomainDesignNote) => DomainDesignService
 export interface DomainDesignService extends DomainDesignObject {
   readonly _attributes: {
     readonly __id: string
     readonly rule: Extract<DomainDesignRule, 'Service'>
     readonly name: string
-    readonly description?: DomainDesignDesc
+    readonly note?: DomainDesignNote
   }
   command<COMMAND extends DomainDesignCommand<any>>(command: COMMAND): COMMAND
   command<G_NAME extends string, ARR extends NonEmptyArray<CustomInfo<G_NAME>>>(
     name: string,
     infos: ARR,
-    desc?: string | DomainDesignDesc
+    note?: string | DomainDesignNote
   ): DomainDesignCommand<CustomInfoArrayToInfoObject<ARR>>
   facadeCmd<FACADECMD extends DomainDesignFacadeCommand<any>>(facadeCmd: FACADECMD): FACADECMD
   facadeCmd<G_NAME extends string, ARR extends NonEmptyArray<CustomInfo<G_NAME>>>(
     name: string,
     infos: ARR,
-    desc?: string | DomainDesignDesc
+    note?: string | DomainDesignNote
   ): DomainDesignFacadeCommand<CustomInfoArrayToInfoObject<ARR>>
   agg<AGG extends DomainDesignAgg<any>>(agg: AGG): AGG
   agg<G_NAME extends string, ARR extends NonEmptyArray<CustomInfo<G_NAME>>>(
     name: string,
     agg: ARR,
-    desc?: string | DomainDesignDesc
+    note?: string | DomainDesignNote
   ): DomainDesignAgg<CustomInfoArrayToInfoObject<ARR>>
   toFormat(): string
 }
@@ -350,7 +350,7 @@ export type DomainDesignReadModelProvider = {
   <G_NAME extends string, ARR extends NonEmptyArray<CustomInfo<G_NAME>>>(
     name: string,
     infos: ARR | NonEmptyInitFunc<() => ARR>,
-    desc?: string | DomainDesignDesc
+    note?: string | DomainDesignNote
   ): DomainDesignReadModel<CustomInfoArrayToInfoObject<ARR>>
 }
 export interface DomainDesignReadModel<INFOS extends DomainDesignInfoRecord> extends DomainDesignObject {
@@ -359,7 +359,7 @@ export interface DomainDesignReadModel<INFOS extends DomainDesignInfoRecord> ext
     readonly rule: Extract<DomainDesignRule, 'ReadModel'>
     readonly name: string
     readonly infos: INFOS
-    readonly description?: DomainDesignDesc
+    readonly note?: DomainDesignNote
   }
   readonly inner: INFOS
   toFormat(): string
@@ -427,7 +427,7 @@ export function isDomainDesigner(param: any): param is DomainDesigner {
     typeof d.startWorkflow === 'function' &&
     typeof d.defineUserStory === 'function' &&
     typeof d._getContext === 'function' &&
-    typeof d.desc === 'function' &&
+    typeof d.note === 'function' &&
     typeof d.info === 'object' &&
     typeof d.command === 'function' &&
     typeof d.facadeCmd === 'function' &&
@@ -446,18 +446,18 @@ export function isDomainDesigner(param: any): param is DomainDesigner {
 export type DomainDesigner = {
   startWorkflow: (name: string) => string
   defineUserStory: (name: string, workflowNames: NonEmptyArray<string>) => void
-  desc: DomainDesignDescProvider
+  note: DomainDesignNoteProvider
   info: {
-    document<NAME extends string>(name: NAME, desc?: string | DomainDesignDesc): DomainDesignInfo<'Document', NAME>
-    func<NAME extends string>(name: NAME, desc?: string | DomainDesignDesc): DomainDesignInfo<'Function', NAME>
+    document<NAME extends string>(name: NAME, note?: string | DomainDesignNote): DomainDesignInfo<'Document', NAME>
+    func<NAME extends string>(name: NAME, note?: string | DomainDesignNote): DomainDesignInfo<'Function', NAME>
     func<NAME extends string>(
       name: NAME,
-      dependsOn: NonEmptyArray<DomainDesignInfoFuncDependsOn | string | [string, string | DomainDesignDesc]>,
-      desc?: string | DomainDesignDesc
+      dependsOn: NonEmptyArray<DomainDesignInfoFuncDependsOn | string | [string, string | DomainDesignNote]>,
+      note?: string | DomainDesignNote
     ): DomainDesignInfo<'Function', NAME>
-    id<NAME extends string>(name: NAME, desc?: string | DomainDesignDesc): DomainDesignInfo<'Id', NAME>
-    valueObj<NAME extends string>(name: NAME, desc?: string | DomainDesignDesc): DomainDesignInfo<'ValueObject', NAME>
-    version<NAME extends string>(name: NAME, desc?: string | DomainDesignDesc): DomainDesignInfo<'Version', NAME>
+    id<NAME extends string>(name: NAME, note?: string | DomainDesignNote): DomainDesignInfo<'Id', NAME>
+    valueObj<NAME extends string>(name: NAME, note?: string | DomainDesignNote): DomainDesignInfo<'ValueObject', NAME>
+    version<NAME extends string>(name: NAME, note?: string | DomainDesignNote): DomainDesignInfo<'Version', NAME>
   }
   actor: DomainDesignActorProvider
   command: DomainDesignCommandProvider
@@ -531,18 +531,18 @@ export type DomainDesigner = {
       arr: ARR
     ): DomainDesignInfo<DomainDesignInfoType, string>[]
     toFormat<OBJ extends { _attributes: { __id: string; name: string } }>(obj: OBJ): string
-    createDesc: DomainDesignDescProvider
+    createNote: DomainDesignNoteProvider
     info: {
-      document<NAME extends string>(name: NAME, desc?: string | DomainDesignDesc): DomainDesignInfo<'Document', NAME>
-      func<NAME extends string>(name: NAME, desc?: string | DomainDesignDesc): DomainDesignInfo<'Function', NAME>
+      document<NAME extends string>(name: NAME, note?: string | DomainDesignNote): DomainDesignInfo<'Document', NAME>
+      func<NAME extends string>(name: NAME, note?: string | DomainDesignNote): DomainDesignInfo<'Function', NAME>
       func<NAME extends string>(
         name: NAME,
-        dependsOn: NonEmptyArray<DomainDesignInfoFuncDependsOn | string | [string, string | DomainDesignDesc]>,
-        desc?: string | DomainDesignDesc
+        dependsOn: NonEmptyArray<DomainDesignInfoFuncDependsOn | string | [string, string | DomainDesignNote]>,
+        note?: string | DomainDesignNote
       ): DomainDesignInfo<'Function', NAME>
-      id<NAME extends string>(name: NAME, desc?: string | DomainDesignDesc): DomainDesignInfo<'Id', NAME>
-      valueObj<NAME extends string>(name: NAME, desc?: string | DomainDesignDesc): DomainDesignInfo<'ValueObject', NAME>
-      version<NAME extends string>(name: NAME, desc?: string | DomainDesignDesc): DomainDesignInfo<'Version', NAME>
+      id<NAME extends string>(name: NAME, note?: string | DomainDesignNote): DomainDesignInfo<'Id', NAME>
+      valueObj<NAME extends string>(name: NAME, note?: string | DomainDesignNote): DomainDesignInfo<'ValueObject', NAME>
+      version<NAME extends string>(name: NAME, note?: string | DomainDesignNote): DomainDesignInfo<'Version', NAME>
     }
     createPersion: DomainDesignActorProvider
     createCommand: DomainDesignCommandProvider

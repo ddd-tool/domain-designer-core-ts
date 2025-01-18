@@ -11,7 +11,7 @@ it('', () => {
     d.info.id('c'),
     'd1',
     d.info.valueObj('d2'),
-    d.info.valueObj('d3', d.desc`field2`),
+    d.info.valueObj('d3', d.note`field2`),
     d.info.version('e'),
   ])
   expect(命令.inner.a._attributes.name).toBe('a')

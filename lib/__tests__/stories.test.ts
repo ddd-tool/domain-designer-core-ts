@@ -32,7 +32,7 @@ it('self design', () => {
     ])
   })()
 
-  const 确定软件价值 = d.command('确定软件价值', [强类型需求.inner.是否已确定软件价值], d.desc`与${领域专家}沟通`)
+  const 确定软件价值 = d.command('确定软件价值', [强类型需求.inner.是否已确定软件价值], d.note`与${领域专家}沟通`)
 
   const 已确定软件价值 = d.event('已确定软件价值', [
     强类型需求.inner.现有痛点,
@@ -46,7 +46,7 @@ it('self design', () => {
 
   const 沟通策略 = d.policy(
     '继续沟通',
-    d.desc`
+    d.note`
     ${开发人员}与${领域专家}沟通
       1、${未确定软件价值}的${未确定软件价值.inner.模糊地带}
     `

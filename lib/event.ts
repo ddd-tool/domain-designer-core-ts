@@ -1,7 +1,7 @@
 import { genId, useInternalContext } from './common'
 import {
   DomainDesignEvent,
-  DomainDesignDesc,
+  DomainDesignNote,
   DomainDesignPolicy,
   DomainDesignSystem,
   DomainDesignEventProvider,
@@ -17,7 +17,7 @@ export function eventProvider(designId: string): DomainDesignEventProvider {
   return <G_NAME extends string, ARR extends NonEmptyArray<CustomInfo<G_NAME>>>(
     name: string,
     infoInitializer: ARR | NonEmptyInitFunc<() => ARR>,
-    desc?: string | DomainDesignDesc
+    note?: string | DomainDesignNote
   ): DomainDesignEvent<CustomInfoArrayToInfoObject<ARR>> => {
     const context = useInternalContext(designId)
     const infos = context.customInfoArrToInfoObj(
@@ -26,25 +26,25 @@ export function eventProvider(designId: string): DomainDesignEventProvider {
     const __id = genId()
 
     function policy(param: DomainDesignPolicy): DomainDesignPolicy
-    function policy(name: string, desc?: string | DomainDesignDesc): DomainDesignPolicy
-    function policy(param1: DomainDesignPolicy | string, desc?: string | DomainDesignDesc): DomainDesignPolicy {
+    function policy(name: string, note?: string | DomainDesignNote): DomainDesignPolicy
+    function policy(param1: DomainDesignPolicy | string, note?: string | DomainDesignNote): DomainDesignPolicy {
       if (typeof param1 === 'object') {
         context.linkTo(RULE, __id, param1._attributes.rule, param1._attributes.__id)
         return param1
       }
-      const p = context.createPolicy(param1, desc)
+      const p = context.createPolicy(param1, note)
       context.linkTo(RULE, __id, p._attributes.rule, p._attributes.__id)
       return p
     }
 
     function system(param: DomainDesignSystem): DomainDesignSystem
-    function system(name: string, desc?: string | DomainDesignDesc): DomainDesignSystem
-    function system(param1: DomainDesignSystem | string, desc?: string | DomainDesignDesc): DomainDesignSystem {
+    function system(name: string, note?: string | DomainDesignNote): DomainDesignSystem
+    function system(param1: DomainDesignSystem | string, note?: string | DomainDesignNote): DomainDesignSystem {
       if (typeof param1 === 'object') {
         context.linkTo(RULE, __id, param1._attributes.rule, param1._attributes.__id)
         return param1
       }
-      const s = context.createSystem(param1, desc)
+      const s = context.createSystem(param1, note)
       context.linkTo(RULE, __id, s._attributes.rule, s._attributes.__id)
       return s
     }
@@ -53,7 +53,7 @@ export function eventProvider(designId: string): DomainDesignEventProvider {
     function readModel<G_NAME extends string, ARR extends NonEmptyArray<CustomInfo<G_NAME>>>(
       name: string,
       infos: ARR | NonEmptyInitFunc<() => ARR>,
-      desc?: string | DomainDesignDesc
+      note?: string | DomainDesignNote
     ): DomainDesignReadModel<CustomInfoArrayToInfoObject<ARR>>
     function readModel<
       READ_MODEL extends DomainDesignReadModel<any>,
@@ -62,13 +62,13 @@ export function eventProvider(designId: string): DomainDesignEventProvider {
     >(
       param1: READ_MODEL | string,
       infos?: ARR | NonEmptyInitFunc<() => ARR>,
-      desc?: string | DomainDesignDesc
+      note?: string | DomainDesignNote
     ): READ_MODEL | DomainDesignReadModel<CustomInfoArrayToInfoObject<ARR>> {
       if (typeof param1 === 'object') {
         context.linkTo(RULE, __id, param1._attributes.rule, param1._attributes.__id, 'Aggregation')
         return param1
       }
-      const c = context.createReadModel(name, infos!, desc)
+      const c = context.createReadModel(name, infos!, note)
       context.linkTo(RULE, __id, c._attributes.rule, c._attributes.__id, 'Aggregation')
       return c
     }
@@ -78,7 +78,7 @@ export function eventProvider(designId: string): DomainDesignEventProvider {
         rule: RULE,
         name,
         infos,
-        description: context.createDesc(desc as any),
+        note: context.createNote(note as any),
       },
       inner: infos,
       policy,

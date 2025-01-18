@@ -1,7 +1,7 @@
 import { genId, useInternalContext } from './common'
 import {
   DomainDesignCommand,
-  DomainDesignDesc,
+  DomainDesignNote,
   DomainDesignCommandProvider,
   DomainDesignAgg,
   DomainDesignFacadeCommandProvider,
@@ -18,7 +18,7 @@ export function createCommandProvider(designId: string): DomainDesignCommandProv
   return <G_NAME extends string, ARR extends NonEmptyArray<CustomInfo<G_NAME>>>(
     name: string,
     infoInitializer: ARR | NonEmptyInitFunc<() => ARR>,
-    desc?: string | DomainDesignDesc
+    note?: string | DomainDesignNote
   ): DomainDesignCommand<CustomInfoArrayToInfoObject<ARR>> => {
     const context = useInternalContext(designId)
     const infos = context.customInfoArrToInfoObj(
@@ -30,7 +30,7 @@ export function createCommandProvider(designId: string): DomainDesignCommandProv
     function agg<G_NAME extends string, ARR extends NonEmptyArray<CustomInfo<G_NAME>>>(
       name: string,
       agg: ARR,
-      desc?: string | DomainDesignDesc
+      note?: string | DomainDesignNote
     ): DomainDesignAgg<CustomInfoArrayToInfoObject<ARR>>
     function agg<
       AGG extends DomainDesignAgg<any>,
@@ -39,13 +39,13 @@ export function createCommandProvider(designId: string): DomainDesignCommandProv
     >(
       param1: AGG | string,
       infos?: ARR,
-      desc?: string | DomainDesignDesc
+      note?: string | DomainDesignNote
     ): AGG | DomainDesignAgg<CustomInfoArrayToInfoObject<ARR>> {
       if (typeof param1 === 'object') {
         context.linkTo(RULE, __id, param1._attributes.rule, param1._attributes.__id)
         return param1
       } else {
-        const agg = context.createAgg(param1, infos!, desc)
+        const agg = context.createAgg(param1, infos!, note)
         context.linkTo(RULE, __id, agg._attributes.rule, agg._attributes.__id)
         return agg
       }
@@ -56,7 +56,7 @@ export function createCommandProvider(designId: string): DomainDesignCommandProv
         rule: RULE,
         name,
         infos,
-        description: context.createDesc(desc as any),
+        note: context.createNote(note as any),
       },
       inner: infos,
       agg,
@@ -74,7 +74,7 @@ export function createFacadeCmdProvider(designId: string): DomainDesignFacadeCom
   return <G_NAME extends string, ARR extends NonEmptyArray<CustomInfo<G_NAME>>>(
     name: string,
     infoInitializer: ARR | NonEmptyInitFunc<() => ARR>,
-    desc?: string | DomainDesignDesc
+    note?: string | DomainDesignNote
   ): DomainDesignFacadeCommand<CustomInfoArrayToInfoObject<ARR>> => {
     const context = useInternalContext(designId)
     const infos = context.customInfoArrToInfoObj(
@@ -86,7 +86,7 @@ export function createFacadeCmdProvider(designId: string): DomainDesignFacadeCom
     function agg<G_NAME extends string, ARR extends NonEmptyArray<CustomInfo<G_NAME>>>(
       name: string,
       agg: ARR,
-      desc?: string | DomainDesignDesc
+      note?: string | DomainDesignNote
     ): DomainDesignAgg<CustomInfoArrayToInfoObject<ARR>>
     function agg<
       AGG extends DomainDesignAgg<any>,
@@ -95,26 +95,26 @@ export function createFacadeCmdProvider(designId: string): DomainDesignFacadeCom
     >(
       param1: AGG | string,
       infos?: ARR,
-      desc?: string | DomainDesignDesc
+      note?: string | DomainDesignNote
     ): AGG | DomainDesignAgg<CustomInfoArrayToInfoObject<ARR>> {
       if (typeof param1 === 'object') {
         context.linkTo(RULE, __id, param1._attributes.rule, param1._attributes.__id)
         return param1
       } else {
-        const agg = context.createAgg(param1, infos!, desc)
+        const agg = context.createAgg(param1, infos!, note)
         context.linkTo(RULE, __id, agg._attributes.rule, agg._attributes.__id)
         return agg
       }
     }
 
     function service(param: DomainDesignService): DomainDesignService
-    function service(name: string, desc?: string | DomainDesignDesc): DomainDesignService
-    function service(param1: DomainDesignService | string, desc?: string | DomainDesignDesc): DomainDesignService {
+    function service(name: string, note?: string | DomainDesignNote): DomainDesignService
+    function service(param1: DomainDesignService | string, note?: string | DomainDesignNote): DomainDesignService {
       if (typeof param1 === 'object') {
         context.linkTo(RULE, __id, param1._attributes.rule, param1._attributes.__id)
         return param1
       }
-      const s = context.createService(param1, desc)
+      const s = context.createService(param1, note)
       context.linkTo(RULE, __id, s._attributes.rule, s._attributes.__id)
       return s
     }
@@ -124,7 +124,7 @@ export function createFacadeCmdProvider(designId: string): DomainDesignFacadeCom
         rule: RULE,
         name,
         infos,
-        description: context.createDesc(desc as any),
+        note: context.createNote(note as any),
       },
       inner: infos,
       agg,

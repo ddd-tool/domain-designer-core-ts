@@ -1,6 +1,6 @@
 import { genId, useInternalContext } from './common'
 import type {
-  DomainDesignDesc,
+  DomainDesignNote,
   DomainDesignInfo,
   DomainDesignInfoProvider,
   DomainDesignInfoFuncDependsOn,
@@ -9,28 +9,28 @@ import type {
 
 export function createInfoProvider(designId: string): DomainDesignInfoProvider {
   return () => {
-    function func<NAME extends string>(name: NAME, desc?: string | DomainDesignDesc): DomainDesignInfo<'Function', NAME>
+    function func<NAME extends string>(name: NAME, note?: string | DomainDesignNote): DomainDesignInfo<'Function', NAME>
     function func<NAME extends string>(
       name: NAME,
-      dependsOn: NonEmptyArray<DomainDesignInfoFuncDependsOn | string | [string, string | DomainDesignDesc]>,
-      desc?: string | DomainDesignDesc
+      dependsOn: NonEmptyArray<DomainDesignInfoFuncDependsOn | string | [string, string | DomainDesignNote]>,
+      note?: string | DomainDesignNote
     ): DomainDesignInfo<'Function', NAME>
     function func<NAME extends string>(
       name: NAME,
       p2?:
-        | NonEmptyArray<DomainDesignInfoFuncDependsOn | string | [string, string | DomainDesignDesc]>
+        | NonEmptyArray<DomainDesignInfoFuncDependsOn | string | [string, string | DomainDesignNote]>
         | string
-        | DomainDesignDesc,
-      p3?: string | DomainDesignDesc
+        | DomainDesignNote,
+      p3?: string | DomainDesignNote
     ): DomainDesignInfo<'Function', NAME> {
       const context = useInternalContext(designId)
       let subtype: Array<DomainDesignInfoFuncDependsOn> = []
-      let desc: DomainDesignDesc | undefined = undefined
+      let note: DomainDesignNote | undefined = undefined
       if (p2 instanceof Array) {
         subtype = context.customInfoArrToInfoArr(p2 as any) as DomainDesignInfoFuncDependsOn[]
-        desc = p3 as DomainDesignDesc | undefined
+        note = p3 as DomainDesignNote | undefined
       } else {
-        desc = p2 as DomainDesignDesc | undefined
+        note = p2 as DomainDesignNote | undefined
       }
       const result = {
         _attributes: {
@@ -39,7 +39,7 @@ export function createInfoProvider(designId: string): DomainDesignInfoProvider {
           type: 'Function' as const,
           subtype,
           name,
-          description: context.createDesc(desc as any),
+          note: context.createNote(note as any),
         },
         toFormat() {
           return context.toFormat(this)
@@ -50,7 +50,7 @@ export function createInfoProvider(designId: string): DomainDesignInfoProvider {
     }
 
     return {
-      document<NAME extends string>(name: NAME, desc?: string | DomainDesignDesc): DomainDesignInfo<'Document', NAME> {
+      document<NAME extends string>(name: NAME, note?: string | DomainDesignNote): DomainDesignInfo<'Document', NAME> {
         const context = useInternalContext(designId)
         const result = {
           _attributes: {
@@ -59,7 +59,7 @@ export function createInfoProvider(designId: string): DomainDesignInfoProvider {
             type: 'Document' as const,
             subtype: 'None' as const,
             name,
-            description: context.createDesc(desc as any),
+            note: context.createNote(note as any),
           },
           toFormat() {
             return context.toFormat(this)
@@ -69,7 +69,7 @@ export function createInfoProvider(designId: string): DomainDesignInfoProvider {
         return result
       },
       func,
-      id<NAME extends string>(name: NAME, desc?: string | DomainDesignDesc): DomainDesignInfo<'Id', NAME> {
+      id<NAME extends string>(name: NAME, note?: string | DomainDesignNote): DomainDesignInfo<'Id', NAME> {
         const context = useInternalContext(designId)
         const result = {
           _attributes: {
@@ -78,7 +78,7 @@ export function createInfoProvider(designId: string): DomainDesignInfoProvider {
             type: 'Id' as const,
             subtype: 'None' as const,
             name,
-            description: context.createDesc(desc as any),
+            note: context.createNote(note as any),
           },
           toFormat() {
             return context.toFormat(this)
@@ -89,7 +89,7 @@ export function createInfoProvider(designId: string): DomainDesignInfoProvider {
       },
       valueObj<NAME extends string>(
         name: NAME,
-        desc?: string | DomainDesignDesc
+        note?: string | DomainDesignNote
       ): DomainDesignInfo<'ValueObject', NAME> {
         const context = useInternalContext(designId)
         const result: DomainDesignInfo<'ValueObject', NAME> = {
@@ -99,7 +99,7 @@ export function createInfoProvider(designId: string): DomainDesignInfoProvider {
             type: 'ValueObject' as const,
             subtype: 'None' as const,
             name,
-            description: context.createDesc(desc as any),
+            note: context.createNote(note as any),
           },
           toFormat() {
             return context.toFormat(this)
@@ -108,7 +108,7 @@ export function createInfoProvider(designId: string): DomainDesignInfoProvider {
         context.registerInfo(result)
         return result
       },
-      version<NAME extends string>(name: NAME, desc?: string | DomainDesignDesc): DomainDesignInfo<'Version', NAME> {
+      version<NAME extends string>(name: NAME, note?: string | DomainDesignNote): DomainDesignInfo<'Version', NAME> {
         const context = useInternalContext(designId)
         const result = {
           _attributes: {
@@ -117,7 +117,7 @@ export function createInfoProvider(designId: string): DomainDesignInfoProvider {
             type: 'Version' as const,
             subtype: 'None' as const,
             name,
-            description: context.createDesc(desc as any),
+            note: context.createNote(note as any),
           },
           toFormat() {
             return context.toFormat(this)

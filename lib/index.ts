@@ -2,7 +2,7 @@ import { createInfoProvider } from './info'
 import { createCommandProvider, createFacadeCmdProvider } from './command'
 import { eventProvider } from './event'
 import { createActorProvider } from './actor'
-import { createDescProvider } from './desc'
+import { createNoteProvider } from './note'
 import { createAggProvider } from './agg'
 import { createSystemProvider } from './system'
 import { createPolicyProvider } from './policy'
@@ -13,7 +13,7 @@ import { DomainDesigner, DomainDesignOptions } from './define'
 
 export function createDomainDesigner(opts?: DomainDesignOptions): DomainDesigner {
   const designId = genId()
-  const createDesc = createDescProvider(designId)
+  const createNote = createNoteProvider(designId)
   const createInfo = createInfoProvider(designId)
   const createActor = createActorProvider(designId)
   const createCommand = createCommandProvider(designId)
@@ -28,7 +28,7 @@ export function createDomainDesigner(opts?: DomainDesignOptions): DomainDesigner
     return {
       id: designId,
       options: opts,
-      createDesc,
+      createNote,
       createInfo,
       createActor,
       createCommand,
@@ -45,7 +45,7 @@ export function createDomainDesigner(opts?: DomainDesignOptions): DomainDesigner
   return {
     startWorkflow: context.startWorkflow,
     defineUserStory: context.defineUserStory,
-    desc: createDesc,
+    note: createNote,
     info: context.info,
     actor: createActor,
     command: createCommand,
@@ -65,7 +65,7 @@ export {
   type DomainDesignAgg,
   type DomainDesignCommand,
   type DomainDesignFacadeCommand,
-  type DomainDesignDesc,
+  type DomainDesignNote,
   type DomainDesignEvent,
   type DomainDesignInfo,
   type DomainDesignInfoType,
