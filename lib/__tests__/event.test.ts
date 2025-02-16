@@ -18,8 +18,12 @@ it('event糖', () => {
   const d = createDomainDesigner()
   const event = d.event('event', ['field1', d.info.id('field2'), ['field3', '']])
   const readModel = event.readModel('readModel', ['field1', ['field2', '']])
+  const system = event.system('system')
   expect(readModel.inner.field1).not.toBeUndefined()
   expect(readModel.inner.field2).not.toBeUndefined()
+  expect(typeof system._attributes.__id).toBe('string')
+  expect(system._attributes.name).toBe('system')
+  expect(system._attributes.note).toBeUndefined()
 })
 
 it('toFormat', () => {

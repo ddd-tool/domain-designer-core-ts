@@ -24,3 +24,4 @@ dist-ssr
 # custom
 pnpm-lock.yaml
 target/
+/coverage

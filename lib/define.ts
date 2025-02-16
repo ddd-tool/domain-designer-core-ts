@@ -10,6 +10,9 @@ export class DomainObjectSet<T extends DomainDesignObject> implements Iterable<T
   has(item: T): boolean {
     return this.record[item._attributes.__id] !== undefined
   }
+  getById(__id: string) {
+    return this.record[__id]
+  }
   delete(item: T): boolean {
     return delete this.record[item._attributes.__id]
   }
@@ -421,7 +424,7 @@ export function isAnyDomainDesignObject(param: any): param is DomainDesignObject
 // *********************************************************
 export function isDomainDesigner(param: any): param is DomainDesigner {
   const d = param as DomainDesigner
-  if (
+  return (
     d &&
     typeof d.actor === 'function' &&
     typeof d.startWorkflow === 'function' &&
@@ -437,10 +440,7 @@ export function isDomainDesigner(param: any): param is DomainDesigner {
     typeof d.policy === 'function' &&
     typeof d.service === 'function' &&
     typeof d.readModel === 'function'
-  ) {
-    return true
-  }
-  return false
+  )
 }
 
 export type DomainDesigner = {

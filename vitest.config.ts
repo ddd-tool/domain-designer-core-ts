@@ -7,6 +7,9 @@ export default defineConfig({
   test: {
     globals: true,
     silent: false,
+    coverage: {
+      include: ['lib/**'],
+    },
   },
   build: {
     target: 'es2017',
