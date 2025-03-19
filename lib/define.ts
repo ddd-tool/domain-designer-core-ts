@@ -371,7 +371,8 @@ export interface DomainDesignReadModel<INFOS extends DomainDesignInfoRecord> ext
 // ========================== 配置 ==========================
 
 export type DomainDesignOptions = {
-  moduleName: string
+  moduleName?: string
+  ignoreValueObjects?: string[]
   __toFormatType?: 'BngleBrackets' | 'JSON' | 'JSONPretty'
 }
 
@@ -499,7 +500,7 @@ export type DomainDesigner = {
       linkType?: import('./common').LinkType
     ): void
     getDesignerId(): string
-    getModuleName(): string
+    getDesignerOptions(): Required<DomainDesignOptions>
     getWorkflows(): Record<string, string[]>
     getUserStories(): Record<string, string[]>
     getLinks(): Record<string, import('./common').LinkType>

@@ -53,7 +53,7 @@ export function genId(): string {
 
 type ContextInitializer = () => {
   id: string
-  options?: DomainDesignOptions
+  options: DomainDesignOptions
   createNote: DomainDesignNoteProvider
   createInfo: DomainDesignInfoProvider
   createActor: DomainDesignActorProvider
@@ -66,9 +66,13 @@ type ContextInitializer = () => {
   createSystem: DomainDesignSystemProvider
   createReadModel: DomainDesignReadModelProvider
 }
-const DETAULT_OPTIONS: DomainDesignOptions = {
-  moduleName: '',
-  __toFormatType: 'BngleBrackets',
+
+export function defaultOptions(): Required<DomainDesignOptions> {
+  return {
+    moduleName: '',
+    ignoreValueObjects: ['time', 'id', 'name', 'state', 'status'],
+    __toFormatType: 'BngleBrackets',
+  }
 }
 
 export type DomainDesignInternalContext = ReturnType<typeof createInternalContext>
@@ -77,9 +81,9 @@ const _internalContextMap: Record<string, DomainDesignInternalContext> = {}
 function createInternalContext(initFn: ContextInitializer) {
   const initResult = initFn()
   if (!initResult.options) {
-    initResult.options = DETAULT_OPTIONS
+    initResult.options = defaultOptions()
   } else {
-    initResult.options = Object.assign(DETAULT_OPTIONS, initResult.options)
+    initResult.options = Object.assign(defaultOptions(), initResult.options)
   }
   const info = initResult.createInfo()
 
@@ -138,8 +142,8 @@ function createInternalContext(initFn: ContextInitializer) {
     getDesignerId() {
       return initResult.id
     },
-    getModuleName() {
-      return initResult.options.moduleName
+    getDesignerOptions() {
+      return initResult.options as Required<DomainDesignOptions>
     },
     getWorkflows() {
       return workflows
