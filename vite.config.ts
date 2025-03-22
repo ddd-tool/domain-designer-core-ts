@@ -1,10 +1,11 @@
 import { fileURLToPath } from 'url'
 import { defineConfig } from 'vite'
 import wasm from 'vite-plugin-wasm'
+import topLevelAwait from 'vite-plugin-top-level-await'
 
 export default defineConfig({
-  plugins: [wasm()],
-  assetsInclude: ['**/*.wasm'],
+  plugins: [wasm(), topLevelAwait()],
+  // assetsInclude: ['**/*.wasm'],
   build: {
     minify: 'esbuild',
     outDir: 'dist',

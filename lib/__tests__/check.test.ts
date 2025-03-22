@@ -1,9 +1,9 @@
 import { expect, it } from 'vitest'
-import { checkDomainDesigner, checkStory, checkWorkflow } from '../check'
+import { loadWasm, checkDomainDesigner, checkStory, checkWorkflow, match_string, match_table } from '../check'
 import { createDomainDesigner } from '..'
-import { match_table, match_string } from '../check/wasm'
 
 it('wasm', async () => {
+  await loadWasm()
   const f = match_string('a', 'a')
   expect(f).toBe(1)
   const m = match_table(['a', 'b'], ['a', 'b'], 0.7)
@@ -17,6 +17,7 @@ it('wasm', async () => {
 })
 
 it('check', async () => {
+  await loadWasm()
   const d = createDomainDesigner()
   const age = d.info.valueObj('age')
   const command = d.command('command', ['id', 'name', age])
@@ -33,6 +34,7 @@ it('check', async () => {
 })
 
 it('check 完整流程', async () => {
+  await loadWasm()
   const d = createDomainDesigner()
 
   // 用户
@@ -133,7 +135,7 @@ it('check 完整流程', async () => {
 
   d.defineUserStory('作为商城用户，我要查看订单情况，以便了解订单状态', [创建订单成功_自动扣款成功流程])
 
-  const chekcResult = checkWorkflow(d, 创建订单成功_自动扣款失败流程)
+  const chekcResult = await checkWorkflow(d, 创建订单成功_自动扣款失败流程)
   expect(Object.values(chekcResult).length).toBe(6)
   expect(Object.values(chekcResult)[0].length).toBe(1)
   expect(Object.values(chekcResult)[1].length).toBe(0)

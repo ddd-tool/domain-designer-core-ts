@@ -12,6 +12,8 @@ import {
   isDomainDesignFacadeCommand,
   isDomainDesignReadModel,
 } from '../define'
+import load_wasm, { match_string, match_table } from './wasm'
+export { match_string, match_table }
 
 export type Warning = {
   _attributes: {
@@ -21,12 +23,11 @@ export type Warning = {
   message: string
 }
 
-import { match_table, match_string } from './wasm'
-
-let wasmApi: {
-  matchTable: (sources: string[], targets: string[], threshold?: number) => MatchResult
-  matchString: (source: string, target: string) => number
-}
+// let wasmApi: {
+//   matchTable: (sources: string[], targets: string[], threshold?: number) => MatchResult
+//   matchString: (source: string, target: string) => number
+// }
+let wasmApi: Awaited<ReturnType<typeof load_wasm>>
 
 type MatchRecord = {
   source: string
@@ -40,24 +41,24 @@ export type MatchResult = {
 
 export async function loadWasm() {
   if (!wasmApi) {
-    wasmApi = {
-      matchTable: match_table,
-      matchString: match_string,
-    }
+    wasmApi = (await load_wasm()) || ({} as any)
   }
-  return wasmApi
 }
 
-export function checkDomainDesigner(d: DomainDesigner): Record<string, Warning[]> {
+export async function checkDomainDesigner(d: DomainDesigner): Promise<Record<string, Warning[]>> {
   const context = d._getContext()
   const result: Record<string, Warning[]> = {}
   for (const story of Object.keys(context.getUserStories())) {
-    Object.assign(result, checkStory(d, story, result))
+    Object.assign(result, await checkStory(d, story, result))
   }
   return result
 }
 
-export function checkStory(d: DomainDesigner, story: string, r?: Record<string, Warning[]>): Record<string, Warning[]> {
+export async function checkStory(
+  d: DomainDesigner,
+  story: string,
+  r?: Record<string, Warning[]>
+): Promise<Record<string, Warning[]>> {
   const context = d._getContext()
   const workflows = context.getUserStories()[story]
   if (!workflows) {
@@ -65,16 +66,16 @@ export function checkStory(d: DomainDesigner, story: string, r?: Record<string, 
   }
   const result: Record<string, Warning[]> = r || {}
   for (const workflow of workflows) {
-    return Object.assign(result, checkWorkflow(d, workflow, result))
+    return Object.assign(result, await checkWorkflow(d, workflow, result))
   }
   return result
 }
 
-export function checkWorkflow(
+export async function checkWorkflow(
   d: DomainDesigner,
   workflow: string,
   r?: Record<string, Warning[]>
-): Record<string, Warning[]> {
+): Promise<Record<string, Warning[]>> {
   const context = d._getContext()
   const result: Record<string, Warning[]> = r || {}
   let srcId = ''
@@ -101,6 +102,7 @@ export function checkWorkflow(
       ...dstIds.filter((item) => !srcIds.includes(item)),
     ]
 
+    await loadWasm()
     const problems = match_table(
       Object.values(src.inner)
         .filter((v) => symmetricDifference.includes(v._attributes.__id))
