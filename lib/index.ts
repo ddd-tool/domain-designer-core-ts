@@ -89,3 +89,5 @@ export {
   isDomainDesignSystem,
   isDomainDesigner,
 } from './define'
+
+export { defaultOptions } from './common'
