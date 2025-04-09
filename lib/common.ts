@@ -70,7 +70,22 @@ type ContextInitializer = () => {
 export function defaultOptions(): Required<DomainDesignOptions> {
   return {
     moduleName: '',
-    ignoreValueObjects: ['time', 'id', 'name', 'state', 'status'],
+    ignoreValueObjects: [
+      'time',
+      'id',
+      'name',
+      'state',
+      'status',
+      'version',
+      'code',
+      'message',
+      'type',
+      'result',
+      'data',
+      'payload',
+      'meta',
+      'context',
+    ],
     __toFormatType: 'BngleBrackets',
   }
 }
@@ -114,8 +129,8 @@ function createInternalContext(initFn: ContextInitializer) {
       return name
     },
     defineUserStory(name: string, workflowNames: NonEmptyArray<string>): void {
-      if (workflows[name] !== undefined) {
-        throw new Error(`flow ${name} already exists`)
+      if (userStories[name] !== undefined) {
+        throw new Error(`userStory ${name} already exists`)
       }
       userStories[name] = workflowNames
     },
