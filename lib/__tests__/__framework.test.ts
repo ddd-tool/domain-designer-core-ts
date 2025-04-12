@@ -18,3 +18,9 @@ it('测试用户配置', () => {
   expect(options.ignoreValueObjects).toEqual(['time'])
   expect(options.__toFormatType).toBe('JSON')
 })
+
+it('测试用户配置2', () => {
+  const d = createDomainDesigner({ ignoreValueObjects: [...defaultOptions().ignoreValueObjects, 'sorting'] })
+  const options = d._getContext().getDesignerOptions()
+  expect(options.ignoreValueObjects).includes('sorting')
+})
