@@ -73,6 +73,7 @@ export function defaultOptions(): Required<DomainDesignOptions> {
     ignoreValueObjects: [
       'time',
       'id',
+      'pid',
       'name',
       'state',
       'status',
