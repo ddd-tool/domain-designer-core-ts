@@ -85,6 +85,7 @@ export function defaultOptions(): Required<DomainDesignOptions> {
       'payload',
       'meta',
       'context',
+      'sorting',
     ],
     __toFormatType: 'BngleBrackets',
   }
