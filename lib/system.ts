@@ -8,6 +8,7 @@ import {
   DomainDesignSystem,
   DomainDesignSystemProvider,
   NonEmptyArray,
+  DomainDesignEvent,
 } from './define'
 
 export function createSystemProvider(designId: string): DomainDesignSystemProvider {
@@ -63,6 +64,27 @@ export function createSystemProvider(designId: string): DomainDesignSystemProvid
         return c
       }
     }
+
+    function event<EVENT extends DomainDesignEvent<any>>(param: EVENT): EVENT
+    function event<G_NAME extends string, ARR extends NonEmptyArray<CustomInfo<G_NAME>>>(
+      name: string,
+      infos: ARR,
+      note?: string | DomainDesignNote
+    ): DomainDesignEvent<CustomInfoArrayToInfoObject<ARR>>
+    function event<
+      EVENT extends DomainDesignEvent<any>,
+      G_NAME extends string,
+      ARR extends NonEmptyArray<CustomInfo<G_NAME>>
+    >(param1: EVENT | string, infos?: ARR, note?: string | DomainDesignNote) {
+      if (typeof param1 === 'object') {
+        context.linkTo(RULE, __id, param1._attributes.rule, param1._attributes.__id)
+        return param1
+      } else {
+        const c = context.createEvent(param1, infos!, note)
+        context.linkTo(RULE, __id, c._attributes.rule, c._attributes.__id)
+        return c
+      }
+    }
     const system: DomainDesignSystem = {
       _attributes: {
         __id,
@@ -72,6 +94,7 @@ export function createSystemProvider(designId: string): DomainDesignSystemProvid
       },
       command,
       facadeCmd,
+      event,
       toFormat() {
         return context.toFormat(this)
       },

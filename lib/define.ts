@@ -315,6 +315,12 @@ export interface DomainDesignSystem extends DomainDesignObject {
     infos: ARR,
     note?: string | DomainDesignNote
   ): DomainDesignFacadeCommand<CustomInfoArrayToInfoObject<ARR>>
+  event<EVENT extends DomainDesignEvent<any>>(event: EVENT): EVENT
+  event<G_NAME extends string, ARR extends NonEmptyArray<CustomInfo<G_NAME>>>(
+    name: string,
+    infos: ARR,
+    note?: string | DomainDesignNote
+  ): DomainDesignEvent<CustomInfoArrayToInfoObject<ARR>>
   toFormat(): string
 }
 
