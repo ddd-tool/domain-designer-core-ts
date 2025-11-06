@@ -18,20 +18,6 @@ delete publishPackageInfo._id
 
 fs.writeFileSync(path.join(rootDir, 'dist', 'package.json'), JSON.stringify(publishPackageInfo, null, 2), 'utf8')
 
-fs.writeFileSync(
-  path.join(rootDir, 'dist', 'check', 'package.json'),
-  JSON.stringify(
-    {
-      main: './index.mjs',
-      module: './index.mjs',
-      types: './index.d.ts',
-    },
-    null,
-    2
-  ),
-  'utf8'
-)
-
 fs.copyFileSync(path.join(rootDir, 'README.md'), path.join(rootDir, 'dist', 'README.md'))
 
 console.log('Package.json files generated for publish package.')
